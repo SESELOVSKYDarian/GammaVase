@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Montaga&display=swap");
+
+nav {
+  padding: 1rem 2rem;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li a {
+  color: #000000;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.2rem;
+  font-family: "Montaga", serif;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #e75ec0;
+}
+
+nav ul li a i {
+  font-size: 1.6rem;
+  vertical-align: middle;
+}
