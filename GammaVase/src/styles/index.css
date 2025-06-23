@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Onest:wght@400;800&family=Scheherazade+New&display=swap");
 
 * {
   box-sizing: border-box;
@@ -9,7 +9,7 @@
 html,
 body {
   height: 100%;
-  font-family: sans-serif;
+  font-family: "Onest", sans-serif;
   background-color: #f0ede8;
   color: #000;
 }

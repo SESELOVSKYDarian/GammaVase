@@ -1,0 +1,18 @@
+/* src/styles/Objetivo.css */
+.objetivo {
+  background-color: #f0ede8;
+  padding: 2rem 5rem;
+  text-align: left;
+}
+
+.objetivo h3 {
+  font-family: "Onest", sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+}
+
+.objetivo p {
+  font-family: "Onest", sans-serif;
+  padding-top: 1rem;
+  font-size: 1.2rem;
+}

@@ -1,0 +1,40 @@
+/* src/styles/Importaciones.css */
+.importaciones {
+  background-color: #cacaca;
+  padding: 2rem;
+  text-align: center;
+}
+
+.importaciones h3 {
+  font-family: "Onest", sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  text-align: left;
+  padding: 0 3rem;
+}
+
+.paises {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.pais {
+  background-color: #afafaf;
+  border-radius: 50%;
+  padding: 1rem;
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+}
+
+.pais img {
+  width: 100%;
+  border-radius: 50%;
+}
+
+.pais p {
+  margin-top: 0.5rem;
+  font-family: "Onest", sans-serif;
+}

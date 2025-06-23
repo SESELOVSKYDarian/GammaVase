@@ -1,0 +1,32 @@
+/* src/styles/Slider.css */
+.slider {
+  text-align: center;
+  position: relative;
+}
+
+.slider img {
+  border-radius: 30px;
+  width: 90%;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.slider-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1.5rem 4.5rem;
+}
+
+.slider-buttons button {
+  border: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0 5px;
+  border-radius: 50%;
+  background-color: #afafaf;
+  cursor: pointer;
+}
+
+.slider-buttons button.active {
+  background-color: #e75ec0;
+}

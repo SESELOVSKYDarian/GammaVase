@@ -1,0 +1,11 @@
+/* src/styles/TijerasImage.css */
+.tijeras-container {
+  position: relative;
+  top: -50px; /* para que se superponga al Hero */
+  display: flex;
+  justify-content: center;
+}
+
+.tijeras-container img {
+  max-width: 150px;
+}

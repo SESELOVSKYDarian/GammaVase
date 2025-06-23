@@ -1,0 +1,34 @@
+/* src/styles/Empresa/Hero.css */
+.hero {
+  position: relative;
+  height: 80vh;
+  background: url("/assets/empresa.jpg") center/cover no-repeat;
+}
+
+.hero-overlay {
+  background-color: rgba(0, 0, 0, 0.555);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: 8rem;
+  font-weight: 100;
+  text-align: center;
+}
+
+.somos {
+  display: block;
+  font-family: "Scheherazade New", serif;
+  color: #ffffff;
+  padding-left: 7rem;
+}
+
+.gamma {
+  display: block;
+  margin: -10rem auto 0;
+  font-family: "Kaushan Script", cursive;
+  color: #e75ec0;
+}
