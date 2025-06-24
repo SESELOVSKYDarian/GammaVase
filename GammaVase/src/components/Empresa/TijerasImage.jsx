@@ -1,4 +1,3 @@
-// src/components/TijerasImage.jsx
 import React from "react";
 import "../../styles/Empresa/TijerasImage.css";
 

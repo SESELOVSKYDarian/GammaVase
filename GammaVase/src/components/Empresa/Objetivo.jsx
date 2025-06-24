@@ -1,4 +1,3 @@
-// src/components/Objetivo.jsx
 import React from "react";
 import "../../styles/Empresa/Objetivo.css";
 

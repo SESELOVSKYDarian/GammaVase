@@ -1,4 +1,3 @@
-// src/components/Slider.jsx
 import React, { useState, useEffect } from "react";
 import "../../styles/Empresa/Slider.css";
 

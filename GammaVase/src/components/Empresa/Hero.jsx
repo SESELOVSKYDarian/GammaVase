@@ -1,4 +1,3 @@
-// src/components/Empresa/Hero.jsx
 import React from "react";
 import "../../styles/Empresa/Hero.css";
 

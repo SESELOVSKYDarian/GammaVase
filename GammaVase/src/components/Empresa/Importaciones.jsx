@@ -1,4 +1,3 @@
-// src/components/Importaciones.jsx
 import React from "react";
 import "../../styles/Empresa/Importaciones.css";
 
