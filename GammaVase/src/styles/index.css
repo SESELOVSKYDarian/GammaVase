@@ -12,4 +12,8 @@ body {
   font-family: "Onest", sans-serif;
   background-color: #f0ede8;
   color: #000;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }

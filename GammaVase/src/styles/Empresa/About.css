@@ -1,7 +1,8 @@
 /* src/styles/About.css */
 .about {
   text-align: left;
-  padding: 2rem 5rem;
+  margin-top: -9rem;
+  padding: 0rem 5rem;
 }
 
 .about h3 {
