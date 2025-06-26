@@ -1,0 +1,98 @@
+.ideas-page {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0ede8;
+  padding-bottom: 2rem;
+}
+
+
+.ideas-banner {
+  background-image: url('/ideas.jpg'); 
+  background-size: cover;
+  background-position: center;
+  height: 400px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ideas-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #1e1e1ea4; /* Oscurece más la imagen */
+  z-index: 1;
+}
+
+.ideas-banner h1 {
+    font-family: 'Kaushan Script', cursive;
+    z-index: 2;
+  color: white;
+  font-size: 5rem;
+  font-style: italic;
+ 
+}
+
+
+
+.ideas-subtitle {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #E75EC0;
+  font-weight: bold;
+  margin: 2rem auto 1.5rem;
+  padding: 0.5rem 1.5rem;
+  
+  letter-spacing: 2px;
+
+  background-color: #ffffff;
+   font-family: 'Kaushan Script', cursive;
+  border-radius: 15px;
+  width: 25%;
+ 
+}
+
+.ideas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  padding: 0 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.idea-card {
+  position: relative;
+  height: 150px;
+  background-color: #ccc; 
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.idea-card:hover {
+  transform: scale(1.03);
+}
+
+.idea-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+
+.ideas-banner .logo-gamma {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  height: 100px;
+  z-index: 2;
+}

@@ -6,7 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import Home from "../pages/Home/Home";
 import Empresa from "../pages/Empresa/Empresa";
 // import Catalogo from "../pages/Catalogo/Catalogo";
-// import Ideas from "../pages/Ideas/Ideas";
+import Ideas from "../pages/Ideas/Ideas";
 // import Contacto from "../pages/Contacto/Contacto";
 
 export default function AnimatedRoutes() {
@@ -17,8 +17,10 @@ export default function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/empresa" element={<Empresa />} />
+         <Route path="/ideas" element={<Ideas />} />
         {/* <Route path="/catalogo" element={<Catalogo />} />
-        <Route path="/ideas" element={<Ideas />} />
+       
+        
         <Route path="/contacto" element={<Contacto />} /> */}
       </Routes>
     </AnimatePresence>
