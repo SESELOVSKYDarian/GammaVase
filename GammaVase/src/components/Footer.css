@@ -1,0 +1,54 @@
+.footer {
+  background-color: #1f1f1f;
+  color: #fff;
+  padding: 1.5rem 2rem;
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 900px;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #444;
+}
+
+.footer-logo img {
+  height: 60px;
+  object-fit: contain;
+}
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  color: #fff;
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.footer-copy {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.footer-copy-name {
+  color: #8888ff;
+  font-weight: bold;
+}
