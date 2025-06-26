@@ -1,7 +1,7 @@
 .footer {
   background-color: #1f1f1f;
   color: #fff;
-  padding: 1.5rem 2rem;
+  padding: 1rem 1rem;
   font-family: 'Arial', sans-serif;
   display: flex;
   flex-direction: column;
@@ -14,13 +14,13 @@
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
-  max-width: 900px;
+  max-width: 100%;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #444;
+
 }
 
 .footer-logo img {
-  height: 60px;
+  height: 80px;
   object-fit: contain;
 }
 
@@ -38,13 +38,13 @@
 }
 
 .footer-icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 
 .footer-copy {
-  margin-top: 1rem;
-  font-size: 0.9rem;
+  margin-top: 1px;
+  font-size: 12px;
   text-align: center;
 }
 
