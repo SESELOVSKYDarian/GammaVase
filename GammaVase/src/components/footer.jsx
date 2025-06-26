@@ -1,5 +1,6 @@
 import React from 'react';
-import '../components/'; // asumimos que ya está el CSS preparado
+import './Footer.css';
+// asumimos que ya está el CSS preparado
 
 const Footer = () => {
   return (
@@ -7,7 +8,7 @@ const Footer = () => {
       <div className="footer-container">
         {/* Logo */}
         <div className="footer-logo">
-          <img src="/logo-gamma.png" alt="Gamma Modas" />
+          <img src="/logo.jpg" alt="Gamma Modas" />
         </div>
 
         {/* Contacto */}
