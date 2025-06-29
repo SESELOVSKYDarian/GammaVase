@@ -1,9 +1,10 @@
 .tijeras-container {
   position: relative;
-  top: -125px; /* para que se superponga al Hero */
+  top: -100px; /* para que se superponga al Hero */
   display: flex;
   justify-content: center;
   margin: 0;
+  z-index: 5;
 }
 
 .tijeras-container img {

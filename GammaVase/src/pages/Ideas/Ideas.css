@@ -47,7 +47,8 @@
   background-color: #ffffff;
    font-family: 'Kaushan Script', cursive;
   border-radius: 15px;
-  width: 25%;
+  width: fit-content;
+max-width: 90%;
  
 }
 
@@ -63,12 +64,33 @@
 .idea-card {
   position: relative;
   height: 150px;
-  background-color: #ccc; 
   border-radius: 8px;
   overflow: hidden;
-  cursor: pointer;
+  background-size: cover;
+  background-position: center;
   transition: transform 0.2s ease;
+  cursor: pointer;
 }
+
+.idea-card:hover {
+  transform: scale(1.03);
+}
+.idea-overlay {
+  position: absolute;
+  letter-spacing: 2px;
+    font-family: 'Kaushan Script', cursive;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 0.5rem;
+}
+
 
 .idea-card:hover {
   transform: scale(1.03);
