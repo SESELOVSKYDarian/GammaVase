@@ -1,6 +1,6 @@
 .tijeras-container {
   position: relative;
-  top: -100px; /* para que se superponga al Hero */
+  top: -120px; /* para que se superponga al Hero */
   display: flex;
   justify-content: center;
   margin: 0;

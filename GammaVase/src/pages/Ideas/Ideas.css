@@ -1,12 +1,11 @@
 .ideas-page {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   background-color: #f0ede8;
   padding-bottom: 2rem;
 }
 
-
 .ideas-banner {
-  background-image: url('/ideas.jpg'); 
+  background-image: url("/ideas.jpg");
   background-size: cover;
   background-position: center;
   height: 400px;
@@ -16,7 +15,7 @@
   justify-content: center;
 }
 .ideas-banner::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: #1e1e1ea4; /* Oscurece más la imagen */
@@ -24,32 +23,32 @@
 }
 
 .ideas-banner h1 {
-    font-family: 'Kaushan Script', cursive;
-    z-index: 2;
+  font-family: "Kaushan Script", cursive;
+  z-index: 2;
   color: white;
   font-size: 5rem;
   font-style: italic;
- 
 }
 
-
+.ideas-page h2 {
+  margin-top: -9rem;
+}
 
 .ideas-subtitle {
   text-align: center;
   font-size: 2.5rem;
-  color: #E75EC0;
+  color: #e75ec0;
   font-weight: bold;
   margin: 2rem auto 1.5rem;
   padding: 0.5rem 1.5rem;
-  
+
   letter-spacing: 2px;
 
   background-color: #ffffff;
-   font-family: 'Kaushan Script', cursive;
+  font-family: "Kaushan Script", cursive;
   border-radius: 15px;
   width: fit-content;
-max-width: 90%;
- 
+  max-width: 90%;
 }
 
 .ideas-grid {
@@ -78,7 +77,7 @@ max-width: 90%;
 .idea-overlay {
   position: absolute;
   letter-spacing: 2px;
-    font-family: 'Kaushan Script', cursive;
+  font-family: "Kaushan Script", cursive;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
   color: white;
@@ -90,7 +89,6 @@ max-width: 90%;
   text-align: center;
   padding: 0.5rem;
 }
-
 
 .idea-card:hover {
   transform: scale(1.03);
@@ -109,7 +107,6 @@ max-width: 90%;
   text-align: center;
   padding: 0.5rem;
 }
-
 
 .ideas-banner .logo-gamma {
   position: absolute;
