@@ -8,6 +8,11 @@ import Empresa from "../pages/Empresa/Empresa";
 // import Catalogo from "../pages/Catalogo/Catalogo";
 import Ideas from "../pages/Ideas/Ideas";
 // import Contacto from "../pages/Contacto/Contacto";
+import RopaAccesorios from '../../src/pages/Ideas/RopaAccesorios';
+
+
+// dentro de tus <Routes>
+
 
 export default function AnimatedRoutes() {
   const location = useLocation();
@@ -18,6 +23,8 @@ export default function AnimatedRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/empresa" element={<Empresa />} />
          <Route path="/ideas" element={<Ideas />} />
+         <Route path="/ropa-accesorios" element={<RopaAccesorios />} />
+
         {/* <Route path="/catalogo" element={<Catalogo />} />
        
         

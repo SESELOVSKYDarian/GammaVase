@@ -1,15 +1,15 @@
 import React from 'react';
 import './Ideas.css';
-import TijerasImage from "../../components/Empresa/TijerasImage"; // Ajustá el path si hace falta
- // Asegurate que el path sea correcto
+import TijerasImage from "../../components/Empresa/TijerasImage";
+import { Link } from 'react-router-dom'; // 🧠 Importá Link para navegación interna
 
 const Ideas = () => {
   const categorias = [
-    { titulo: 'Ropa y accesorios', imagen: '/ideas/ropayaccesorios.jpg' },
+    { titulo: 'Ropa y accesorios', imagen: '/ideas/ropayaccesorios.jpg', link: '/ropa-accesorios' },
     { titulo: 'Decoración para el hogar', imagen: '/ideas/decoracionparaelhogar.jpg' },
     { titulo: 'Amigurumis', imagen: '/ideas/amigurimus.png' },
     { titulo: 'Decoraciones de temporada', imagen: '/ideas/decoracionfestivas.jpg' },
-    { titulo: 'Accesorios prácticos', imagen: '/ideas/AccesoriosPracticos.jpg' },
+    { titulo: 'Accesorios prácticos', imagen: '/ideas/AccesoriosPracticos.jpg', link: '/accesorios-practicos' },
     { titulo: 'Proyectos para bebés', imagen: '/ideas/proyectosparabebes.png' },
     { titulo: 'Próximamente', imagen: '/ideas/proximamente.jpg' },
     { titulo: 'Próximamente', imagen: '/ideas/proximamente.jpg' },
@@ -24,25 +24,34 @@ const Ideas = () => {
         <h1>IDEAS</h1>
       </div>
 
-      {/* ✅ Tijeras justo debajo del banner */}
+      {/* Tijeras */}
       <TijerasImage />
 
-      {/* Categoría título */}
+      {/* Título Categorías */}
       <h2 className="ideas-subtitle">Categorías</h2>
 
       {/* Grid de categorías */}
       <div className="ideas-grid">
-        {categorias.map((cat, index) => (
-          <div
-            key={index}
-            className="idea-card"
-            style={{ backgroundImage: `url(${cat.imagen})` }}
-          >
-            <div className="idea-overlay">
-              <p>{cat.titulo}</p>
+        {categorias.map((cat, index) => {
+          const cardContent = (
+            <div
+              className="idea-card"
+              style={{ backgroundImage: `url(${cat.imagen})` }}
+            >
+              <div className="idea-overlay">
+                <p>{cat.titulo}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+
+          return cat.link ? (
+            <Link to={cat.link} key={index}>
+              {cardContent}
+            </Link>
+          ) : (
+            <div key={index}>{cardContent}</div>
+          );
+        })}
       </div>
     </div>
   );
