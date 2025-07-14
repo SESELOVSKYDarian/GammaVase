@@ -9,6 +9,7 @@ import Empresa from "../pages/Empresa/Empresa";
 import Ideas from "../pages/Ideas/Ideas";
 // import Contacto from "../pages/Contacto/Contacto";
 import RopaAccesorios from '../../src/pages/Ideas/RopaAccesorios';
+import AdminPanel from "../pages/AdminPanel/AdminPanel";
 
 
 // dentro de tus <Routes>
@@ -24,6 +25,7 @@ export default function AnimatedRoutes() {
         <Route path="/empresa" element={<Empresa />} />
          <Route path="/ideas" element={<Ideas />} />
          <Route path="/ropa-accesorios" element={<RopaAccesorios />} />
+         <Route path="/" element={<AdminPanel />} />
 
         {/* <Route path="/catalogo" element={<Catalogo />} />
        
