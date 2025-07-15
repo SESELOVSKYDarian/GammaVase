@@ -8,12 +8,11 @@ import Empresa from "../pages/Empresa/Empresa";
 // import Catalogo from "../pages/Catalogo/Catalogo";
 import Ideas from "../pages/Ideas/Ideas";
 // import Contacto from "../pages/Contacto/Contacto";
-import RopaAccesorios from '../../src/pages/Ideas/RopaAccesorios';
+import RopaAccesorios from "../../src/pages/Ideas/RopaAccesorios";
+import Login from "../pages/Login/Login";
 import AdminPanel from "../pages/AdminPanel/AdminPanel";
 
-
 // dentro de tus <Routes>
-
 
 export default function AnimatedRoutes() {
   const location = useLocation();
@@ -23,9 +22,10 @@ export default function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/empresa" element={<Empresa />} />
-         <Route path="/ideas" element={<Ideas />} />
-         <Route path="/ropa-accesorios" element={<RopaAccesorios />} />
-         <Route path="/ad" element={<AdminPanel />} />
+        <Route path="/ideas" element={<Ideas />} />
+        <Route path="/ropa-accesorios" element={<RopaAccesorios />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<AdminPanel />} />
 
         {/* <Route path="/catalogo" element={<Catalogo />} />
        

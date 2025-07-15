@@ -1,0 +1,99 @@
+.login-container {
+  position: relative;
+  min-height: 100vh;
+  background-image: url("/login.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Fondo oscuro encima de la imagen */
+.login-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.684); /* Más oscuro */
+  z-index: 1;
+}
+
+/* Logo arriba a la izquierda */
+.login-logo {
+  position: absolute;
+  top: 30px;
+  left: 50px;
+  height: 100px;
+  z-index: 2;
+}
+
+/* Caja del login */
+.login-box {
+  position: relative;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 40px;
+  border-radius: 25px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.login-title {
+  font-family: "Kaushan Script", cursive;
+  font-size: 2rem;
+  color: white;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-radius: 30px;
+  border: 2px solid white;
+  background-color: #222;
+  color: white;
+  font-size: 1rem;
+}
+
+.login-input::placeholder {
+  color: #ccc;
+}
+
+.login-button {
+  width: 100%;
+  padding: 15px 0;
+  border-radius: 15px;
+  border: none;
+  background-color: white;
+  color: black;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #ddd;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 40%;
+  right: 20px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}

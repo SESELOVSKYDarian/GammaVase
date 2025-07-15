@@ -1,20 +1,30 @@
 @import url("https://fonts.googleapis.com/css2?family=Montaga&display=swap");
 
-nav {
-  padding: 2rem;
+.navbar {
+  position: relative;
+  background-color: #f0ede8;
+  padding: 1.5rem;
+  z-index: 1000;
 }
 
-nav ul {
+.navbar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Estilo base para listas */
+.navbar-list {
   list-style: none;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 2rem;
   margin: 0;
   padding: 0;
 }
 
-nav ul li a {
+.navbar-list li a {
   color: #000000;
   text-decoration: none;
   font-weight: 500;
@@ -23,11 +33,76 @@ nav ul li a {
   transition: color 0.3s ease;
 }
 
-nav ul li a:hover {
+.navbar-list li a:hover {
   color: #e75ec0;
 }
 
-nav ul li a i {
+.navbar-list li a i {
   font-size: 1.6rem;
   vertical-align: middle;
+}
+
+/* Oculta el icono en escritorio */
+.menu-icon {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+  position: absolute;
+  top: -0.8rem;
+  right: 1rem;
+  z-index: 1001; /* Más alto que el menú lateral */
+}
+
+.active-link {
+  color: #e75ec0 !important;
+  font-weight: 700;
+}
+
+/* ========== MOBILE ========== */
+@media (max-width: 768px) {
+  .navbar-container {
+    justify-content: space-between;
+  }
+
+  .navbar-list.desktop {
+    display: none;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 250px;
+    background-color: #f0ede8;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+    padding-top: 4rem;
+    transition: right 0.3s ease;
+    z-index: 1000; /* Debajo del botón */
+  }
+
+  .mobile-menu.open {
+    right: 0;
+  }
+
+  .navbar-list.mobile {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-left: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .navbar-list.mobile li a {
+    font-size: 1.3rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu {
+    display: none;
+  }
 }
