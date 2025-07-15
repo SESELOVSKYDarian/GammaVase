@@ -25,7 +25,7 @@ export default function AnimatedRoutes() {
         <Route path="/empresa" element={<Empresa />} />
          <Route path="/ideas" element={<Ideas />} />
          <Route path="/ropa-accesorios" element={<RopaAccesorios />} />
-         <Route path="/" element={<AdminPanel />} />
+         <Route path="/ad" element={<AdminPanel />} />
 
         {/* <Route path="/catalogo" element={<Catalogo />} />
        

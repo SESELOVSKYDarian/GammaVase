@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+
+.admin-panel {
+  background-color: #f8f5ee;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+.admin-banner {
+  background-image: url('/admin/banner-hilos.jpg'); /* poné tu imagen acá */
+  background-size: cover;
+  background-position: center;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-banner h1 {
+  color: white;
+  font-family: 'Kaushan Script', cursive;
+  font-size: 2.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.admin-section {
+  background-color: #f1f1f1;
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.admin-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actions {
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  text-align: left;
+}
+
+th {
+  background-color: #f9f9f9;
+}
