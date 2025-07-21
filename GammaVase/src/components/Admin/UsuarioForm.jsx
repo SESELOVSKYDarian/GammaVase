@@ -1,0 +1,41 @@
+import React, { useState } from 'react';
+import './UsuarioForm.css';
+
+const UsuarioForm = ({ onClose, onSave }) => {
+    const [formData, setFormData] = useState({
+        id: '',
+        cliente: '',
+        contrasena: '',
+        precios: '',
+    });
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await onSave(formData);
+        onClose();
+    };
+
+    return (
+        <div className="modal-backdrop">
+            <div className="modal">
+                <h2>Agregar Usuario</h2>
+                <form onSubmit={handleSubmit}>
+                    <input name="id" placeholder="ID" value={formData.id} onChange={handleChange} required />
+                    <input name="cliente" placeholder="Cliente" value={formData.cliente} onChange={handleChange} required />
+                    <input name="contrasena" placeholder="Contraseña" value={formData.contrasena} onChange={handleChange} required />
+                    <input name="precios" placeholder="Precio" value={formData.precios} onChange={handleChange} required />
+                    <div className="modal-actions">
+                        <button type="submit">Guardar</button>
+                        <button type="button" onClick={onClose}>Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default UsuarioForm;

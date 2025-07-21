@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev": "concurrently \"cd backend && nodemon index.js\" \"cd GammaVase && npm start\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

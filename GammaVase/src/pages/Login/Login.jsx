@@ -20,7 +20,7 @@ export default function Login() {
       <div className="login-box">
         <h2 className="login-title">Inicio de Sesión</h2>
 
-        <input type="text" placeholder="ID" className="login-input" />
+        <input type="number" placeholder="ID" className="login-input" />
 
         <div className="password-wrapper">
           <input
