@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import UsuarioForm from "../../components/Admin/UsuarioForm"; // <- IMPORTANTE
 import "./AdminPanel.css";
 
+
 const AdminPanel = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [showForm, setShowForm] = useState(false); // Nuevo estado para mostrar el modal

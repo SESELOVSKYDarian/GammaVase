@@ -2,14 +2,14 @@ const express = require('express');
 require('dotenv').config();
 require('./db/db');
 const cors = require('cors');
+
+const app = express(); // ✅ Ahora primero se define
+
 app.use(cors());
-
-const app = express();
-
 app.use(express.json());
+
 const usuariosRoutes = require('./routes/usuariosRoutes');
 app.use('/api/usuarios', usuariosRoutes);
-
 // Login
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;

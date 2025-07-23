@@ -1,11 +1,12 @@
 const pool = require('../db/db');
 
+
 exports.getUsuarios = async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM usuarios');
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: err.message }); // 👈 esto devuelve { error: ... }
     }
 };
 
