@@ -1,16 +1,24 @@
 const express = require('express');
-require('dotenv').config();
-require('./db/db');
 const cors = require('cors');
+require('dotenv').config();
+const pool = require('./db/db'); // o como lo estés importando
 
-const app = express(); // ✅ Ahora primero se define
+const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5175',
+  credentials: true,
+}));
+
 app.use(express.json());
 
-const usuariosRoutes = require('./routes/usuariosRoutes');
-app.use('/api/usuarios', usuariosRoutes);
+
+ // si tenés productos
+app.use('/api/familias', require('./routes/familiasRoutes'));
+app.use('/api/usuarios', require('./routes/usuariosRoutes'));
 // Login
+
+
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     const result = await pool.query('SELECT * FROM admin WHERE email = $1 AND password = $2', [email, password]);

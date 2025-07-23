@@ -2,19 +2,56 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import UsuarioForm from "../../components/Admin/UsuarioForm"; // <- IMPORTANTE
+import FamiliaForm from "../../components/Admin/FamiliaForm";
+
 import "./AdminPanel.css";
 
 
 const AdminPanel = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [showForm, setShowForm] = useState(false); // Nuevo estado para mostrar el modal
+const [familias, setFamilias] = useState([]);
+const [showFamiliaForm, setShowFamiliaForm] = useState(false);
 
   useEffect(() => {
+    fetch("http://localhost:3000/api/familias")
+  .then((res) => res.json())
+  .then((data) => setFamilias(data))
+  .catch((err) => console.error("Error al cargar familias", err));
+
     fetch("http://localhost:3000/api/usuarios")
       .then((res) => res.json())
       .then((data) => setUsuarios(data))
       .catch((err) => console.error("Error al cargar usuarios", err));
   }, []);
+
+  const agregarFamilia = async (nuevaFamilia) => {
+  try {
+    const res = await fetch("http://localhost:3000/api/familias", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(nuevaFamilia),
+    });
+
+    if (!res.ok) throw new Error("No se pudo agregar");
+
+    const data = await res.json();
+    setFamilias((prev) => [...prev, data]);
+  } catch (err) {
+    alert("Error al agregar familia: " + err.message);
+  }
+};
+
+const eliminarFamilia = async (id) => {
+  try {
+    await fetch(`http://localhost:3000/api/familias/${id}`, {
+      method: "DELETE",
+    });
+    setFamilias((prev) => prev.filter((f) => f.id !== id));
+  } catch (err) {
+    console.error("Error al eliminar familia", err);
+  }
+};
 
   const eliminarUsuario = async (id) => {
     try {
@@ -47,6 +84,7 @@ const AdminPanel = () => {
       console.error(err);
     }
   };
+  
 
 
   return (
@@ -93,6 +131,41 @@ const AdminPanel = () => {
         )}
 
       </div>
+        {/* Sección Familias */}
+<div className="admin-section">
+  <h2>
+    Familias{" "}
+    <span className="actions" onClick={() => setShowFamiliaForm(true)}>➕</span>
+  </h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Familia</th>
+        <th>Tipo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {familias.map((familia) => (
+        <tr key={familia.id}>
+          <td>{familia.id}</td>
+          <td>{familia.familia}</td>
+          <td>{familia.tipo}</td>
+          <td>
+            <button onClick={() => eliminarFamilia(familia.id)}>🗑️</button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  {showFamiliaForm && (
+    <FamiliaForm
+      onClose={() => setShowFamiliaForm(false)}
+      onSave={agregarFamilia}
+    />
+  )}
+</div>
 
       {/* Las otras secciones como Precios e Ideas pueden seguir igual */}
     </div>
