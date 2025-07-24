@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import wasapIcon from "/wasap.svg";
-import Hero from "../../components/Empresa/Hero";
+import Hero from "../../components/Contacto/Hero";
 import TijerasImage from "../../components/Empresa/TijerasImage";
 import "../../styles/Contacto/Contacto.css";
 

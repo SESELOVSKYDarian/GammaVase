@@ -140,8 +140,8 @@ button[type="submit"]:hover {
   height: auto;
 }
 
-.hero {
-  background: url("/login.jpg") center/cover no-repeat;
+.hero2 {
+  background: url("login.jpg") center/cover no-repeat;
 }
 
 /* Responsivo */
