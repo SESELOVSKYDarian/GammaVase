@@ -7,10 +7,10 @@ import Home from "../pages/Home/Home";
 import Empresa from "../pages/Empresa/Empresa";
 // import Catalogo from "../pages/Catalogo/Catalogo";
 import Ideas from "../pages/Ideas/Ideas";
-// import Contacto from "../pages/Contacto/Contacto";
 import RopaAccesorios from "../../src/pages/Ideas/RopaAccesorios";
 import Login from "../pages/Login/Login";
 import AdminPanel from "../pages/AdminPanel/AdminPanel";
+import Contacto from "../pages/Contacto/Contacto";
 
 // dentro de tus <Routes>
 
@@ -27,10 +27,9 @@ export default function AnimatedRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminPanel />} />
 
-        {/* <Route path="/catalogo" element={<Catalogo />} />
-       
-        
-        <Route path="/contacto" element={<Contacto />} /> */}
+        {/* <Route path="/catalogo" element={<Catalogo />} /> */}
+
+        <Route path="/contacto" element={<Contacto />} />
       </Routes>
     </AnimatePresence>
   );
