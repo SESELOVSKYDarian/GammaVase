@@ -1,0 +1,112 @@
+.catalogo-container {
+  display: flex;
+  background: #f4f0e9;
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.sidebar {
+  width: 200px;
+  background: #ddd;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.sidebar label {
+  display: block;
+  margin-top: 1rem;
+}
+
+.sidebar input, .sidebar select {
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.3rem;
+}
+
+.contenido {
+  flex: 1;
+  margin-left: 2rem;
+}
+
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.producto-card {
+  background: white;
+  border-radius: 8px;
+  padding: 0.5rem;
+  text-align: center;
+  box-shadow: 0 0 5px #ccc;
+}
+
+.producto-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.nombre {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.precio {
+  color: green;
+  font-weight: bold;
+  margin: 0.3rem 0;
+}
+
+.etiquetas-precio {
+  display: flex;
+  justify-content: space-around;
+  font-size: 0.75rem;
+}
+
+.etiqueta {
+  font-weight: bold;
+  margin-right: 0.3rem;
+}
+
+.compra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.compra input {
+  width: 40px;
+  text-align: center;
+}
+
+.comprar-btn {
+  background: black;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.paginacion {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.paginacion span {
+  width: 12px;
+  height: 12px;
+  margin: 0 5px;
+  background: #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.paginacion .activo {
+  background: pink;
+}

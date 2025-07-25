@@ -15,6 +15,8 @@ app.use(express.json());
 
 app.use("/api/contacto", contactoRoute); // Asegurate que la ruta es correcta
 
+const productosRoutes = require('./routes/productosRoutes');
+app.use('/api/productos', productosRoutes);
 
  // si tenés productos
 app.use('/api/familias', require('./routes/familiasRoutes'));

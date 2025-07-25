@@ -1,0 +1,72 @@
+.producto-detalle {
+  padding: 2rem;
+  background: #f4f0e9;
+  font-family: sans-serif;
+}
+
+.info-principal {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.img-grande img {
+  width: 300px;
+  border-radius: 12px;
+}
+
+.info-texto {
+  flex: 1;
+}
+
+.ruta {
+  font-size: 0.8rem;
+  color: gray;
+}
+
+.precio {
+  color: green;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.acciones {
+  margin-top: 1rem;
+}
+
+.añadir {
+  background: #e0e0e0;
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  border: none;
+  border-radius: 6px;
+}
+
+.comprar {
+  background: black;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+}
+
+.miniaturas {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0 2rem 0;
+}
+
+.miniaturas img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.relacionados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}

@@ -1,0 +1,95 @@
+.card-producto {
+  width: 200px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease;
+}
+
+.card-producto:hover {
+  transform: scale(1.02);
+}
+
+.imagen-container {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-bottom: 1px solid #eee;
+}
+
+.imagen-principal {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.detalle-producto {
+  padding: 1rem;
+  text-align: center;
+}
+
+.titulo-producto {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.precio-producto {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+}
+
+.acciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contador {
+  background: #000;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.contador button {
+  border: none;
+  background: none;
+  color: white;
+  font-size: 1.2rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+
+.contador span {
+  padding: 0 0.7rem;
+  font-weight: bold;
+}
+
+.btn-comprar {
+  background: black;
+  color: white;
+  border: none;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-comprar:hover {
+  background: #222;
+}
