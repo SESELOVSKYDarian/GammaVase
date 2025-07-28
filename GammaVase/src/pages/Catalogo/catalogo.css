@@ -30,14 +30,16 @@
 
 .productos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr); /* Solo 3 por fila */
+  gap: 1rem; /* Menor espacio entre ellas */
+  padding: 1rem 2rem;
 }
+
 
 .producto-card {
   background: white;
   border-radius: 8px;
-  padding: 0.5rem;
+  padding: 0;
   text-align: center;
   box-shadow: 0 0 5px #ccc;
 }
@@ -110,3 +112,95 @@
 .paginacion .activo {
   background: pink;
 }
+
+.catalogo-wrapper {
+  padding: 1.5rem;
+  background: #f4f0e9;
+}
+
+/* ENCABEZADO SUPERIOR */
+.catalogo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0%;
+}
+
+.titulo-catalogo {
+  font-size: 3.4rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.logo-catalogo {
+  height: 120px;
+  object-fit: contain;
+}
+
+.contenido {
+  background: white;
+  padding: 0rem;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.05);
+  flex-grow: 1;
+}
+
+/* Esto asegura que el contenedor lateral + contenido queden uno al lado del otro */
+.catalogo-container {
+  display: flex;
+  gap: 2rem;
+}
+
+.titulo-familia {
+  text-align: left;
+  padding: 1rem 2rem;
+}
+
+.titulo-familia h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.titulo-familia h4 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #666;
+  margin-top: 0.3rem;
+}
+
+
+
+.titulo-principal {
+  background-color: #dddddd;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 0.5rem;
+  text-align: center;
+  margin-bottom: 0rem;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+}
+
+.titulo-principal h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #222;
+}
+
+.titulo-familia {
+  text-align: left;
+
+}
+
+.titulo-familia h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #111;
+  padding-left: 5%;
+ 
+  display: inline-block;
+  padding-bottom: 0.3rem;
+}
+
