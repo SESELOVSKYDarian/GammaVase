@@ -1,31 +1,49 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Plus, Minus, ShoppingCart, Eye } from "lucide-react";
 import "./ProductoCard.css";
 
-const ProductoCard = ({ producto }) => {
+const ProductoCard = ({ producto, onAgregarAlCarrito }) => {
   const [cantidad, setCantidad] = useState(1);
 
   const aumentar = () => setCantidad((prev) => prev + 1);
   const disminuir = () => setCantidad((prev) => (prev > 1 ? prev - 1 : 1));
 
+  const agregarAlCarrito = () => {
+    if (onAgregarAlCarrito) {
+      onAgregarAlCarrito(producto, cantidad);
+    }
+  };
+
   return (
     <div className="card-producto">
       <div className="imagen-container">
         <img
-          src={`/imgCata/${producto.img_articulo[0]}`}
+          src={`${producto.img_articulo[0]}`}
           alt={producto.articulo}
           className="imagen-principal"
         />
       </div>
+
       <div className="detalle-producto">
         <p className="titulo-producto">{producto.articulo}</p>
-        <p className="precio-producto">${producto.precio.toLocaleString("es-AR")}</p>
+        <p className="precio-producto">
+          ${producto.precio.toLocaleString("es-AR")}
+        </p>
+
         <div className="acciones">
           <div className="contador">
             <button onClick={disminuir}>–</button>
             <span>{cantidad}</span>
             <button onClick={aumentar}>+</button>
           </div>
-          <button className="btn-comprar">COMPRAR</button>
+
+          <button className="btn-carrito" onClick={agregarAlCarrito}>
+            <ShoppingCart size={20} strokeWidth={2.5} />
+          </button>
+          <Link to={`/productos/${producto.url}`} className="btn-vermas">
+            <Eye size={20} strokeWidth={2.5} />
+          </Link>
         </div>
       </div>
     </div>

@@ -17,7 +17,8 @@
   margin-top: 1rem;
 }
 
-.sidebar input, .sidebar select {
+.sidebar input,
+.sidebar select {
   width: 100%;
   margin-top: 0.3rem;
   padding: 0.3rem;
@@ -34,7 +35,6 @@
   gap: 1rem; /* Menor espacio entre ellas */
   padding: 1rem 2rem;
 }
-
 
 .producto-card {
   background: white;
@@ -139,10 +139,10 @@
 }
 
 .contenido {
-  background: white;
+  background: rgb(248, 248, 248);
   padding: 0rem;
   border-radius: 16px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.05);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
   flex-grow: 1;
 }
 
@@ -157,20 +157,11 @@
   padding: 1rem 2rem;
 }
 
-.titulo-familia h3 {
+.titulo-familia h4 {
   font-size: 2rem;
   font-weight: bold;
   margin: 0;
 }
-
-.titulo-familia h4 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: #666;
-  margin-top: 0.3rem;
-}
-
-
 
 .titulo-principal {
   background-color: #dddddd;
@@ -179,10 +170,10 @@
   padding: 0.5rem;
   text-align: center;
   margin-bottom: 0rem;
-  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 }
 
-.titulo-principal h1 {
+.titulo-principal h3 {
   margin: 0;
   font-size: 2.5rem;
   font-weight: bold;
@@ -191,7 +182,6 @@
 
 .titulo-familia {
   text-align: left;
-
 }
 
 .titulo-familia h2 {
@@ -199,8 +189,7 @@
   font-weight: bold;
   color: #111;
   padding-left: 5%;
- 
+
   display: inline-block;
   padding-bottom: 0.3rem;
 }
-

@@ -1,12 +1,14 @@
+// ProductoForm.jsx
 import React, { useState, useEffect } from "react";
 
 const ProductoForm = ({ onClose, onSave }) => {
   const [familias, setFamilias] = useState([]);
+  const [imagenes, setImagenes] = useState([]);
   const [form, setForm] = useState({
     articulo: "",
+    descripcion: "",
     familia_id: "",
     linea: "",
-    img_articulo: [],
     pdf_colores: "",
     stock: 0,
   });
@@ -17,19 +19,39 @@ const ProductoForm = ({ onClose, onSave }) => {
       .then((data) => setFamilias(data));
   }, []);
 
+  const generateSlug = (nombre) =>
+    nombre
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImgChange = (e) => {
-    const files = Array.from(e.target.files).map(f => f.name);
-    setForm((prev) => ({ ...prev, img_articulo: files.slice(0, 5) }));
+    const files = Array.from(e.target.files).slice(0, 5);
+    setImagenes(files);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(form);
+
+    const formData = new FormData();
+    formData.append("articulo", form.articulo);
+    formData.append("descripcion", form.descripcion);
+    formData.append("familia_id", form.familia_id);
+    formData.append("linea", form.linea);
+    formData.append("pdf_colores", form.pdf_colores);
+    formData.append("stock", form.stock);
+    formData.append("url", generateSlug(form.articulo)); // 👈 Agrega el slug
+
+    imagenes.forEach((img) => {
+      formData.append("imagenes", img);
+    });
+
+    await onSave(formData);
     onClose();
   };
 
@@ -38,22 +60,55 @@ const ProductoForm = ({ onClose, onSave }) => {
       <div className="modal">
         <h2>Agregar Producto</h2>
         <form onSubmit={handleSubmit}>
-          <input name="articulo" placeholder="Artículo" onChange={handleChange} />
-          <select name="familia_id" onChange={handleChange}>
+          <input
+            name="articulo"
+            placeholder="Artículo"
+            onChange={handleChange}
+            required
+          />
+          <select name="familia_id" onChange={handleChange} required>
             <option value="">Seleccione Familia</option>
             {familias.map((f) => (
-              <option key={f.id} value={f.id}>{f.familia}</option>
+              <option key={f.id} value={f.id}>
+                {f.familia}
+              </option>
             ))}
           </select>
-          <input name="linea" placeholder="Línea o marca" onChange={handleChange} />
+          <textarea
+            name="descripcion"
+            placeholder="Descripción"
+            onChange={handleChange}
+          />
+          <input
+            name="linea"
+            placeholder="Línea o marca"
+            onChange={handleChange}
+          />
           <label>Imágenes (máx 5)</label>
-          <input type="file" multiple accept="image/*" onChange={handleImgChange} />
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImgChange}
+          />
           <label>PDF de colores</label>
-          <input name="pdf_colores" placeholder="nombre_archivo.pdf" onChange={handleChange} />
-          <input type="number" name="stock" placeholder="Stock" onChange={handleChange} />
+          <input
+            name="pdf_colores"
+            placeholder="nombre.pdf"
+            onChange={handleChange}
+          />
+          <input
+            type="number"
+            name="stock"
+            placeholder="Stock"
+            onChange={handleChange}
+            min="0"
+          />
           <div className="modal-actions">
             <button type="submit">Guardar</button>
-            <button type="button" onClick={onClose}>Cancelar</button>
+            <button type="button" onClick={onClose}>
+              Cancelar
+            </button>
           </div>
         </form>
       </div>

@@ -13,6 +13,8 @@ import Login from "../pages/Login/Login";
 import AdminPanel from "../pages/AdminPanel/AdminPanel";
 import Contacto from "../pages/Contacto/Contacto";
 import Catalogo from "../pages/Catalogo/Catalogo";
+import Producto from "../pages/Catalogo/Productos/Producto";
+
 // dentro de tus <Routes>
 
 export default function AnimatedRoutes() {
@@ -29,8 +31,9 @@ export default function AnimatedRoutes() {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/catalogo" element={<Catalogo />} />
         {/* <Route path="/catalogo" element={<Catalogo />} /> */}
- <Route path="/producto" element={<ProductoDetalle />} />
+        <Route path="/producto" element={<ProductoDetalle />} />
         <Route path="/contacto" element={<Contacto />} />
+        <Route path="/productos/:slug" element={<Producto />} />
       </Routes>
     </AnimatePresence>
   );

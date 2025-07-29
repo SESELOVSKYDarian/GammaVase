@@ -1,0 +1,169 @@
+.producto-container {
+  padding: 2rem;
+}
+
+/* NUEVO: grid de 2 columnas, imagen fija a la izquierda */
+.producto-grid {
+  display: grid;
+  grid-template-columns: 450px 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* breadcrumb ocupa ambas columnas pero empieza alineado a la imagen */
+.breadcrumb {
+  grid-column: 1 / 2;
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.producto {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.producto-imagen img {
+  width: 450px;
+  border-radius: 1rem;
+}
+
+.producto-info {
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.producto-info h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.precio {
+  color: #0a8a1f;
+  font-size: 1.8rem;
+}
+
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  justify-content: space-between !important;
+}
+
+.contador {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #e6e6e6;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.2rem;
+}
+
+.contador button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.btn-comprar {
+  background-color: black;
+  color: white;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+/* MINIATURAS alineadas a imagen */
+.miniaturas {
+  grid-column: 1 / 2;
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: left;
+  flex-wrap: wrap;
+}
+
+.miniatura-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: border 0.2s ease, opacity 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.miniatura-img:hover {
+  opacity: 1;
+}
+
+.miniatura-img.activa {
+  border: 2px solid gray;
+  opacity: 1;
+}
+
+/* RELACIONADOS TÍTULO alineado con imagen */
+.relacionados-titulo {
+  grid-column: 1 / 2;
+  font-size: 1.6rem;
+  margin-top: 3rem;
+  font-weight: bold;
+  text-align: left;
+}
+
+.relacionados-grid {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+.relacionado-card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 160px;
+  text-align: center;
+}
+
+.relacionado-card img {
+  width: 100%;
+  border-radius: 0.5rem;
+}
+
+.contador-mini {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #e6e6e6;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.btn-mini {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}

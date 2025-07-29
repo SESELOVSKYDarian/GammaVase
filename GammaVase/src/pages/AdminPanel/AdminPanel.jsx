@@ -6,76 +6,83 @@ import FamiliaForm from "../../components/Admin/FamiliaForm";
 import ProductoForm from "../../components/Admin/ProductoForm";
 import "./AdminPanel.css";
 
-
 const AdminPanel = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [showForm, setShowForm] = useState(false); // Nuevo estado para mostrar el modal
-const [familias, setFamilias] = useState([]);
-const [showFamiliaForm, setShowFamiliaForm] = useState(false);
-const [productos, setProductos] = useState([]);
-const [showProductoForm, setShowProductoForm] = useState(false);
+  const [familias, setFamilias] = useState([]);
+  const [showFamiliaForm, setShowFamiliaForm] = useState(false);
+  const [productos, setProductos] = useState([]);
+  const [showProductoForm, setShowProductoForm] = useState(false);
   useEffect(() => {
     fetch("http://localhost:3000/api/familias")
-  .then((res) => res.json())
-  .then((data) => setFamilias(data))
-  .catch((err) => console.error("Error al cargar familias", err));
+      .then((res) => res.json())
+      .then((data) => setFamilias(data))
+      .catch((err) => console.error("Error al cargar familias", err));
 
     fetch("http://localhost:3000/api/usuarios")
       .then((res) => res.json())
       .then((data) => setUsuarios(data))
       .catch((err) => console.error("Error al cargar usuarios", err));
 
-
-      fetch("http://localhost:3000/api/productos")
-    .then(res => res.json())
-    .then(data => setProductos(data));
+    fetch("http://localhost:3000/api/productos")
+      .then((res) => res.json())
+      .then((data) => setProductos(data));
   }, []);
 
-  
-
   const agregarFamilia = async (nuevaFamilia) => {
-  try {
-    const res = await fetch("http://localhost:3000/api/familias", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(nuevaFamilia),
-    });
+    try {
+      const res = await fetch("http://localhost:3000/api/familias", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevaFamilia),
+      });
 
-    if (!res.ok) throw new Error("No se pudo agregar");
+      if (!res.ok) throw new Error("No se pudo agregar");
 
-    const data = await res.json();
-    setFamilias((prev) => [...prev, data]);
-  } catch (err) {
-    alert("Error al agregar familia: " + err.message);
-  }
-};
+      const data = await res.json();
+      setFamilias((prev) => [...prev, data]);
+    } catch (err) {
+      alert("Error al agregar familia: " + err.message);
+    }
+  };
 
-const eliminarFamilia = async (id) => {
-  try {
-    await fetch(`http://localhost:3000/api/familias/${id}`, {
+  const eliminarFamilia = async (id) => {
+    try {
+      await fetch(`http://localhost:3000/api/familias/${id}`, {
+        method: "DELETE",
+      });
+      setFamilias((prev) => prev.filter((f) => f.id !== id));
+    } catch (err) {
+      console.error("Error al eliminar familia", err);
+    }
+  };
+
+  const agregarProducto = async (formData) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/productos", {
+        method: "POST",
+        body: formData, // No pongas headers, el navegador lo hace automáticamente
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Error al agregar producto");
+      }
+
+      const data = await res.json();
+      setProductos((prev) => [...prev, data]);
+    } catch (err) {
+      alert("Error al agregar producto: " + err.message);
+      console.error(err);
+    }
+  };
+
+  const eliminarProducto = async (id) => {
+    await fetch(`http://localhost:3000/api/productos/${id}`, {
       method: "DELETE",
     });
-    setFamilias((prev) => prev.filter((f) => f.id !== id));
-  } catch (err) {
-    console.error("Error al eliminar familia", err);
-  }
-};
-
-const agregarProducto = async (nuevo) => {
-  const res = await fetch("http://localhost:3000/api/productos", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(nuevo),
-  });
-  const data = await res.json();
-  setProductos(prev => [...prev, data]);
-};
-
-const eliminarProducto = async (id) => {
-  await fetch(`http://localhost:3000/api/productos/${id}`, { method: "DELETE" });
-  setProductos(prev => prev.filter(p => p.id !== id));
-};
-
+    setProductos((prev) => prev.filter((p) => p.id !== id));
+  };
 
   const eliminarUsuario = async (id) => {
     try {
@@ -108,8 +115,6 @@ const eliminarProducto = async (id) => {
       console.error(err);
     }
   };
-  
-
 
   return (
     <div className="admin-panel">
@@ -121,7 +126,9 @@ const eliminarProducto = async (id) => {
       <div className="admin-section">
         <h2>
           Usuarios{" "}
-          <span className="actions" onClick={() => setShowForm(true)}>➕</span>
+          <span className="actions" onClick={() => setShowForm(true)}>
+            ➕
+          </span>
         </h2>
         <table>
           <thead>
@@ -141,7 +148,9 @@ const eliminarProducto = async (id) => {
                 <td>{usuario.contrasena}</td>
                 <td>{usuario.precios}</td>
                 <td>
-                  <button onClick={() => eliminarUsuario(usuario.id)}>🗑️</button>
+                  <button onClick={() => eliminarUsuario(usuario.id)}>
+                    🗑️
+                  </button>
                 </td>
               </tr>
             ))}
@@ -153,81 +162,90 @@ const eliminarProducto = async (id) => {
             onSave={agregarUsuario}
           />
         )}
-
       </div>
-        {/* Sección Familias */}
-<div className="admin-section">
-  <h2>
-    Familias{" "}
-    <span className="actions" onClick={() => setShowFamiliaForm(true)}>➕</span>
-  </h2>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Familia</th>
-        <th>Tipo</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {familias.map((familia) => (
-        <tr key={familia.id}>
-          <td>{familia.id}</td>
-          <td>{familia.familia}</td>
-          <td>{familia.tipo}</td>
-          <td>
-            <button onClick={() => eliminarFamilia(familia.id)}>🗑️</button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-  {showFamiliaForm && (
-    <FamiliaForm
-      onClose={() => setShowFamiliaForm(false)}
-      onSave={agregarFamilia}
-    />
-  )}
-</div>
-    <div className="admin-section">
-  <h2>
-    Productos <span className="actions" onClick={() => setShowProductoForm(true)}>➕</span>
-  </h2>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Artículo</th>
-        <th>Familia</th>
-        <th>Línea</th>
-        <th>Imágenes</th>
-        <th>PDF</th>
-        <th>Stock</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {productos.map((p) => (
-        <tr key={p.id}>
-          <td>{p.id}</td>
-          <td>{p.articulo}</td>
-          <td>{p.familia}</td>
-          <td>{p.linea}</td>
-          <td>{p.img_articulo?.join(", ")}</td>
-          <td>{p.pdf_colores}</td>
-          <td>{p.stock}</td>
-          <td>
-            <button onClick={() => eliminarProducto(p.id)}>🗑️</button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-  {showProductoForm && (
-    <ProductoForm onClose={() => setShowProductoForm(false)} onSave={agregarProducto} />
-  )}
-</div>
+      {/* Sección Familias */}
+      <div className="admin-section">
+        <h2>
+          Familias{" "}
+          <span className="actions" onClick={() => setShowFamiliaForm(true)}>
+            ➕
+          </span>
+        </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Familia</th>
+              <th>Tipo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {familias.map((familia) => (
+              <tr key={familia.id}>
+                <td>{familia.id}</td>
+                <td>{familia.familia}</td>
+                <td>{familia.tipo}</td>
+                <td>
+                  <button onClick={() => eliminarFamilia(familia.id)}>
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {showFamiliaForm && (
+          <FamiliaForm
+            onClose={() => setShowFamiliaForm(false)}
+            onSave={agregarFamilia}
+          />
+        )}
+      </div>
+      <div className="admin-section">
+        <h2>
+          Productos{" "}
+          <span className="actions" onClick={() => setShowProductoForm(true)}>
+            ➕
+          </span>
+        </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Artículo</th>
+              <th>Familia</th>
+              <th>Línea</th>
+              <th>Imágenes</th>
+              <th>PDF</th>
+              <th>Stock</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {productos.map((p) => (
+              <tr key={p.id}>
+                <td>{p.id}</td>
+                <td>{p.articulo}</td>
+                <td>{p.familia}</td>
+                <td>{p.linea}</td>
+                <td>{p.img_articulo?.join(", ")}</td>
+                <td>{p.pdf_colores}</td>
+                <td>{p.stock}</td>
+                <td>
+                  <button onClick={() => eliminarProducto(p.id)}>🗑️</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {showProductoForm && (
+          <ProductoForm
+            onClose={() => setShowProductoForm(false)}
+            onSave={agregarProducto}
+          />
+        )}
+      </div>
 
       {/* Las otras secciones como Precios e Ideas pueden seguir igual */}
     </div>
