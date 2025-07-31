@@ -14,8 +14,9 @@ const ProductoDetalle = () => {
       .then((data) => {
         const actual = data.find((p) => p.id === parseInt(id));
         setProducto(actual);
-        const relacionados = data.filter((p) =>
-          p.familia === actual.familia && p.id !== actual.id
+
+        const relacionados = data.filter(
+          (p) => p.familia === actual.familia && p.id !== actual.id
         );
         setRelacionados(relacionados);
       });
@@ -23,16 +24,28 @@ const ProductoDetalle = () => {
 
   if (!producto) return <p>Cargando producto...</p>;
 
+  const usuario = JSON.parse(localStorage.getItem("usuario"));
+  const precio =
+    usuario?.rol === "mayorista"
+      ? producto.precio_mayorista
+      : producto.precio_minorista;
+
   return (
     <div className="producto-detalle">
       <div className="info-principal">
         <div className="img-grande">
-          <img src={`/imgCata/${producto.img_articulo[0]}`} alt={producto.articulo} />
+          <img
+            src={`/imgCata/${producto.img_articulo[0]}`}
+            alt={producto.articulo}
+          />
         </div>
+
         <div className="info-texto">
           <p className="ruta">Hilos / {producto.familia}</p>
           <h2>{producto.articulo}</h2>
-          <p className="precio">${producto.precio}</p>
+
+          <p className="precio">${precio}</p>
+
           <p><b>Color</b></p>
           <p>{producto.linea}</p>
 

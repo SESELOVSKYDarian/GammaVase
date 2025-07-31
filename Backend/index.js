@@ -5,6 +5,11 @@ const pool = require('./db/db'); // o como lo estés importando
 const contactoRoute = require("./routes/contactoRoute");
 const app = express();
 const path = require('path');
+const authRoutes = require('./routes/authRoutes');
+
+
+app.use('/api', authRoutes);
+
 app.use('/imgCata', express.static(path.join(__dirname, '../GammaVase/public/imgCata')));
 
 

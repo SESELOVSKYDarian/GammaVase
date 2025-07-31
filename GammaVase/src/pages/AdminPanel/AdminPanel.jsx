@@ -131,30 +131,28 @@ const AdminPanel = () => {
           </span>
         </h2>
         <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Cliente</th>
-              <th>Contraseña</th>
-              <th>Precios</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usuarios.map((usuario) => (
-              <tr key={usuario.id}>
-                <td>{usuario.id}</td>
-                <td>{usuario.cliente}</td>
-                <td>{usuario.contrasena}</td>
-                <td>{usuario.precios}</td>
-                <td>
-                  <button onClick={() => eliminarUsuario(usuario.id)}>
-                    🗑️
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+         <thead>
+  <tr>
+    <th>ID</th>
+    <th>Cliente</th>
+    <th>Contraseña</th>
+    <th>Rol</th>
+    <th>Acciones</th>
+  </tr>
+</thead>
+<tbody>
+  {usuarios.map((usuario) => (
+    <tr key={usuario.id}>
+      <td>{usuario.id}</td>
+      <td>{usuario.cliente}</td>
+      <td>{usuario.contrasena}</td>
+      <td>{usuario.rol || "cliente"}</td>
+      <td>
+        <button onClick={() => eliminarUsuario(usuario.id)}>🗑️</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
         {showForm && (
           <UsuarioForm
