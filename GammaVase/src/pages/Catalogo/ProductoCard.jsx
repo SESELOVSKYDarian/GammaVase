@@ -6,6 +6,14 @@ import "./ProductoCard.css";
 const ProductoCard = ({ producto, onAgregarAlCarrito }) => {
   const [cantidad, setCantidad] = useState(1);
 
+  const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+  const precio = usuario
+    ? usuario.rol === "mayorista"
+      ? producto.precio_mayorista
+      : producto.precio_minorista
+    : null;
+
   const aumentar = () => setCantidad((prev) => prev + 1);
   const disminuir = () => setCantidad((prev) => (prev > 1 ? prev - 1 : 1));
 
@@ -27,9 +35,14 @@ const ProductoCard = ({ producto, onAgregarAlCarrito }) => {
 
       <div className="detalle-producto">
         <p className="titulo-producto">{producto.articulo}</p>
-        <p className="precio-producto">
-          ${producto.precio.toLocaleString("es-AR")}
-        </p>
+
+        {precio !== null ? (
+          <p className="precio-producto">
+            ${precio.toLocaleString("es-AR")}
+          </p>
+        ) : (
+          <p className="precio-producto">Iniciá sesión para ver precio</p>
+        )}
 
         <div className="acciones">
           <div className="contador">

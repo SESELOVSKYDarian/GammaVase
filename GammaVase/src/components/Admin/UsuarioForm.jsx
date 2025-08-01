@@ -6,7 +6,6 @@ const UsuarioForm = ({ onClose, onSave }) => {
     id: '',
     cliente: '',
     contrasena: '',
-    precios: '',
     rol: 'cliente', // valor por defecto
   });
 
@@ -46,15 +45,7 @@ const UsuarioForm = ({ onClose, onSave }) => {
             onChange={handleChange}
             required
           />
-          <input
-            name="precios"
-            placeholder="Precio"
-            value={formData.precios}
-            onChange={handleChange}
-            required
-          />
 
-          {/* Selector de rol */}
           <select name="rol" value={formData.rol} onChange={handleChange}>
             <option value="cliente">Cliente</option>
             <option value="mayorista">Mayorista</option>

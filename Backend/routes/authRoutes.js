@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db/db");
-const jwt = require("jsonwebtoken");
 
 router.post("/login", async (req, res) => {
-  const { id, contraseña } = req.body;
+  const { id, contrasena } = req.body;
 
   try {
     const result = await pool.query("SELECT * FROM usuarios WHERE id = $1", [id]);
@@ -14,19 +13,14 @@ router.post("/login", async (req, res) => {
 
     const usuario = result.rows[0];
 
-    if (contraseña !== usuario.contraseña)
+    if (contrasena !== usuario.contrasena)
       return res.status(401).json({ mensaje: "Contraseña incorrecta" });
 
-    const token = jwt.sign(
-      { id: usuario.id, rol: usuario.rol },
-      "secreto_super_seguro",
-      { expiresIn: "1d" }
-    );
-
-    res.json({ token, usuario });
+    // ✅ Sin token, solo devolvemos el usuario
+    res.json({ usuario });
   } catch (error) {
     console.error("Error al loguear:", error);
-    res.status(500).json({ mensaje: "Error interno" });
+    res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 });
 

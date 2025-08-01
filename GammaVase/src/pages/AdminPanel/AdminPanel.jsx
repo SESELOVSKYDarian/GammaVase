@@ -208,34 +208,39 @@ const AdminPanel = () => {
           </span>
         </h2>
         <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Artículo</th>
-              <th>Familia</th>
-              <th>Línea</th>
-              <th>Imágenes</th>
-              <th>PDF</th>
-              <th>Stock</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {productos.map((p) => (
-              <tr key={p.id}>
-                <td>{p.id}</td>
-                <td>{p.articulo}</td>
-                <td>{p.familia}</td>
-                <td>{p.linea}</td>
-                <td>{p.img_articulo?.join(", ")}</td>
-                <td>{p.pdf_colores}</td>
-                <td>{p.stock}</td>
-                <td>
-                  <button onClick={() => eliminarProducto(p.id)}>🗑️</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+        <thead>
+  <tr>
+    <th>ID</th>
+    <th>Artículo</th>
+    <th>Familia</th>
+    <th>Línea</th>
+    <th>Imágenes</th>
+    <th>PDF</th>
+    <th>Stock</th>
+    <th>Precio Minorista</th>
+    <th>Precio Mayorista</th>
+    <th>Acciones</th>
+  </tr>
+</thead>
+<tbody>
+  {productos.map((p) => (
+    <tr key={p.id}>
+      <td>{p.id}</td>
+      <td>{p.articulo}</td>
+      <td>{p.familia}</td>
+      <td>{p.linea}</td>
+      <td>{p.img_articulo?.join(", ")}</td>
+      <td>{p.pdf_colores}</td>
+      <td>{p.stock}</td>
+      <td>${p.precio_minorista}</td>
+      <td>${p.precio_mayorista}</td>
+      <td>
+        <button onClick={() => eliminarProducto(p.id)}>🗑️</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
         </table>
         {showProductoForm && (
           <ProductoForm

@@ -1,17 +1,19 @@
-// ProductoForm.jsx
+import "../Admin/UsuarioForm.css";
 import React, { useState, useEffect } from "react";
 
 const ProductoForm = ({ onClose, onSave }) => {
   const [familias, setFamilias] = useState([]);
   const [imagenes, setImagenes] = useState([]);
-  const [form, setForm] = useState({
-    articulo: "",
-    descripcion: "",
-    familia_id: "",
-    linea: "",
-    pdf_colores: "",
-    stock: 0,
-  });
+ const [form, setForm] = useState({
+  articulo: "",
+  descripcion: "",
+  familia_id: "",
+  linea: "",
+  pdf_colores: "",
+  stock: 0,
+  precio_minorista: "",
+  precio_mayorista: ""
+});
 
   useEffect(() => {
     fetch("http://localhost:3000/api/familias")
@@ -104,6 +106,23 @@ const ProductoForm = ({ onClose, onSave }) => {
             onChange={handleChange}
             min="0"
           />
+          <input
+  type="number"
+  name="precio_minorista"
+  placeholder="Precio Minorista"
+  onChange={handleChange}
+  min="0"
+  required
+/>
+
+<input
+  type="number"
+  name="precio_mayorista"
+  placeholder="Precio Mayorista"
+  onChange={handleChange}
+  min="0"
+  required
+/>
           <div className="modal-actions">
             <button type="submit">Guardar</button>
             <button type="button" onClick={onClose}>
