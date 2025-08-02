@@ -5,35 +5,42 @@ const upload = require("../middlewares/upload"); // importa multer
 
 // Agregar producto con imagen
 router.post("/", upload.array("imagenes", 5), async (req, res) => {
-  const {
+ const {
+  articulo,
+  descripcion,
+  familia_id,
+  linea,
+  pdf_colores,
+  stock,
+  url,
+  precio,
+  precio_minorista,
+  precio_mayorista
+} = req.body;
+
+
+  try {
+    const img_articulo = req.files.map((file) => `/imgCata/${file.filename}`); // ✅ corregido
+const result = await pool.query(
+  `INSERT INTO productos 
+  (articulo, descripcion, familia_id, linea, img_articulo, pdf_colores, stock, url, precio, precio_minorista, precio_mayorista)
+   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+   RETURNING *`,
+  [
     articulo,
     descripcion,
     familia_id,
     linea,
+    img_articulo,
     pdf_colores,
     stock,
-    url
-  } = req.body;
+    url,
+    precio,
+    precio_minorista,
+    precio_mayorista
+  ]
+);
 
-  try {
-    const img_articulo = req.files.map((file) => `/imgCata/${file.filename}`); // ✅ corregido
-
-    const result = await pool.query(
-      `INSERT INTO productos 
-      (articulo, descripcion, familia_id, linea, img_articulo, pdf_colores, stock, url)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-       RETURNING *`,
-      [
-        articulo,
-        descripcion,
-        familia_id,
-        linea,
-        img_articulo,
-        pdf_colores,
-        stock,
-        url
-      ]
-    );
 
     res.json(result.rows[0]);
   } catch (err) {

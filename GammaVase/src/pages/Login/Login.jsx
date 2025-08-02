@@ -23,7 +23,7 @@ export default function Login() {
     if (res.ok) {
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
       alert("Login exitoso");
-      window.location.href = "/";
+      window.location.href = "/catalogo";
     } else {
       alert(data.mensaje || "Login fallido");
     }

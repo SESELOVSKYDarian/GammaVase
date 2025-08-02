@@ -48,6 +48,9 @@ const ProductoForm = ({ onClose, onSave }) => {
     formData.append("pdf_colores", form.pdf_colores);
     formData.append("stock", form.stock);
     formData.append("url", generateSlug(form.articulo)); // 👈 Agrega el slug
+formData.append("precio", form.precio_minorista); // opcional, usa el mismo que el minorista
+formData.append("precio_minorista", form.precio_minorista);
+formData.append("precio_mayorista", form.precio_mayorista);
 
     imagenes.forEach((img) => {
       formData.append("imagenes", img);
