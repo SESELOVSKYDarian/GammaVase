@@ -14,7 +14,7 @@ import AdminPanel from "../pages/AdminPanel/AdminPanel";
 import Contacto from "../pages/Contacto/Contacto";
 import Catalogo from "../pages/Catalogo/Catalogo";
 import Producto from "../pages/Catalogo/Productos/Producto";
-
+import Carrito from "../pages/Carrito/Carrito";
 // dentro de tus <Routes>
 
 export default function AnimatedRoutes() {
@@ -34,6 +34,7 @@ export default function AnimatedRoutes() {
         <Route path="/producto" element={<ProductoDetalle />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/productos/:slug" element={<Producto />} />
+        <Route path="/carrito" element={<Carrito />} />
       </Routes>
     </AnimatePresence>
   );

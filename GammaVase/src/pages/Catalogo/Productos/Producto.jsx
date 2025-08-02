@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { CarritoContext } from "../../Carrito/CarritoContext"; // corregí si tu ruta es distinta
+import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import ProductoCard from "../ProductoCard";
@@ -11,6 +13,8 @@ const Producto = () => {
   const [cargando, setCargando] = useState(true);
   const [cantidad, setCantidad] = useState(1);
   const [relacionados, setRelacionados] = useState([]);
+const { agregarProducto } = useContext(CarritoContext);
+const usuario = JSON.parse(localStorage.getItem("usuario"));
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/productos/slug/${slug}`)
@@ -78,6 +82,21 @@ const Producto = () => {
                   <span>{cantidad}</span>
                   <button onClick={() => setCantidad((c) => c + 1)}>+</button>
                 </div>
+                      <button
+                  className="btn-comprar"
+                  onClick={() => {
+  if (usuario) {
+    agregarProducto(producto, cantidad);
+    toast.success(`${producto.articulo} agregado al carrito 🛒`);
+  } else {
+    toast.info("Iniciá sesión para agregar productos.");
+  }
+
+                  }}
+                >
+                  Añadir 🛒
+                </button>
+                
                 <button className="btn-comprar">COMPRAR</button>
               </div>
             </div>

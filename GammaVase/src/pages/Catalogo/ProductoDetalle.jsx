@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import ProductoCard from "./ProductoCard";
+import { CarritoContext } from "../Carrito/CarritoContext"; // corregí la ruta si es necesario
+import { toast } from "react-toastify";
 import "./detalles.css";
 
 const ProductoDetalle = () => {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
   const [relacionados, setRelacionados] = useState([]);
+const [cantidad, setCantidad] = useState(1);
+const { agregarProducto } = useContext(CarritoContext);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/productos")
@@ -50,7 +54,22 @@ const ProductoDetalle = () => {
           <p>{producto.linea}</p>
 
           <div className="acciones">
-            <button className="añadir">Añadir 🛒</button>
+            
+          <button
+  className="comprar"
+  onClick={() => {
+    if (usuario) {
+      agregarProducto(producto, 1);
+      toast.success(`${producto.articulo} agregado al carrito 🛒`);
+    } else {
+      toast.info("Iniciá sesión para agregar productos.");
+    }
+  }}
+>
+  Añadir 🛒
+</button>
+
+
             <button className="comprar">COMPRAR</button>
           </div>
         </div>
