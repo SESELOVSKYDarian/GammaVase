@@ -11,6 +11,39 @@ const Carrito = () => {
     (acc, item) => acc + item.precio_unitario * item.cantidad,
     0
   );
+  const finalizarCompra = () => {
+  const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+  const numeroOrden = `ORD-${new Date()
+    .toISOString()
+    .slice(0, 10)
+    .replace(/-/g, "")}-${Math.floor(Math.random() * 1000)}`;
+
+  const mensaje = `
+📝 *Pedido - ${numeroOrden}*
+👤 Cliente: ${usuario?.cliente || "Invitado"}
+📦 Productos:
+${carrito
+  .map(
+    (p) =>
+      `- ${p.articulo} x${p.cantidad} = $${(
+        p.precio_unitario * p.cantidad
+      ).toLocaleString("es-AR")}`
+  )
+  .join("\n")}
+
+💰 Total: $${carrito
+    .reduce((acc, p) => acc + p.precio_unitario * p.cantidad, 0)
+    .toLocaleString("es-AR")}
+`.trim();
+
+  const numero = "542236334301"; // ✅ ← Cambialo por el de tu empresa
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, "_blank");
+
+  vaciarCarrito();
+};
+
 
   return (
     <div className="carrito-container">
@@ -53,7 +86,10 @@ const Carrito = () => {
             <button className="carrito-vaciar" onClick={vaciarCarrito}>
               Vaciar Carrito
             </button>
-            <button className="carrito-comprar">Finalizar Compra</button>
+           <button className="carrito-comprar" onClick={() => finalizarCompra()}>
+  Finalizar Compra por WhatsApp
+</button>
+
           </div>
         </>
       )}
