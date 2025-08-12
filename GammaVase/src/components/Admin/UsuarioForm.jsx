@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './UsuarioForm.css';
 
-const UsuarioForm = ({ onClose, onSave }) => {
+const UsuarioForm = ({ onClose, onSave, initialData }) => {
   const [formData, setFormData] = useState({
     id: '',
     cliente: '',
     contrasena: '',
-    rol: 'cliente', // valor por defecto
+    rol: 'cliente',
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,7 +28,7 @@ const UsuarioForm = ({ onClose, onSave }) => {
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h2>Agregar Usuario</h2>
+        <h2>{initialData ? 'Editar Usuario' : 'Agregar Usuario'}</h2>
         <form onSubmit={handleSubmit}>
           <input
             name="id"

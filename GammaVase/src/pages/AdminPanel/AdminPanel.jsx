@@ -2,15 +2,20 @@ import React, { useState, useEffect } from "react";
 import UsuarioForm from "../../components/Admin/UsuarioForm"; // <- IMPORTANTE
 import FamiliaForm from "../../components/Admin/FamiliaForm";
 import ProductoForm from "../../components/Admin/ProductoForm";
+import ConfirmDialog from "../../components/Admin/ConfirmDialog";
 import "./AdminPanel.css";
 
 const AdminPanel = () => {
   const [usuarios, setUsuarios] = useState([]);
-  const [showForm, setShowForm] = useState(false); // Nuevo estado para mostrar el modal
+  const [showForm, setShowForm] = useState(false);
   const [familias, setFamilias] = useState([]);
   const [showFamiliaForm, setShowFamiliaForm] = useState(false);
   const [productos, setProductos] = useState([]);
   const [showProductoForm, setShowProductoForm] = useState(false);
+  const [editingUsuario, setEditingUsuario] = useState(null);
+  const [editingFamilia, setEditingFamilia] = useState(null);
+  const [editingProducto, setEditingProducto] = useState(null);
+  const [confirm, setConfirm] = useState(null);
   useEffect(() => {
     fetch("http://localhost:3000/api/familias")
       .then((res) => res.json())
@@ -27,22 +32,33 @@ const AdminPanel = () => {
       .then((data) => setProductos(data));
   }, []);
 
-  const agregarFamilia = async (nuevaFamilia) => {
+  const guardarFamilia = async (familia) => {
     try {
-      const res = await fetch("http://localhost:3000/api/familias", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevaFamilia),
-      });
-
-      if (!res.ok) throw new Error("No se pudo agregar");
-
-      const data = await res.json();
-      // El backend puede devolver un objeto o un array de familias
-      const nuevas = Array.isArray(data) ? data : [data];
-      setFamilias((prev) => [...prev, ...nuevas]);
+      if (editingFamilia) {
+        const res = await fetch(
+          `http://localhost:3000/api/familias/${editingFamilia.id}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(familia),
+          }
+        );
+        const data = await res.json();
+        setFamilias((prev) =>
+          prev.map((f) => (f.id === editingFamilia.id ? data : f))
+        );
+      } else {
+        const res = await fetch("http://localhost:3000/api/familias", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(familia),
+        });
+        const data = await res.json();
+        const nuevas = Array.isArray(data) ? data : [data];
+        setFamilias((prev) => [...prev, ...nuevas]);
+      }
     } catch (err) {
-      alert("Error al agregar familia: " + err.message);
+      alert("Error al guardar familia: " + err.message);
     }
   };
 
@@ -57,22 +73,29 @@ const AdminPanel = () => {
     }
   };
 
-  const agregarProducto = async (formData) => {
+  const guardarProducto = async (formData) => {
     try {
-      const res = await fetch("http://localhost:3000/api/productos", {
-        method: "POST",
-        body: formData, // No pongas headers, el navegador lo hace automáticamente
-      });
-
+      let url = "http://localhost:3000/api/productos";
+      let method = "POST";
+      if (editingProducto) {
+        url += `/${editingProducto.id}`;
+        method = "PUT";
+      }
+      const res = await fetch(url, { method, body: formData });
       if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.error || "Error al agregar producto");
+        throw new Error(error.error || "Error al guardar producto");
       }
-
       const data = await res.json();
-      setProductos((prev) => [...prev, data]);
+      if (editingProducto) {
+        setProductos((prev) =>
+          prev.map((p) => (p.id === editingProducto.id ? data : p))
+        );
+      } else {
+        setProductos((prev) => [...prev, data]);
+      }
     } catch (err) {
-      alert("Error al agregar producto: " + err.message);
+      alert("Error al guardar producto: " + err.message);
       console.error(err);
     }
   };
@@ -106,12 +129,18 @@ const AdminPanel = () => {
     }
   };
 
-  const agregarUsuario = async (nuevoUsuario) => {
+  const guardarUsuario = async (usuario) => {
     try {
-      const res = await fetch("http://localhost:3000/api/usuarios", {
-        method: "POST",
+      let url = "http://localhost:3000/api/usuarios";
+      let method = "POST";
+      if (editingUsuario) {
+        url += `/${editingUsuario.id}`;
+        method = "PUT";
+      }
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevoUsuario),
+        body: JSON.stringify(usuario),
       });
 
       if (!res.ok) {
@@ -120,11 +149,27 @@ const AdminPanel = () => {
       }
 
       const data = await res.json();
-      setUsuarios((prev) => [...prev, data]); // 👈 actualiza la tabla
+      if (editingUsuario) {
+        setUsuarios((prev) =>
+          prev.map((u) => (u.id === editingUsuario.id ? data : u))
+        );
+      } else {
+        setUsuarios((prev) => [...prev, data]);
+      }
     } catch (err) {
-      alert("Error al agregar usuario: " + err.message); // 👈 muestra si hay error
+      alert("Error al guardar usuario: " + err.message);
       console.error(err);
     }
+  };
+
+  const confirmDelete = (action) => {
+    setConfirm({
+      onConfirm: () => {
+        action();
+        setConfirm(null);
+      },
+      onCancel: () => setConfirm(null),
+    });
   };
 
   return (
@@ -137,7 +182,13 @@ const AdminPanel = () => {
       <div className="admin-section">
         <h2>
           Usuarios{" "}
-          <span className="actions" onClick={() => setShowForm(true)}>
+          <span
+            className="actions"
+            onClick={() => {
+              setEditingUsuario(null);
+              setShowForm(true);
+            }}
+          >
             ➕
           </span>
         </h2>
@@ -159,7 +210,17 @@ const AdminPanel = () => {
       <td>{usuario.contrasena}</td>
       <td>{usuario.rol || "cliente"}</td>
       <td>
-        <button onClick={() => eliminarUsuario(usuario.id)}>🗑️</button>
+        <button
+          onClick={() => {
+            setEditingUsuario(usuario);
+            setShowForm(true);
+          }}
+        >
+          ✏️
+        </button>
+        <button onClick={() => confirmDelete(() => eliminarUsuario(usuario.id))}>
+          🗑️
+        </button>
       </td>
     </tr>
   ))}
@@ -167,8 +228,12 @@ const AdminPanel = () => {
         </table>
         {showForm && (
           <UsuarioForm
-            onClose={() => setShowForm(false)}
-            onSave={agregarUsuario}
+            onClose={() => {
+              setShowForm(false);
+              setEditingUsuario(null);
+            }}
+            onSave={guardarUsuario}
+            initialData={editingUsuario}
           />
         )}
       </div>
@@ -176,7 +241,13 @@ const AdminPanel = () => {
       <div className="admin-section">
         <h2>
           Familias{" "}
-          <span className="actions" onClick={() => setShowFamiliaForm(true)}>
+          <span
+            className="actions"
+            onClick={() => {
+              setEditingFamilia(null);
+              setShowFamiliaForm(true);
+            }}
+          >
             ➕
           </span>
         </h2>
@@ -196,7 +267,15 @@ const AdminPanel = () => {
                 <td>{familia.gran_familia}</td>
                 <td>{familia.tipo_familia}</td>
                 <td>
-                  <button onClick={() => eliminarFamilia(familia.id)}>
+                  <button
+                    onClick={() => {
+                      setEditingFamilia(familia);
+                      setShowFamiliaForm(true);
+                    }}
+                  >
+                    ✏️
+                  </button>
+                  <button onClick={() => confirmDelete(() => eliminarFamilia(familia.id))}>
                     🗑️
                   </button>
                 </td>
@@ -206,15 +285,25 @@ const AdminPanel = () => {
         </table>
         {showFamiliaForm && (
           <FamiliaForm
-            onClose={() => setShowFamiliaForm(false)}
-            onSave={agregarFamilia}
+            onClose={() => {
+              setShowFamiliaForm(false);
+              setEditingFamilia(null);
+            }}
+            onSave={guardarFamilia}
+            initialData={editingFamilia}
           />
         )}
       </div>
       <div className="admin-section">
         <h2>
           Productos{" "}
-          <span className="actions" onClick={() => setShowProductoForm(true)}>
+          <span
+            className="actions"
+            onClick={() => {
+              setEditingProducto(null);
+              setShowProductoForm(true);
+            }}
+          >
             ➕
           </span>
         </h2>
@@ -256,7 +345,17 @@ const AdminPanel = () => {
         />
       </td>
       <td>
-        <button onClick={() => eliminarProducto(p.id)}>🗑️</button>
+        <button
+          onClick={() => {
+            setEditingProducto(p);
+            setShowProductoForm(true);
+          }}
+        >
+          ✏️
+        </button>
+        <button onClick={() => confirmDelete(() => eliminarProducto(p.id))}>
+          🗑️
+        </button>
       </td>
     </tr>
   ))}
@@ -265,13 +364,24 @@ const AdminPanel = () => {
         </table>
         {showProductoForm && (
           <ProductoForm
-            onClose={() => setShowProductoForm(false)}
-            onSave={agregarProducto}
+            onClose={() => {
+              setShowProductoForm(false);
+              setEditingProducto(null);
+            }}
+            onSave={guardarProducto}
+            initialData={editingProducto}
           />
         )}
       </div>
 
       {/* Las otras secciones como Precios e Ideas pueden seguir igual */}
+      {confirm && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this item?"
+          onConfirm={confirm.onConfirm}
+          onCancel={confirm.onCancel}
+        />
+      )}
     </div>
   );
 };

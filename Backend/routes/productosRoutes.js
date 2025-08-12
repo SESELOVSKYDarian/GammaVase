@@ -69,12 +69,18 @@ router.get("/", async (req, res) => {
     values.push(tipo_familia);
   }
   if (codigo_color) {
-    conditions.push(`productos.codigo_color = $${conditions.length + 1}`);
-    values.push(codigo_color);
+    const clean = codigo_color.replace('#', '');
+    conditions.push(`REPLACE(productos.codigo_color, '#', '') ILIKE $${conditions.length + 1}`);
+    values.push(`%${clean}%`);
   }
   if (q) {
-    conditions.push(`(productos.articulo ILIKE $${conditions.length + 1} OR productos.descripcion ILIKE $${conditions.length + 1})`);
-    values.push(`%${q}%`);
+    const palabras = q.trim().split(/\s+/);
+    palabras.forEach((palabra) => {
+      conditions.push(
+        `(productos.articulo ILIKE $${values.length + 1} OR productos.descripcion ILIKE $${values.length + 1} OR familias.gran_familia ILIKE $${values.length + 1} OR familias.tipo_familia ILIKE $${values.length + 1})`
+      );
+      values.push(`%${palabra}%`);
+    });
   }
   if (conditions.length) {
     query += ` WHERE ` + conditions.join(" AND ");
@@ -88,6 +94,100 @@ router.get("/", async (req, res) => {
   } catch (err) {
     console.error("❌ Error al obtener productos:", err);
     res.status(500).json({ error: "Error al obtener productos" });
+  }
+});
+
+// Listado de códigos de color distintos para filtros/sugerencias
+router.get("/color-codes", async (req, res) => {
+  const { gran_familia, tipo_familia, q } = req.query;
+  let query = `SELECT DISTINCT codigo_color FROM productos JOIN familias ON productos.familia_id = familias.id`;
+  const conditions = [];
+  const values = [];
+  if (gran_familia) {
+    conditions.push(`familias.gran_familia = $${conditions.length + 1}`);
+    values.push(gran_familia);
+  }
+  if (tipo_familia) {
+    conditions.push(`familias.tipo_familia = $${conditions.length + 1}`);
+    values.push(tipo_familia);
+  }
+  if (q) {
+    const clean = q.replace('#', '');
+    conditions.push(`REPLACE(productos.codigo_color, '#', '') ILIKE $${conditions.length + 1}`);
+    values.push(`%${clean}%`);
+  }
+  if (conditions.length) {
+    query += ` WHERE ` + conditions.join(" AND ");
+  }
+  try {
+    const result = await pool.query(query, values);
+    res.json(result.rows.map((r) => r.codigo_color));
+  } catch (err) {
+    console.error("❌ Error al obtener códigos de color:", err);
+    res.status(500).json({ error: "Error al obtener códigos de color" });
+  }
+});
+
+// Actualizar un producto
+router.put("/:id", upload.array("imagenes", 5), async (req, res) => {
+  const { id } = req.params;
+  const {
+    articulo,
+    descripcion,
+    familia_id,
+    linea,
+    codigo_color,
+    stock,
+    url,
+    precio,
+    precio_minorista,
+    precio_mayorista,
+    slider,
+  } = req.body;
+
+  try {
+    const img_articulo = req.files && req.files.length
+      ? req.files.map((file) => `/imgCata/${file.filename}`)
+      : null;
+    const sliderValue = slider === "true" || slider === true;
+    const baseFields = [
+      articulo,
+      descripcion,
+      familia_id,
+      linea,
+      codigo_color,
+      stock,
+      url,
+      precio,
+      precio_minorista,
+      precio_mayorista,
+      sliderValue,
+    ];
+    let query = `UPDATE productos SET articulo=$1, descripcion=$2, familia_id=$3, linea=$4, codigo_color=$5, stock=$6, url=$7, precio=$8, precio_minorista=$9, precio_mayorista=$10, slider=$11`;
+    if (img_articulo) {
+      query += `, img_articulo=$12 WHERE id=$13 RETURNING *`;
+      baseFields.push(img_articulo, id);
+    } else {
+      query += ` WHERE id=$12 RETURNING *`;
+      baseFields.push(id);
+    }
+    const result = await pool.query(query, baseFields);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("❌ Error al actualizar producto:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Eliminar un producto
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query("DELETE FROM productos WHERE id = $1", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ Error al eliminar producto:", err);
+    res.status(500).json({ error: "Error al eliminar producto" });
   }
 });
 

@@ -1,7 +1,7 @@
 import "../Admin/UsuarioForm.css";
 import React, { useState, useEffect } from "react";
 
-const ProductoForm = ({ onClose, onSave }) => {
+const ProductoForm = ({ onClose, onSave, initialData }) => {
   const [familias, setFamilias] = useState([]);
   const [imagenes, setImagenes] = useState([]);
   const [granSel, setGranSel] = useState("");
@@ -22,6 +22,23 @@ const ProductoForm = ({ onClose, onSave }) => {
       .then((res) => res.json())
       .then((data) => setFamilias(data));
   }, []);
+
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        articulo: initialData.articulo,
+        descripcion: initialData.descripcion || "",
+        familia_id: initialData.familia_id,
+        linea: initialData.linea || "",
+        codigo_color: initialData.codigo_color || "",
+        stock: initialData.stock || 0,
+        precio_minorista: initialData.precio_minorista || "",
+        precio_mayorista: initialData.precio_mayorista || "",
+        slider: initialData.slider,
+      });
+      setGranSel(initialData.gran_familia || "");
+    }
+  }, [initialData]);
 
   const generateSlug = (nombre) =>
     nombre
@@ -66,7 +83,7 @@ formData.append("precio_minorista", form.precio_minorista);
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h2>Agregar Producto</h2>
+        <h2>{initialData ? "Editar Producto" : "Agregar Producto"}</h2>
         <form onSubmit={handleSubmit}>
           <input
             name="articulo"

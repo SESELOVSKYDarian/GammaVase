@@ -52,4 +52,19 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+// Actualizar una familia existente
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { gran_familia, tipo_familia } = req.body;
+    try {
+        const result = await pool.query(
+            'UPDATE familias SET gran_familia = $1, tipo_familia = $2 WHERE id = $3 RETURNING *',
+            [gran_familia, tipo_familia, id]
+        );
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;

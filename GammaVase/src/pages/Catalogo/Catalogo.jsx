@@ -15,11 +15,15 @@ const Catalogo = () => {
   const [granFamilia, setGranFamilia] = useState("");
   const [tipoFamilia, setTipoFamilia] = useState("");
   const [codigoColor, setCodigoColor] = useState("");
+  const [colorOptions, setColorOptions] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/familias")
       .then((res) => res.json())
       .then((data) => setFamilias(data));
+    fetch("http://localhost:3000/api/productos/color-codes")
+      .then((res) => res.json())
+      .then((data) => setColorOptions(data));
   }, []);
 
   useEffect(() => {
@@ -38,6 +42,16 @@ const Catalogo = () => {
       .then((res) => res.json())
       .then((data) => setProductos(data));
   }, [granFamilia, tipoFamilia, codigoColor, busqueda]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (granFamilia) params.append("gran_familia", granFamilia);
+    if (tipoFamilia) params.append("tipo_familia", tipoFamilia);
+    if (codigoColor) params.append("q", codigoColor);
+    fetch(`http://localhost:3000/api/productos/color-codes?${params.toString()}`)
+      .then((res) => res.json())
+      .then((data) => setColorOptions(data));
+  }, [granFamilia, tipoFamilia, codigoColor]);
 
   const granFamilias = [...new Set(familias.map((f) => f.gran_familia))];
   const tiposFamilia = [
@@ -81,7 +95,13 @@ const Catalogo = () => {
             />
             <h2>Filtros</h2>
             <label>Gran familia</label>
-            <select value={granFamilia} onChange={(e) => setGranFamilia(e.target.value)}>
+            <select
+              value={granFamilia}
+              onChange={(e) => {
+                setGranFamilia(e.target.value);
+                setTipoFamilia("");
+              }}
+            >
               <option value="">Todas</option>
               {granFamilias.map((gf) => (
                 <option key={gf} value={gf}>
@@ -100,11 +120,28 @@ const Catalogo = () => {
             </select>
             <label>Código de color</label>
             <input
+              list="colores"
               type="text"
-              placeholder="#FFFFFF"
+              placeholder="FFFFFF"
               value={codigoColor}
               onChange={(e) => setCodigoColor(e.target.value)}
             />
+            <datalist id="colores">
+              {colorOptions.map((c) => (
+                <option key={c} value={c.replace('#','')} />
+              ))}
+            </datalist>
+            <button
+              type="button"
+              onClick={() => {
+                setBusqueda("");
+                setGranFamilia("");
+                setTipoFamilia("");
+                setCodigoColor("");
+              }}
+            >
+              Limpiar filtros
+            </button>
           </aside>
 
           <main className="contenido">

@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Admin/UsuarioForm.css"; // asumimos que ahí está tu CSS, si no, ponelo donde corresponda
 
-const FamiliaForm = ({ onClose, onSave }) => {
+const FamiliaForm = ({ onClose, onSave, initialData }) => {
   const [granFamilia, setGranFamilia] = useState("");
   const [tipos, setTipos] = useState([""]);
+
+  useEffect(() => {
+    if (initialData) {
+      setGranFamilia(initialData.gran_familia);
+      setTipos([initialData.tipo_familia]);
+    }
+  }, [initialData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -12,7 +19,11 @@ const FamiliaForm = ({ onClose, onSave }) => {
       return;
     }
 
-    onSave({ gran_familia: granFamilia, tipos_familia: tipos });
+    if (initialData) {
+      onSave({ gran_familia: granFamilia, tipo_familia: tipos[0] });
+    } else {
+      onSave({ gran_familia: granFamilia, tipos_familia: tipos });
+    }
     onClose();
   };
 
@@ -26,7 +37,7 @@ const FamiliaForm = ({ onClose, onSave }) => {
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h2>Agregar Familia</h2>
+        <h2>{initialData ? "Editar Familia" : "Agregar Familia"}</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -43,9 +54,11 @@ const FamiliaForm = ({ onClose, onSave }) => {
               onChange={(e) => actualizarTipo(i, e.target.value)}
             />
           ))}
-          <button type="button" onClick={agregarTipo}>
-            + Agregar tipo
-          </button>
+          {!initialData && (
+            <button type="button" onClick={agregarTipo}>
+              + Agregar tipo
+            </button>
+          )}
           <div className="modal-actions">
             <button type="submit">Guardar</button>
             <button type="button" onClick={onClose}>Cancelar</button>
