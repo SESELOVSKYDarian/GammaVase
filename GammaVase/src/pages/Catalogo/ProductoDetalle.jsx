@@ -20,7 +20,7 @@ const { agregarProducto } = useContext(CarritoContext);
         setProducto(actual);
 
         const relacionados = data.filter(
-          (p) => p.familia === actual.familia && p.id !== actual.id
+          (p) => p.gran_familia === actual.gran_familia && p.id !== actual.id
         );
         setRelacionados(relacionados);
       });
@@ -45,7 +45,7 @@ const { agregarProducto } = useContext(CarritoContext);
         </div>
 
         <div className="info-texto">
-          <p className="ruta">Hilos / {producto.familia}</p>
+          <p className="ruta">Hilos / {producto.gran_familia}</p>
           <h2>{producto.articulo}</h2>
 
           <p className="precio">${precio}</p>

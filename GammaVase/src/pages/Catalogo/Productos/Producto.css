@@ -112,6 +112,20 @@
   opacity: 1;
 }
 
+.codigo-color {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.color-box {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+
 /* RELACIONADOS TÍTULO alineado con imagen */
 .relacionados-titulo {
   grid-column: 1 / 2;

@@ -9,7 +9,7 @@ const ProductoForm = ({ onClose, onSave }) => {
   descripcion: "",
   familia_id: "",
   linea: "",
-  pdf_colores: "",
+  codigo_color: "",
   stock: 0,
   precio_minorista: "",
   precio_mayorista: "",
@@ -46,7 +46,7 @@ const ProductoForm = ({ onClose, onSave }) => {
     formData.append("descripcion", form.descripcion);
     formData.append("familia_id", form.familia_id);
     formData.append("linea", form.linea);
-    formData.append("pdf_colores", form.pdf_colores);
+    formData.append("codigo_color", form.codigo_color);
     formData.append("stock", form.stock);
     formData.append("url", generateSlug(form.articulo)); // 👈 Agrega el slug
 formData.append("precio", form.precio_minorista); // opcional, usa el mismo que el minorista
@@ -77,7 +77,7 @@ formData.append("precio_minorista", form.precio_minorista);
             <option value="">Seleccione Familia</option>
             {familias.map((f) => (
               <option key={f.id} value={f.id}>
-                {f.familia}
+                {f.gran_familia}
               </option>
             ))}
           </select>
@@ -98,10 +98,10 @@ formData.append("precio_minorista", form.precio_minorista);
             accept="image/*"
             onChange={handleImgChange}
           />
-          <label>PDF de colores</label>
+          <label>Código de color</label>
           <input
-            name="pdf_colores"
-            placeholder="nombre.pdf"
+            name="codigo_color"
+            placeholder="#FFFFFF"
             onChange={handleChange}
           />
           <input

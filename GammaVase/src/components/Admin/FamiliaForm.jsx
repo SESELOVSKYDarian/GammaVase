@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import "../Admin/UsuarioForm.css"; // asumimos que ahí está tu CSS, si no, ponelo donde corresponda
 
 const FamiliaForm = ({ onClose, onSave }) => {
-  const [familia, setFamilia] = useState("");
-  const [tipo, setTipo] = useState("");
+  const [granFamilia, setGranFamilia] = useState("");
+  const [tipoFamilia, setTipoFamilia] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!familia || !tipo) {
+    if (!granFamilia || !tipoFamilia) {
       alert("Todos los campos son obligatorios.");
       return;
     }
 
-    onSave({ familia, tipo });
+    onSave({ gran_familia: granFamilia, tipo_familia: tipoFamilia });
     onClose();
   };
 
@@ -23,15 +23,15 @@ const FamiliaForm = ({ onClose, onSave }) => {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Familia"
-            value={familia}
-            onChange={(e) => setFamilia(e.target.value)}
+            placeholder="Gran familia"
+            value={granFamilia}
+            onChange={(e) => setGranFamilia(e.target.value)}
           />
           <input
             type="text"
-            placeholder="Tipo"
-            value={tipo}
-            onChange={(e) => setTipo(e.target.value)}
+            placeholder="Tipo familia"
+            value={tipoFamilia}
+            onChange={(e) => setTipoFamilia(e.target.value)}
           />
           <div className="modal-actions">
             <button type="submit">Guardar</button>

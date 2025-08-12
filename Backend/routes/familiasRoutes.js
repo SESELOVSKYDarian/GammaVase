@@ -14,11 +14,11 @@ router.get('/', async (_, res) => {
 
 // Crear una nueva familia
 router.post('/', async (req, res) => {
-    const { familia, tipo } = req.body;
+    const { gran_familia, tipo_familia } = req.body;
     try {
         const result = await pool.query(
-            'INSERT INTO familias (familia, tipo) VALUES ($1, $2) RETURNING *',
-            [familia, tipo]
+            'INSERT INTO familias (gran_familia, tipo_familia) VALUES ($1, $2) RETURNING *',
+            [gran_familia, tipo_familia]
         );
         res.json(result.rows[0]);
     } catch (err) {

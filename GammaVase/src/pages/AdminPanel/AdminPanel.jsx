@@ -184,8 +184,8 @@ const AdminPanel = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Familia</th>
-              <th>Tipo</th>
+              <th>Gran Familia</th>
+              <th>Tipo Familia</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -193,8 +193,8 @@ const AdminPanel = () => {
             {familias.map((familia) => (
               <tr key={familia.id}>
                 <td>{familia.id}</td>
-                <td>{familia.familia}</td>
-                <td>{familia.tipo}</td>
+                <td>{familia.gran_familia}</td>
+                <td>{familia.tipo_familia}</td>
                 <td>
                   <button onClick={() => eliminarFamilia(familia.id)}>
                     🗑️
@@ -226,7 +226,7 @@ const AdminPanel = () => {
     <th>Familia</th>
     <th>Línea</th>
     <th>Imágenes</th>
-    <th>PDF</th>
+    <th>Código color</th>
     <th>Stock</th>
     <th>Precio Minorista</th>
     <th>Precio Mayorista</th>
@@ -239,10 +239,10 @@ const AdminPanel = () => {
     <tr key={p.id}>
       <td>{p.id}</td>
       <td>{p.articulo}</td>
-      <td>{p.familia}</td>
+      <td>{p.gran_familia}</td>
       <td>{p.linea}</td>
       <td>{p.img_articulo?.join(", ")}</td>
-      <td>{p.pdf_colores}</td>
+      <td>{p.codigo_color}</td>
       <td>{p.stock}</td>
       <td>${p.precio_minorista}</td>
       <td>${p.precio_mayorista}</td>
