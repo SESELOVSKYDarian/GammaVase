@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import FeaturedSlider from "../../components/Slider/FeaturedSlider";
 
 export default function Home() {
   return (
@@ -9,11 +10,7 @@ export default function Home() {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
     >
-      <h1>Gamma</h1>
-      <p>
-        Explora nuestro catálogo de productos y encuentra la inspiración que
-        necesitas.
-      </p>
+      <FeaturedSlider />
     </motion.div>
   );
 }

@@ -84,6 +84,17 @@ const AdminPanel = () => {
     setProductos((prev) => prev.filter((p) => p.id !== id));
   };
 
+  const toggleSlider = async (id, current) => {
+    await fetch(`http://localhost:3000/api/productos/${id}/slider`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slider: !current }),
+    });
+    setProductos((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, slider: !current } : p))
+    );
+  };
+
   const eliminarUsuario = async (id) => {
     try {
       await fetch(`http://localhost:3000/api/usuarios/${id}`, {
@@ -219,6 +230,7 @@ const AdminPanel = () => {
     <th>Stock</th>
     <th>Precio Minorista</th>
     <th>Precio Mayorista</th>
+    <th>Slider</th>
     <th>Acciones</th>
   </tr>
 </thead>
@@ -234,6 +246,13 @@ const AdminPanel = () => {
       <td>{p.stock}</td>
       <td>${p.precio_minorista}</td>
       <td>${p.precio_mayorista}</td>
+      <td>
+        <input
+          type="checkbox"
+          checked={p.slider}
+          onChange={() => toggleSlider(p.id, p.slider)}
+        />
+      </td>
       <td>
         <button onClick={() => eliminarProducto(p.id)}>🗑️</button>
       </td>

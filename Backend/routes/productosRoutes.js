@@ -15,16 +15,18 @@ router.post("/", upload.array("imagenes", 5), async (req, res) => {
   url,
   precio,
   precio_minorista,
-  precio_mayorista
+  precio_mayorista,
+  slider
 } = req.body;
 
 
   try {
-    const img_articulo = req.files.map((file) => `/imgCata/${file.filename}`); // ✅ corregido
+    const img_articulo = req.files.map((file) => `/imgCata/${file.filename}`);
+    const sliderValue = slider === "true" || slider === true;
 const result = await pool.query(
-  `INSERT INTO productos 
-  (articulo, descripcion, familia_id, linea, img_articulo, pdf_colores, stock, url, precio, precio_minorista, precio_mayorista)
-   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  `INSERT INTO productos
+  (articulo, descripcion, familia_id, linea, img_articulo, pdf_colores, stock, url, precio, precio_minorista, precio_mayorista, slider)
+   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
    RETURNING *`,
   [
     articulo,
@@ -37,7 +39,8 @@ const result = await pool.query(
     url,
     precio,
     precio_minorista,
-    precio_mayorista
+    precio_mayorista,
+    sliderValue
   ]
 );
 
@@ -46,6 +49,21 @@ const result = await pool.query(
   } catch (err) {
     console.error("❌ Error al guardar producto:", err);
     res.status(500).json({ error: err.message });
+  }
+});
+
+// Obtener todos los productos con su familia
+router.get("/", async (_req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT productos.*, familias.familia, familias.tipo
+       FROM productos
+       JOIN familias ON productos.familia_id = familias.id`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("❌ Error al obtener productos:", err);
+    res.status(500).json({ error: "Error al obtener productos" });
   }
 });
 
@@ -91,6 +109,38 @@ router.get("/familia/:familia_id", async (req, res) => {
   } catch (err) {
     console.error("❌ Error al obtener productos por familia:", err);
     res.status(500).json({ error: "Error al obtener productos relacionados" });
+  }
+});
+
+// Productos marcados para el slider principal
+router.get("/slider", async (_req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT productos.*, familias.familia, familias.tipo
+       FROM productos
+       JOIN familias ON productos.familia_id = familias.id
+       WHERE productos.slider = true`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("❌ Error al obtener productos del slider:", err);
+    res.status(500).json({ error: "Error al obtener productos del slider" });
+  }
+});
+
+// Actualizar bandera slider de un producto
+router.patch("/:id/slider", async (req, res) => {
+  const { id } = req.params;
+  const { slider } = req.body;
+  try {
+    const result = await pool.query(
+      "UPDATE productos SET slider = $1 WHERE id = $2 RETURNING *",
+      [slider, id]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("❌ Error al actualizar slider:", err);
+    res.status(500).json({ error: "Error al actualizar slider" });
   }
 });
 

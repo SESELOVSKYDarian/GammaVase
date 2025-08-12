@@ -12,7 +12,8 @@ const ProductoForm = ({ onClose, onSave }) => {
   pdf_colores: "",
   stock: 0,
   precio_minorista: "",
-  precio_mayorista: ""
+  precio_mayorista: "",
+  slider: false
 });
 
   useEffect(() => {
@@ -28,8 +29,8 @@ const ProductoForm = ({ onClose, onSave }) => {
       .replace(/[^\w\-]+/g, "");
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
   const handleImgChange = (e) => {
@@ -50,7 +51,8 @@ const ProductoForm = ({ onClose, onSave }) => {
     formData.append("url", generateSlug(form.articulo)); // 👈 Agrega el slug
 formData.append("precio", form.precio_minorista); // opcional, usa el mismo que el minorista
 formData.append("precio_minorista", form.precio_minorista);
-formData.append("precio_mayorista", form.precio_mayorista);
+    formData.append("precio_mayorista", form.precio_mayorista);
+    formData.append("slider", form.slider);
 
     imagenes.forEach((img) => {
       formData.append("imagenes", img);
@@ -109,6 +111,15 @@ formData.append("precio_mayorista", form.precio_mayorista);
             onChange={handleChange}
             min="0"
           />
+          <label className="slider-check">
+            <input
+              type="checkbox"
+              name="slider"
+              checked={form.slider}
+              onChange={handleChange}
+            />
+            Mostrar en slider principal
+          </label>
           <input
   type="number"
   name="precio_minorista"
