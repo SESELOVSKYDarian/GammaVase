@@ -42,6 +42,42 @@
   vertical-align: middle;
 }
 
+.cart-icon {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.8rem;
+  background: #e60000;
+  color: #fff;
+  border-radius: 50%;
+  padding: 0 0.4rem;
+  font-size: 0.7rem;
+}
+
+.user-menu-wrapper {
+  position: relative;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  z-index: 1002;
+}
+
+.user-dropdown button,
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "Montaga", serif;
+}
+
 /* Oculta el icono en escritorio */
 .menu-icon {
   display: none;

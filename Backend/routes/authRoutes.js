@@ -1,6 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/db');
+const nodemailer = require('nodemailer');
+
+let adminCode = null;
+let adminCodeExp = null;
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 router.post('/login', async (req, res) => {
   const { id, contrasena } = req.body;
@@ -24,6 +36,40 @@ router.post('/login', async (req, res) => {
     console.error('Error al loguear:', error);
     res.status(500).json({ mensaje: 'Error interno del servidor' });
   }
+});
+
+router.post('/admin/login', async (req, res) => {
+  const { admin, contrasena } = req.body;
+  if (
+    admin !== process.env.ADMIN_USER ||
+    contrasena !== process.env.ADMIN_PASS
+  ) {
+    return res.status(401).json({ mensaje: 'Credenciales inválidas' });
+  }
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  adminCode = code;
+  adminCodeExp = Date.now() + 5 * 60 * 1000;
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: process.env.ADMIN_EMAIL,
+      subject: 'Código de verificación',
+      text: `Tu código de verificación es: ${code}`,
+    });
+    res.json({ mensaje: 'Código enviado' });
+  } catch (err) {
+    res.status(500).json({ mensaje: err.message });
+  }
+});
+
+router.post('/admin/verify', (req, res) => {
+  const { code } = req.body;
+  if (code === adminCode && adminCodeExp && Date.now() < adminCodeExp) {
+    adminCode = null;
+    adminCodeExp = null;
+    return res.json({ success: true });
+  }
+  res.status(401).json({ mensaje: 'Código incorrecto' });
 });
 
 module.exports = router;

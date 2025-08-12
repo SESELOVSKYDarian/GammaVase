@@ -21,6 +21,9 @@ const AdminPanel = () => {
   const [editingPrecio, setEditingPrecio] = useState(null);
   const [confirm, setConfirm] = useState(null);
   useEffect(() => {
+    if (!localStorage.getItem('adminAuthed')) {
+      window.location.href = '/admin';
+    }
     fetch("http://localhost:3000/api/familias")
       .then((res) => res.json())
       .then((data) => setFamilias(data))
@@ -155,6 +158,19 @@ const AdminPanel = () => {
     }
   };
 
+  const eliminarPrecio = async (listaId) => {
+    try {
+      await fetch(`http://localhost:3000/api/precios/${listaId}`, {
+        method: 'DELETE',
+      });
+      setPrecios((prev) =>
+        prev.filter((p) => p.lista_de_precio_id !== listaId)
+      );
+    } catch (err) {
+      console.error('Error al eliminar lista de precios', err);
+    }
+  };
+
   const eliminarUsuario = async (id) => {
     try {
       await fetch(`http://localhost:3000/api/usuarios/${id}`, {
@@ -199,8 +215,16 @@ const AdminPanel = () => {
     }
   };
 
-  const confirmDelete = (action) => {
+  const confirmDelete = (
+    action,
+    message = 'Are you sure you want to delete this item?',
+    confirmLabel = 'Yes',
+    cancelLabel = 'No'
+  ) => {
     setConfirm({
+      message,
+      confirmLabel,
+      cancelLabel,
       onConfirm: () => {
         action();
         setConfirm(null);
@@ -449,6 +473,18 @@ const AdminPanel = () => {
                   >
                     ✏️
                   </button>
+                  <button
+                    onClick={() =>
+                      confirmDelete(
+                        () => eliminarPrecio(p.lista_de_precio_id),
+                        '¿Está seguro de borrar esta lista de precios?',
+                        'Sí',
+                        'No'
+                      )
+                    }
+                  >
+                    🗑️
+                  </button>
                 </td>
               </tr>
             ))}
@@ -469,9 +505,11 @@ const AdminPanel = () => {
       {/* Las otras secciones como Ideas pueden seguir igual */}
       {confirm && (
         <ConfirmDialog
-          message="Are you sure you want to delete this item?"
+          message={confirm.message}
           onConfirm={confirm.onConfirm}
           onCancel={confirm.onCancel}
+          confirmLabel={confirm.confirmLabel}
+          cancelLabel={confirm.cancelLabel}
         />
       )}
     </div>

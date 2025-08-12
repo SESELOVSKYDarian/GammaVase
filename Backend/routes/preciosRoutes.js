@@ -41,4 +41,15 @@ router.put('/:listaId', async (req, res) => {
   }
 });
 
+// Eliminar una lista de precios
+router.delete('/:listaId', async (req, res) => {
+  const { listaId } = req.params;
+  try {
+    await pool.query('DELETE FROM precios WHERE lista_de_precio_id=$1', [listaId]);
+    res.sendStatus(204);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
