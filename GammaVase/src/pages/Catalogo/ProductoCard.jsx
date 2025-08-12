@@ -13,11 +13,14 @@ const ProductoCard = ({ producto }) => {
 
   const usuario = JSON.parse(localStorage.getItem("usuario"));
 
-  const precio = usuario
+  const porcentaje = usuario?.porcentaje_a_agregar || 0;
+  const base = usuario
     ? usuario.rol === "mayorista"
       ? producto.precio_mayorista
       : producto.precio_minorista
     : null;
+  const precio =
+    base !== null ? base * (1 + parseFloat(porcentaje) / 100) : null;
 
   const aumentar = () => setCantidad((prev) => prev + 1);
   const disminuir = () => setCantidad((prev) => (prev > 1 ? prev - 1 : 1));

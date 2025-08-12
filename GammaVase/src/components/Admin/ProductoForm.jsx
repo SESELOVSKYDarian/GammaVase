@@ -89,6 +89,7 @@ formData.append("precio_minorista", form.precio_minorista);
             name="articulo"
             placeholder="Artículo"
             onChange={handleChange}
+            value={form.articulo}
             required
           />
           <select
@@ -125,11 +126,13 @@ formData.append("precio_minorista", form.precio_minorista);
             name="descripcion"
             placeholder="Descripción"
             onChange={handleChange}
+            value={form.descripcion}
           />
           <input
             name="linea"
             placeholder="Línea o marca"
             onChange={handleChange}
+            value={form.linea}
           />
           <label>Imágenes (máx 5)</label>
           <input
@@ -143,12 +146,14 @@ formData.append("precio_minorista", form.precio_minorista);
             name="codigo_color"
             placeholder="#FFFFFF"
             onChange={handleChange}
+            value={form.codigo_color}
           />
           <input
             type="number"
             name="stock"
             placeholder="Stock"
             onChange={handleChange}
+            value={form.stock}
             min="0"
           />
           <label className="slider-check">
@@ -160,11 +165,12 @@ formData.append("precio_minorista", form.precio_minorista);
             />
             Mostrar en slider principal
           </label>
-          <input
+<input
   type="number"
   name="precio_minorista"
   placeholder="Precio Minorista"
   onChange={handleChange}
+  value={form.precio_minorista}
   min="0"
   required
 />
@@ -174,6 +180,7 @@ formData.append("precio_minorista", form.precio_minorista);
   name="precio_mayorista"
   placeholder="Precio Mayorista"
   onChange={handleChange}
+  value={form.precio_mayorista}
   min="0"
   required
 />

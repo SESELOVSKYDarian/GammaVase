@@ -3,6 +3,7 @@ import UsuarioForm from "../../components/Admin/UsuarioForm"; // <- IMPORTANTE
 import FamiliaForm from "../../components/Admin/FamiliaForm";
 import ProductoForm from "../../components/Admin/ProductoForm";
 import ConfirmDialog from "../../components/Admin/ConfirmDialog";
+import PrecioForm from "../../components/Admin/PrecioForm";
 import "./AdminPanel.css";
 
 const AdminPanel = () => {
@@ -12,9 +13,12 @@ const AdminPanel = () => {
   const [showFamiliaForm, setShowFamiliaForm] = useState(false);
   const [productos, setProductos] = useState([]);
   const [showProductoForm, setShowProductoForm] = useState(false);
+  const [precios, setPrecios] = useState([]);
+  const [showPrecioForm, setShowPrecioForm] = useState(false);
   const [editingUsuario, setEditingUsuario] = useState(null);
   const [editingFamilia, setEditingFamilia] = useState(null);
   const [editingProducto, setEditingProducto] = useState(null);
+  const [editingPrecio, setEditingPrecio] = useState(null);
   const [confirm, setConfirm] = useState(null);
   useEffect(() => {
     fetch("http://localhost:3000/api/familias")
@@ -30,6 +34,10 @@ const AdminPanel = () => {
     fetch("http://localhost:3000/api/productos")
       .then((res) => res.json())
       .then((data) => setProductos(data));
+
+    fetch('http://localhost:3000/api/precios')
+      .then((res) => res.json())
+      .then((data) => setPrecios(data));
   }, []);
 
   const guardarFamilia = async (familia) => {
@@ -118,6 +126,24 @@ const AdminPanel = () => {
     );
   };
 
+  const guardarPrecio = async (precio) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/precios/${precio.lista_de_precio_id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(precio),
+      });
+      const data = await res.json();
+      setPrecios((prev) =>
+        prev.map((p) =>
+          p.lista_de_precio_id === precio.lista_de_precio_id ? data : p
+        )
+      );
+    } catch (err) {
+      alert('Error al guardar precio: ' + err.message);
+    }
+  };
+
   const eliminarUsuario = async (id) => {
     try {
       await fetch(`http://localhost:3000/api/usuarios/${id}`, {
@@ -199,6 +225,7 @@ const AdminPanel = () => {
     <th>Cliente</th>
     <th>Contraseña</th>
     <th>Rol</th>
+    <th>Lista</th>
     <th>Acciones</th>
   </tr>
 </thead>
@@ -209,6 +236,7 @@ const AdminPanel = () => {
       <td>{usuario.cliente}</td>
       <td>{usuario.contrasena}</td>
       <td>{usuario.rol || "cliente"}</td>
+      <td>{usuario.lista_de_precio || ''}</td>
       <td>
         <button
           onClick={() => {
@@ -373,8 +401,50 @@ const AdminPanel = () => {
           />
         )}
       </div>
+      <div className="admin-section">
+        <h2>Listas de precios</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Lista</th>
+              <th>Porcentaje</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {precios.map((p) => (
+              <tr key={p.id}>
+                <td>{p.id}</td>
+                <td>{p.lista_de_precio_id}</td>
+                <td>{p.porcentaje_a_agregar}</td>
+                <td>
+                  <button
+                    onClick={() => {
+                      setEditingPrecio(p);
+                      setShowPrecioForm(true);
+                    }}
+                  >
+                    ✏️
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {showPrecioForm && editingPrecio && (
+          <PrecioForm
+            onClose={() => {
+              setShowPrecioForm(false);
+              setEditingPrecio(null);
+            }}
+            onSave={guardarPrecio}
+            initialData={editingPrecio}
+          />
+        )}
+      </div>
 
-      {/* Las otras secciones como Precios e Ideas pueden seguir igual */}
+      {/* Las otras secciones como Ideas pueden seguir igual */}
       {confirm && (
         <ConfirmDialog
           message="Are you sure you want to delete this item?"

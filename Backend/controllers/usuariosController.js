@@ -12,13 +12,13 @@ exports.getUsuarios = async (req, res) => {
 
 // Crear usuario
 exports.createUsuario = async (req, res) => {
-  const { id, cliente, contrasena, rol } = req.body;
-  console.log("Datos recibidos:", { id, cliente, contrasena, rol });
+  const { id, cliente, contrasena, rol, lista_de_precio } = req.body;
+  console.log("Datos recibidos:", { id, cliente, contrasena, rol, lista_de_precio });
 
   try {
     const result = await pool.query(
-      'INSERT INTO usuarios (id, cliente, contrasena, rol) VALUES ($1, $2, $3, $4) RETURNING *',
-      [id, cliente, contrasena, rol]
+      'INSERT INTO usuarios (id, cliente, contrasena, rol, lista_de_precio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [id, cliente, contrasena, rol, lista_de_precio]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -30,12 +30,12 @@ exports.createUsuario = async (req, res) => {
 // Actualizar usuario
 exports.updateUsuario = async (req, res) => {
   const { id } = req.params;
-  const { cliente, contrasena, rol } = req.body;
+  const { cliente, contrasena, rol, lista_de_precio } = req.body;
 
   try {
     const result = await pool.query(
-      'UPDATE usuarios SET cliente=$1, contrasena=$2, rol=$3 WHERE id=$4 RETURNING *',
-      [cliente, contrasena, rol, id]
+      'UPDATE usuarios SET cliente=$1, contrasena=$2, rol=$3, lista_de_precio=$4 WHERE id=$5 RETURNING *',
+      [cliente, contrasena, rol, lista_de_precio, id]
     );
     res.json(result.rows[0]);
   } catch (err) {

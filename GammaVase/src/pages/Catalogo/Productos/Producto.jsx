@@ -65,9 +65,21 @@ const usuario = JSON.parse(localStorage.getItem("usuario"));
 
             <div className="producto-info">
               <h1>{producto.articulo}</h1>
-              <p className="precio">
-                ${parseFloat(producto.precio).toLocaleString("es-AR")}
-              </p>
+              {(() => {
+                const porcentaje = usuario?.porcentaje_a_agregar || 0;
+                const base = usuario
+                  ? usuario.rol === "mayorista"
+                    ? producto.precio_mayorista
+                    : producto.precio_minorista
+                  : null;
+                const precio =
+                  base !== null ? base * (1 + parseFloat(porcentaje) / 100) : null;
+                return precio !== null ? (
+                  <p className="precio">${precio.toLocaleString("es-AR")}</p>
+                ) : (
+                  <p className="precio">Iniciá sesión para ver precio</p>
+                );
+              })()}
               {producto.codigo_color && (
                 <p className="codigo-color">
                   <span
