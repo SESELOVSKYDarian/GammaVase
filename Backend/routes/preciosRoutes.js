@@ -12,6 +12,20 @@ router.get('/', async (_req, res) => {
   }
 });
 
+// Crear nueva lista de precios
+router.post('/', async (req, res) => {
+  const { lista_de_precio_id, porcentaje_a_agregar } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO precios (lista_de_precio_id, porcentaje_a_agregar) VALUES ($1, $2) RETURNING *',
+      [lista_de_precio_id, porcentaje_a_agregar]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Actualizar porcentaje de una lista
 router.put('/:listaId', async (req, res) => {
   const { listaId } = req.params;

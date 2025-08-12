@@ -128,17 +128,28 @@ const AdminPanel = () => {
 
   const guardarPrecio = async (precio) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/precios/${precio.lista_de_precio_id}`, {
-        method: 'PUT',
+      let url = 'http://localhost:3000/api/precios';
+      let method = 'POST';
+      if (editingPrecio) {
+        url += `/${precio.lista_de_precio_id}`;
+        method = 'PUT';
+      }
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(precio),
       });
       const data = await res.json();
-      setPrecios((prev) =>
-        prev.map((p) =>
-          p.lista_de_precio_id === precio.lista_de_precio_id ? data : p
-        )
-      );
+      if (!res.ok) throw new Error(data.error || 'Error al guardar precio');
+      if (editingPrecio) {
+        setPrecios((prev) =>
+          prev.map((p) =>
+            p.lista_de_precio_id === precio.lista_de_precio_id ? data : p
+          )
+        );
+      } else {
+        setPrecios((prev) => [...prev, data]);
+      }
     } catch (err) {
       alert('Error al guardar precio: ' + err.message);
     }
@@ -402,7 +413,18 @@ const AdminPanel = () => {
         )}
       </div>
       <div className="admin-section">
-        <h2>Listas de precios</h2>
+        <h2>
+          Listas de precios{" "}
+          <span
+            className="actions"
+            onClick={() => {
+              setEditingPrecio(null);
+              setShowPrecioForm(true);
+            }}
+          >
+            ➕
+          </span>
+        </h2>
         <table>
           <thead>
             <tr>
@@ -432,14 +454,14 @@ const AdminPanel = () => {
             ))}
           </tbody>
         </table>
-        {showPrecioForm && editingPrecio && (
+        {showPrecioForm && (
           <PrecioForm
             onClose={() => {
               setShowPrecioForm(false);
               setEditingPrecio(null);
             }}
             onSave={guardarPrecio}
-            initialData={editingPrecio}
+            initialData={editingPrecio || {}}
           />
         )}
       </div>

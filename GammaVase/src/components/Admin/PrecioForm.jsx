@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import './UsuarioForm.css';
 
-const PrecioForm = ({ onClose, onSave, initialData }) => {
+const PrecioForm = ({ onClose, onSave, initialData = {} }) => {
+  const [listaId, setListaId] = useState(initialData.lista_de_precio_id || '');
   const [porcentaje, setPorcentaje] = useState(initialData.porcentaje_a_agregar || '');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await onSave({
-      lista_de_precio_id: initialData.lista_de_precio_id,
+      lista_de_precio_id: listaId,
       porcentaje_a_agregar: porcentaje,
     });
     onClose();
@@ -16,11 +17,16 @@ const PrecioForm = ({ onClose, onSave, initialData }) => {
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h2>Editar Lista {initialData.lista_de_precio_id}</h2>
+        <h2>
+          {initialData.lista_de_precio_id ? `Editar Lista ${initialData.lista_de_precio_id}` : 'Nueva Lista'}
+        </h2>
         <form onSubmit={handleSubmit}>
           <input
-            value={initialData.lista_de_precio_id}
-            disabled
+            value={listaId}
+            onChange={(e) => setListaId(e.target.value)}
+            placeholder="ID de lista"
+            required
+            disabled={!!initialData.lista_de_precio_id}
           />
           <input
             type="number"
