@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { CarritoContext } from "../../Carrito/CarritoContext"; // corregí si tu ruta es distinta
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
+const MotionDiv = motion.div;
 import { useParams } from "react-router-dom";
 import ProductoCard from "../ProductoCard";
 import "./Producto.css";
@@ -45,7 +46,7 @@ const usuario = JSON.parse(localStorage.getItem("usuario"));
   if (!producto) return <h2>Producto no encontrado</h2>;
 
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -54,7 +55,7 @@ const usuario = JSON.parse(localStorage.getItem("usuario"));
       <div className="producto-container">
         <div className="producto-grid">
           <p className="breadcrumb">
-            {producto.familia} / {producto.tipo}
+            {producto.gran_familia} / {producto.tipo_familia}
           </p>
 
           <div className="producto">
@@ -67,9 +68,15 @@ const usuario = JSON.parse(localStorage.getItem("usuario"));
               <p className="precio">
                 ${parseFloat(producto.precio).toLocaleString("es-AR")}
               </p>
-              <p>
-                <strong>Color</strong>
-              </p>
+              {producto.codigo_color && (
+                <p className="codigo-color">
+                  <span
+                    className="color-box"
+                    style={{ backgroundColor: producto.codigo_color }}
+                  ></span>
+                  {producto.codigo_color}
+                </p>
+              )}
               <p>{producto.descripcion}</p>
 
               <div className="acciones">
@@ -131,7 +138,7 @@ const usuario = JSON.parse(localStorage.getItem("usuario"));
           )}
         </div>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 };
 

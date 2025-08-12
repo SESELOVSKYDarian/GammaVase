@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+const MotionDiv = motion.div;
 
 import Hero from "../../components/Empresa/Hero";
 import TijerasImage from "../../components/Empresa/TijerasImage";
@@ -10,7 +11,7 @@ import Objetivo from "../../components/Empresa/Objetivo";
 
 const Empresa = () => {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -22,7 +23,7 @@ const Empresa = () => {
       <Slider />
       <Importaciones />
       <Objetivo />
-    </motion.div>
+    </MotionDiv>
   );
 };
 

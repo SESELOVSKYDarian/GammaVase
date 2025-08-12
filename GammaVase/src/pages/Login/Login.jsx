@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+const MotionDiv = motion.div;
 import "./../../styles/Login/Login.css";
 
 export default function Login() {
@@ -34,7 +35,7 @@ export default function Login() {
 };
 
   return (
-    <motion.div
+    <MotionDiv
       className="login-container"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -84,6 +85,6 @@ export default function Login() {
           Iniciar Sesión
         </button>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 }

@@ -1,0 +1,140 @@
+.sliderWrapper {
+  position: relative;
+  background: #F0EDE8;
+  overflow: hidden;
+  padding: 4rem 2rem;
+}
+
+.sliderWrapper::before {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, #F328B8 0%, rgba(243,40,184,0) 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.text {
+  flex: 1;
+}
+
+.text h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.text p {
+  margin: 1rem 0;
+}
+
+.addButton {
+  background: #F328B8;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+
+.sliderArea {
+  flex: 1;
+  position: relative;
+  height: 400px;
+}
+
+.productImage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.5s ease, filter 0.5s ease, opacity 0.5s ease;
+}
+
+.productImage img {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+}
+
+.active {
+  transform: translate(-50%, -50%) scale(1);
+  filter: blur(0);
+  opacity: 1;
+  z-index: 3;
+}
+
+.next {
+  transform: translate(50%, -50%) scale(0.6);
+  filter: blur(4px);
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.prev {
+  transform: translate(-150%, -50%) scale(0.6);
+  filter: blur(4px);
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.inactive {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  z-index: 5;
+}
+
+.prevButton {
+  left: 0;
+}
+
+.nextButton {
+  right: 0;
+}
+
+.dots {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  z-index: 5;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ccc;
+  cursor: pointer;
+}
+
+.activeDot {
+  background: #F328B8;
+}

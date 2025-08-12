@@ -12,13 +12,29 @@ router.get('/', async (_, res) => {
     }
 });
 
-// Crear una nueva familia
+// Crear una o varias familias dentro de una gran familia
 router.post('/', async (req, res) => {
-    const { familia, tipo } = req.body;
+    const { gran_familia, tipo_familia, tipos_familia } = req.body;
+
     try {
+        // Si llega un array de tipos, insertar todas en una sola operación
+        if (Array.isArray(tipos_familia) && tipos_familia.length) {
+            const values = [gran_familia, ...tipos_familia];
+            const placeholders = tipos_familia
+                .map((_, i) => `($1, $${i + 2})`)
+                .join(',');
+
+            const result = await pool.query(
+                `INSERT INTO familias (gran_familia, tipo_familia) VALUES ${placeholders} RETURNING *`,
+                values
+            );
+            return res.json(result.rows);
+        }
+
+        // Inserción simple si se envía un solo tipo
         const result = await pool.query(
-            'INSERT INTO familias (familia, tipo) VALUES ($1, $2) RETURNING *',
-            [familia, tipo]
+            'INSERT INTO familias (gran_familia, tipo_familia) VALUES ($1, $2) RETURNING *',
+            [gran_familia, tipo_familia]
         );
         res.json(result.rows[0]);
     } catch (err) {

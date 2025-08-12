@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import UsuarioForm from "../../components/Admin/UsuarioForm"; // <- IMPORTANTE
 import FamiliaForm from "../../components/Admin/FamiliaForm";
 import ProductoForm from "../../components/Admin/ProductoForm";
@@ -40,7 +38,9 @@ const AdminPanel = () => {
       if (!res.ok) throw new Error("No se pudo agregar");
 
       const data = await res.json();
-      setFamilias((prev) => [...prev, data]);
+      // El backend puede devolver un objeto o un array de familias
+      const nuevas = Array.isArray(data) ? data : [data];
+      setFamilias((prev) => [...prev, ...nuevas]);
     } catch (err) {
       alert("Error al agregar familia: " + err.message);
     }
@@ -82,6 +82,17 @@ const AdminPanel = () => {
       method: "DELETE",
     });
     setProductos((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const toggleSlider = async (id, current) => {
+    await fetch(`http://localhost:3000/api/productos/${id}/slider`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slider: !current }),
+    });
+    setProductos((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, slider: !current } : p))
+    );
   };
 
   const eliminarUsuario = async (id) => {
@@ -173,8 +184,8 @@ const AdminPanel = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Familia</th>
-              <th>Tipo</th>
+              <th>Gran Familia</th>
+              <th>Tipo Familia</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -182,8 +193,8 @@ const AdminPanel = () => {
             {familias.map((familia) => (
               <tr key={familia.id}>
                 <td>{familia.id}</td>
-                <td>{familia.familia}</td>
-                <td>{familia.tipo}</td>
+                <td>{familia.gran_familia}</td>
+                <td>{familia.tipo_familia}</td>
                 <td>
                   <button onClick={() => eliminarFamilia(familia.id)}>
                     🗑️
@@ -212,13 +223,15 @@ const AdminPanel = () => {
   <tr>
     <th>ID</th>
     <th>Artículo</th>
-    <th>Familia</th>
+    <th>Gran Familia</th>
+    <th>Tipo Familia</th>
     <th>Línea</th>
     <th>Imágenes</th>
-    <th>PDF</th>
+    <th>Código color</th>
     <th>Stock</th>
     <th>Precio Minorista</th>
     <th>Precio Mayorista</th>
+    <th>Slider</th>
     <th>Acciones</th>
   </tr>
 </thead>
@@ -227,13 +240,21 @@ const AdminPanel = () => {
     <tr key={p.id}>
       <td>{p.id}</td>
       <td>{p.articulo}</td>
-      <td>{p.familia}</td>
+      <td>{p.gran_familia}</td>
+      <td>{p.tipo_familia}</td>
       <td>{p.linea}</td>
       <td>{p.img_articulo?.join(", ")}</td>
-      <td>{p.pdf_colores}</td>
+      <td>{p.codigo_color}</td>
       <td>{p.stock}</td>
       <td>${p.precio_minorista}</td>
       <td>${p.precio_mayorista}</td>
+      <td>
+        <input
+          type="checkbox"
+          checked={p.slider}
+          onChange={() => toggleSlider(p.id, p.slider)}
+        />
+      </td>
       <td>
         <button onClick={() => eliminarProducto(p.id)}>🗑️</button>
       </td>

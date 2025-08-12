@@ -1,80 +1,112 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 import ProductoCard from "./ProductoCard";
 import "./catalogo.css";
+
+const MotionDiv = motion.div;
 
 const Catalogo = () => {
   const [productos, setProductos] = useState([]);
   const [familias, setFamilias] = useState([]);
-  const agregarAlCarrito = (producto, cantidad) => {
-    console.log("Agregar al carrito:", producto, cantidad);
-    // aquí puedes guardar en context o localStorage
-  };
+  const [searchParams] = useSearchParams();
+
+  const [busqueda, setBusqueda] = useState("");
+  const [granFamilia, setGranFamilia] = useState("");
+  const [tipoFamilia, setTipoFamilia] = useState("");
+  const [codigoColor, setCodigoColor] = useState("");
 
   useEffect(() => {
-    // Traer productos
-    fetch("http://localhost:3000/api/productos")
-      .then((res) => res.json())
-      .then((data) => setProductos(data));
-
-    // Traer familias
     fetch("http://localhost:3000/api/familias")
       .then((res) => res.json())
       .then((data) => setFamilias(data));
   }, []);
 
-  // Luego, para agrupar y mostrar, podés hacer algo así:
+  useEffect(() => {
+    const inicial = searchParams.get("search") || "";
+    setBusqueda(inicial);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (granFamilia) params.append("gran_familia", granFamilia);
+    if (tipoFamilia) params.append("tipo_familia", tipoFamilia);
+    if (codigoColor) params.append("codigo_color", codigoColor);
+    if (busqueda) params.append("q", busqueda);
+
+    fetch(`http://localhost:3000/api/productos?${params.toString()}`)
+      .then((res) => res.json())
+      .then((data) => setProductos(data));
+  }, [granFamilia, tipoFamilia, codigoColor, busqueda]);
+
+  const granFamilias = [...new Set(familias.map((f) => f.gran_familia))];
+  const tiposFamilia = [
+    ...new Set(
+      familias
+        .filter((f) => !granFamilia || f.gran_familia === granFamilia)
+        .map((f) => f.tipo_familia)
+    ),
+  ];
 
   const productosAgrupados = productos.reduce((acc, prod) => {
-    // Buscar la familia que coincide con prod.familia_id
-    const familiaObj = familias.find((f) => f.id === prod.familia_id);
-
-    const familiaNombre = familiaObj ? familiaObj.familia : "Sin familia";
-    const tipo = familiaObj ? familiaObj.tipo : "Sin tipo";
-
-    if (!acc[familiaNombre]) {
-      acc[familiaNombre] = {
-        tipo: tipo,
-        productos: [],
-      };
+    const gf = prod.gran_familia || "Sin familia";
+    const tf = prod.tipo_familia || "Sin tipo";
+    if (!acc[gf]) {
+      acc[gf] = { tipo: tf, productos: [] };
     }
-
-    acc[familiaNombre].productos.push(prod);
+    acc[gf].productos.push(prod);
     return acc;
   }, {});
 
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
     >
       <div className="catalogo-wrapper">
-        {/* ENCABEZADO SUPERIOR */}
         <div className="catalogo-header">
           <h1 className="titulo-catalogo">Productos</h1>
           <img src="/logo2.png" alt="Logo empresa" className="logo-catalogo" />
         </div>
 
-        {/* CONTENIDO CON FILTROS Y PRODUCTOS */}
         <div className="catalogo-container">
-          {/* Filtros laterales */}
           <aside className="sidebar">
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+            />
             <h2>Filtros</h2>
-            <label>Tipo</label>
-            <select>
-              <option>Todos</option>
+            <label>Gran familia</label>
+            <select value={granFamilia} onChange={(e) => setGranFamilia(e.target.value)}>
+              <option value="">Todas</option>
+              {granFamilias.map((gf) => (
+                <option key={gf} value={gf}>
+                  {gf}
+                </option>
+              ))}
             </select>
-            <label>Medición</label>
-            <select>
-              <option>Todos</option>
+            <label>Tipo familia</label>
+            <select value={tipoFamilia} onChange={(e) => setTipoFamilia(e.target.value)}>
+              <option value="">Todos</option>
+              {tiposFamilia.map((tf) => (
+                <option key={tf} value={tf}>
+                  {tf}
+                </option>
+              ))}
             </select>
-            <label>Cantidad</label>
-            <input type="number" placeholder="Ingrese cantidad" />
+            <label>Código de color</label>
+            <input
+              type="text"
+              placeholder="#FFFFFF"
+              value={codigoColor}
+              onChange={(e) => setCodigoColor(e.target.value)}
+            />
           </aside>
 
-          {/* Contenido principal */}
           <main className="contenido">
             {Object.entries(productosAgrupados).map(([familia, datos]) => (
               <section key={familia}>
@@ -86,11 +118,7 @@ const Catalogo = () => {
                 </div>
                 <div className="productos-grid">
                   {datos.productos.map((prod) => (
-                    <ProductoCard
-                      key={prod.id}
-                      producto={prod}
-                      onAgregarAlCarrito={agregarAlCarrito}
-                    />
+                    <ProductoCard key={prod.id} producto={prod} />
                   ))}
                 </div>
               </section>
@@ -98,7 +126,7 @@ const Catalogo = () => {
           </main>
         </div>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 };
 
