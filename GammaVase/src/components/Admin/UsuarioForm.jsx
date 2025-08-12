@@ -47,8 +47,8 @@ const UsuarioForm = ({ onClose, onSave }) => {
           />
 
           <select name="rol" value={formData.rol} onChange={handleChange}>
-            <option value="cliente">Cliente</option>
-            <option value="mayorista">Mayorista</option>
+            <option value="cliente">Cliente Minorista</option>
+            <option value="mayorista">Cliente Mayorista</option>
             <option value="admin">Administrador</option>
           </select>
 
