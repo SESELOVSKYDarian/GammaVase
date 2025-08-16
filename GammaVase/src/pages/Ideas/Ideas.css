@@ -115,3 +115,12 @@
   height: 100px;
   z-index: 2;
 }
+
+.ideas-table-link {
+  display: block;
+  margin: 2rem auto 0;
+  text-align: center;
+  color: #e75ec0;
+  font-weight: bold;
+  text-decoration: none;
+}

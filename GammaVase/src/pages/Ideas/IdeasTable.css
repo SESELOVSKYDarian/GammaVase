@@ -1,0 +1,38 @@
+.idea-table {
+  padding: 2rem;
+  background-color: #f0ede8;
+}
+
+.add-category {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.add-category input {
+  flex: 1;
+  padding: 0.5rem;
+}
+
+.category {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fff;
+}
+
+.subcard-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.subcard-form input,
+.subcard-form select {
+  padding: 0.4rem;
+}
+
+.subcard-form button {
+  padding: 0.4rem 0.8rem;
+}
