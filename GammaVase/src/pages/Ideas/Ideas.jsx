@@ -14,6 +14,7 @@ const Ideas = () => {
     {
       titulo: "Decoración para el hogar",
       imagen: "/ideas/decoracionparaelhogar.jpg",
+      link: "/decoracion-hogar",
     },
     { titulo: "Amigurumis", imagen: "/ideas/amigurimus.png" },
     {
@@ -74,6 +75,10 @@ const Ideas = () => {
             );
           })}
         </div>
+
+        <Link to="/tabla-ideas" className="ideas-table-link">
+          Ver tabla de ideas
+        </Link>
       </div>
     </motion.div>
   );

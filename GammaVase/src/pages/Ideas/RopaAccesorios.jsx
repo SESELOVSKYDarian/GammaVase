@@ -4,13 +4,24 @@ import TijerasImage from "../../components/Empresa/TijerasImage";
 
 const RopaAccesorios = () => {
   const subcategorias = [
-    { titulo: 'Gorros', imagen: '/ideas/gorro.png' },
-    { titulo: 'bufandas', imagen: '/ideas/bufandas.jpg' },
-    { titulo: 'Guantes', imagen: '/ideas/guantes.jpg' },
-    { titulo: 'Chalecos', imagen: '/ideas/chalecos.jpeg' },
-    { titulo: 'Ponchos', imagen: '/ideas/ponchos.jpg' },
-    { titulo: 'Calentadores', imagen: '/ideas/calentadores.jpeg' },
+    { titulo: 'Gorros', imagen: '/ideas/gorro.png', pdf: '/pdfs/gorros.pdf' },
+    { titulo: 'bufandas', imagen: '/ideas/bufandas.jpg', video: 'https://youtu.be/bufandas' },
+    { titulo: 'Guantes', imagen: '/ideas/guantes.jpg', pdf: '/pdfs/guantes.pdf' },
+    { titulo: 'Chalecos', imagen: '/ideas/chalecos.jpeg', video: 'https://youtu.be/chalecos' },
+    { titulo: 'Ponchos', imagen: '/ideas/ponchos.jpg', pdf: '/pdfs/ponchos.pdf' },
+    { titulo: 'Calentadores', imagen: '/ideas/calentadores.jpeg', video: 'https://youtu.be/calentadores' },
   ];
+
+  const handleCardClick = (item) => {
+    if (item.pdf) {
+      const link = document.createElement('a');
+      link.href = item.pdf;
+      link.download = '';
+      link.click();
+    } else if (item.video) {
+      window.open(item.video, '_blank');
+    }
+  };
 
   return (
     <div className="ropa-page">
@@ -33,6 +44,7 @@ const RopaAccesorios = () => {
             key={index}
             className="ropa-card"
             style={{ backgroundImage: `url(${item.imagen})` }}
+            onClick={() => handleCardClick(item)}
           >
             <div className="ropa-overlay">
               <p>{item.titulo}</p>

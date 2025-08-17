@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import UsuarioForm from "../../components/Admin/UsuarioForm"; // <- IMPORTANTE
 import FamiliaForm from "../../components/Admin/FamiliaForm";
 import ProductoForm from "../../components/Admin/ProductoForm";
+import IdeasAdmin from "../../components/Admin/IdeasAdmin";
 import "./AdminPanel.css";
 
 const AdminPanel = () => {
@@ -269,6 +270,7 @@ const AdminPanel = () => {
         )}
       </div>
 
+      <IdeasAdmin />
       {/* Las otras secciones como Precios e Ideas pueden seguir igual */}
     </div>
   );
