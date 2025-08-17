@@ -14,6 +14,7 @@ const Ideas = () => {
     {
       titulo: "Decoración para el hogar",
       imagen: "/ideas/decoracionparaelhogar.jpg",
+      link: "/decoracion-hogar",
     },
     { titulo: "Amigurumis", imagen: "/ideas/amigurimus.png" },
     {

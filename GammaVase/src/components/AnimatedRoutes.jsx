@@ -9,6 +9,7 @@ import Empresa from "../pages/Empresa/Empresa";
 import ProductoDetalle from "../pages/Catalogo/ProductoDetalle";
 import Ideas from "../pages/Ideas/Ideas";
 import RopaAccesorios from "../../src/pages/Ideas/RopaAccesorios";
+import DecoracionHogar from "../../src/pages/Ideas/DecoracionHogar";
 import IdeasTable from "../pages/Ideas/IdeasTable";
 import Login from "../pages/Login/Login";
 import AdminPanel from "../pages/AdminPanel/AdminPanel";
@@ -29,6 +30,7 @@ export default function AnimatedRoutes() {
         <Route path="/ideas" element={<Ideas />} />
         <Route path="/tabla-ideas" element={<IdeasTable />} />
         <Route path="/ropa-accesorios" element={<RopaAccesorios />} />
+        <Route path="/decoracion-hogar" element={<DecoracionHogar />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/catalogo" element={<Catalogo />} />
