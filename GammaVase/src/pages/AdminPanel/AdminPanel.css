@@ -92,23 +92,9 @@ th {
   background-color: #f1f1f1;
 }
 
-
-.ideas-table tfoot td {
-  background-color: #f9f9f9;
-}
-
-.ideas-table tfoot input,
-.ideas-table tfoot select,
-.ideas-table tfoot button {
-  width: 100%;
-  padding: 0.5rem;
-  box-sizing: border-box;
-}
-
 .idea-item-row td {
   background-color: #fff;
 }
-
 
 
 /* === Estilos para modales (Usuarios, Familias, Productos, Ideas) === */
