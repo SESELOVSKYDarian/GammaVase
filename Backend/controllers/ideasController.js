@@ -48,4 +48,28 @@ const createItem = async (req, res) => {
   }
 };
 
-module.exports = { getIdeas, createCategory, createItem };
+const deleteCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Remove child items first to avoid foreign key violations
+    await pool.query('DELETE FROM idea_items WHERE category_id=$1', [id]);
+    await pool.query('DELETE FROM idea_categories WHERE id=$1', [id]);
+    res.sendStatus(204);
+  } catch (err) {
+    console.error('Error deleting category', err);
+    res.status(500).json({ error: 'Error deleting category' });
+  }
+};
+
+const deleteItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM idea_items WHERE id=$1', [id]);
+    res.sendStatus(204);
+  } catch (err) {
+    console.error('Error deleting item', err);
+    res.status(500).json({ error: 'Error deleting item' });
+  }
+};
+
+module.exports = { getIdeas, createCategory, createItem, deleteCategory, deleteItem };

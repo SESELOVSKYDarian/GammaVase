@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import UsuarioForm from "../../components/Admin/UsuarioForm"; // <- IMPORTANTE
 import FamiliaForm from "../../components/Admin/FamiliaForm";
 import ProductoForm from "../../components/Admin/ProductoForm";
@@ -152,7 +151,7 @@ const AdminPanel = () => {
     const nombre = (nombreDesdeForm ?? newCatName).trim();
     if (!nombre) return;
     try {
-      const res = await fetch("http://localhost:3000/api/ideas", {
+      const res = await fetch("http://localhost:3000/api/ideas/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: nombre }),
@@ -169,7 +168,7 @@ const AdminPanel = () => {
   const eliminarCategoria = async (id) => {
     if (!window.confirm("¿Eliminar esta categoría y sus tarjetas?")) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/ideas/${id}`, {
+      const res = await fetch(`http://localhost:3000/api/ideas/categories/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("No se pudo eliminar");
@@ -182,18 +181,16 @@ const AdminPanel = () => {
   const agregarTarjeta = async () => {
     if (!newCardCatId || !newCardTitle.trim() || !newCardUrl.trim()) return;
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/ideas/${newCardCatId}/cards`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: newCardTitle.trim(),
-            type: newCardType, // "pdf" | "video"
-            url: newCardUrl.trim(),
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/api/ideas/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          categoryId: newCardCatId,
+          title: newCardTitle.trim(),
+          type: newCardType, // "pdf" | "video"
+          url: newCardUrl.trim(),
+        }),
+      });
       if (!res.ok) throw new Error("No se pudo agregar la tarjeta");
       const nueva = await res.json();
       setIdeas((prev) =>
@@ -216,7 +213,7 @@ const AdminPanel = () => {
     if (!window.confirm("¿Eliminar esta tarjeta?")) return;
     try {
       const res = await fetch(
-        `http://localhost:3000/api/ideas/${catId}/cards/${cardId}`,
+        `http://localhost:3000/api/ideas/items/${cardId}`,
         { method: "DELETE" }
       );
       if (!res.ok) throw new Error("No se pudo eliminar la tarjeta");
@@ -422,26 +419,42 @@ function IdeaForm({ onClose, onSave }) {
           </span>
         </h2>
 
-        {/* Tabla de categorías */}
-        <table>
+        {/* Tabla de categorías y tarjetas */}
+        <table className="ideas-table">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Categoría</th>
-              <th>Subitems</th>
+              <th>Categoría / Tarjeta</th>
+              <th>Tipo</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {ideas.map((cat) => (
-              <tr key={cat.id}>
-                <td>{cat.id}</td>
-                <td>{cat.name}</td>
-                <td>{(cat.cards || []).length}</td>
-                <td>
-                  <button onClick={() => eliminarCategoria(cat.id)}>🗑️</button>
-                </td>
-              </tr>
+              <React.Fragment key={cat.id}>
+                <tr>
+                  <td>{cat.id}</td>
+                  <td>{cat.name}</td>
+                  <td>{(cat.cards || []).length} subitems</td>
+                  <td>
+                    <button onClick={() => eliminarCategoria(cat.id)}>🗑️</button>
+                  </td>
+                </tr>
+                {(cat.cards || []).map((card) => (
+                  <tr key={card.id} className="idea-item-row">
+                    <td></td>
+                    <td>
+                      <Link to={card.url} target="_blank" rel="noreferrer">
+                        {card.title}
+                      </Link>
+                    </td>
+                    <td>{card.type === "pdf" ? "PDF" : "Video"}</td>
+                    <td>
+                      <button onClick={() => eliminarTarjeta(cat.id, card.id)}>🗑️</button>
+                    </td>
+                  </tr>
+                ))}
+              </React.Fragment>
             ))}
             {ideas.length === 0 && (
               <tr>
@@ -451,87 +464,71 @@ function IdeaForm({ onClose, onSave }) {
               </tr>
             )}
           </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={2}>
+                <input
+                  placeholder="Nombre de la categoría"
+                  value={newCatName}
+                  onChange={(e) => setNewCatName(e.target.value)}
+                />
+              </td>
+              <td colSpan={2}>
+                <button onClick={agregarCategoria}>Agregar categoría</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select
+                  value={newCardCatId}
+                  onChange={(e) => setNewCardCatId(e.target.value)}
+                >
+                  <option value="">Selecciona categoría</option>
+                  {ideas.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </td>
+              <td>
+                <input
+                  placeholder="Título"
+                  value={newCardTitle}
+                  onChange={(e) => setNewCardTitle(e.target.value)}
+                />
+              </td>
+              <td>
+                <select
+                  value={newCardType}
+                  onChange={(e) => setNewCardType(e.target.value)}
+                >
+                  <option value="pdf">PDF</option>
+                  <option value="video">Video</option>
+                </select>
+              </td>
+              <td>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <input
+                    placeholder="URL (archivo o video)"
+                    value={newCardUrl}
+                    onChange={(e) => setNewCardUrl(e.target.value)}
+                    style={{ flex: 1 }}
+                  />
+                  <button
+                    onClick={agregarTarjeta}
+                    disabled={!newCardCatId || !newCardTitle || !newCardUrl}
+                  >
+                    Agregar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
         </table>
         {showIdeaForm && (
           <IdeaForm onClose={() => setShowIdeaForm(false)} onSave={({ name }) => agregarCategoria(name)} />
         )}
-
-        {/* Form inline: Agregar categoría */}
-        <div style={{ marginTop: ".5rem" }}>
-          <input
-            placeholder="Nombre de la categoría"
-            value={newCatName}
-            onChange={(e) => setNewCatName(e.target.value)}
-            style={{ marginRight: ".5rem" }}
-          />
-          <button onClick={agregarCategoria}>Agregar categoría</button>
-        </div>
-
-        {/* Form inline: Agregar tarjeta a una categoría */}
-        <div style={{ marginTop: ".5rem", display: "grid", gap: ".5rem",
-                      gridTemplateColumns: "200px 1fr 120px 1fr 150px" }}>
-          <select
-            value={newCardCatId}
-            onChange={(e) => setNewCardCatId(e.target.value)}
-          >
-            <option value="">Selecciona categoría</option>
-            {ideas.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-
-          <input
-            placeholder="Título"
-            value={newCardTitle}
-            onChange={(e) => setNewCardTitle(e.target.value)}
-          />
-
-          <select
-            value={newCardType}
-            onChange={(e) => setNewCardType(e.target.value)}
-          >
-            <option value="pdf">PDF</option>
-            <option value="video">Video</option>
-          </select>
-
-          <input
-            placeholder="URL (archivo o video)"
-            value={newCardUrl}
-            onChange={(e) => setNewCardUrl(e.target.value)}
-          />
-
-          <button
-            onClick={agregarTarjeta}
-            disabled={!newCardCatId || !newCardTitle || !newCardUrl}
-          >
-            Agregar tarjeta
-          </button>
-        </div>
-
-        {/* Lista rápida de tarjetas por categoría */}
-        <div style={{ marginTop: "0.75rem" }}>
-          {ideas.map((cat) => (
-            <div key={cat.id} style={{ marginBottom: ".5rem" }}>
-              <strong>{cat.name}:</strong>{" "}
-              {(cat.cards || []).map((card, idx) => (
-                <span key={card.id || idx} style={{ marginRight: "10px" }}>
-                  <Link to={card.url} target="_blank" rel="noreferrer">
-                    {card.title} {card.type === "pdf" ? "📄" : "▶️"}
-                  </Link>{" "}
-                  <button
-                    title="Eliminar tarjeta"
-                    onClick={() => eliminarTarjeta(cat.id, card.id)}
-                    style={{ marginLeft: "4px" }}
-                  >
-                    🗑️
-                  </button>
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
