@@ -50,9 +50,16 @@ const createItem = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   try {
-    const { id } = req.params;
+    co
+nst { id } = req.params;
+// Remove child items first to avoid foreign key violations
+    await pool.query('DELETE FROM idea_items WHERE category_id=$1', [id]);
+
     // Remove child items first to avoid foreign key violations
     await pool.query('DELETE FROM idea_items WHERE category_id=$1', [id]);
+
+
+
     await pool.query('DELETE FROM idea_categories WHERE id=$1', [id]);
     res.sendStatus(204);
   } catch (err) {
@@ -64,8 +71,12 @@ const deleteCategory = async (req, res) => {
 const deleteItem = async (req, res) => {
   try {
     const { id } = req.params;
+
     const result = await pool.query('DELETE FROM idea_items WHERE id=$1', [id]);
     if (result.rowCount === 0) return res.status(404).json({ error: 'Item not found' });
+
+    await pool.query('DELETE FROM idea_items WHERE id=$1', [id]);
+
     res.sendStatus(204);
   } catch (err) {
     console.error('Error deleting item', err);

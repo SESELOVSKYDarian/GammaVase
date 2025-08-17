@@ -177,7 +177,16 @@ const AdminPanel = () => {
       const res = await fetch("http://localhost:3000/api/ideas/items", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+
         body: JSON.stringify({ categoryId, title, type, url }),
+
+        body: JSON.stringify({
+          categoryId: newCardCatId,
+          title: newCardTitle.trim(),
+          type: newCardType, // "pdf" | "video"
+          url: newCardUrl.trim(),
+        }),
+
       });
       if (!res.ok) throw new Error("No se pudo agregar la tarjeta");
       const nueva = await res.json();
@@ -442,7 +451,15 @@ function IdeaForm({ onClose, categories, onAddCategory, onAddCard }) {
           </span>
         </h2>
 
+
         {/* Tabla de categorías y tarjetas */}
+
+
+        {/* Tabla de categorías y tarjetas */}
+
+        {/* Tabla de categorías */}
+
+
         <table className="ideas-table">
           <thead>
             <tr>
@@ -487,14 +504,79 @@ function IdeaForm({ onClose, categories, onAddCategory, onAddCard }) {
               </tr>
             )}
           </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={2}>
+                <input
+                  placeholder="Nombre de la categoría"
+                  value={newCatName}
+                  onChange={(e) => setNewCatName(e.target.value)}
+                />
+              </td>
+              <td colSpan={2}>
+                <button onClick={agregarCategoria}>Agregar categoría</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <select
+                  value={newCardCatId}
+                  onChange={(e) => setNewCardCatId(e.target.value)}
+                >
+                  <option value="">Selecciona categoría</option>
+                  {ideas.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </td>
+              <td>
+                <input
+                  placeholder="Título"
+                  value={newCardTitle}
+                  onChange={(e) => setNewCardTitle(e.target.value)}
+                />
+              </td>
+              <td>
+                <select
+                  value={newCardType}
+                  onChange={(e) => setNewCardType(e.target.value)}
+                >
+                  <option value="pdf">PDF</option>
+                  <option value="video">Video</option>
+                </select>
+              </td>
+              <td>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <input
+                    placeholder="URL (archivo o video)"
+                    value={newCardUrl}
+                    onChange={(e) => setNewCardUrl(e.target.value)}
+                    style={{ flex: 1 }}
+                  />
+                  <button
+                    onClick={agregarTarjeta}
+                    disabled={!newCardCatId || !newCardTitle || !newCardUrl}
+                  >
+                    Agregar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
         </table>
         {showIdeaForm && (
+
           <IdeaForm
             onClose={() => setShowIdeaForm(false)}
             categories={ideas}
             onAddCategory={agregarCategoria}
             onAddCard={agregarTarjeta}
           />
+
+          <IdeaForm onClose={() => setShowIdeaForm(false)} onSave={({ name }) => agregarCategoria(name)} />
+
         )}
       </div>
     </div>
