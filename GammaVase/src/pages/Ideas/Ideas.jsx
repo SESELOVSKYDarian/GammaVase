@@ -76,7 +76,7 @@ const Ideas = () => {
         </div>
 
         <Link to="/tabla-ideas" className="ideas-table-link">
-          Crear tabla de ideas
+          Ver tabla de ideas
         </Link>
       </div>
     </motion.div>
