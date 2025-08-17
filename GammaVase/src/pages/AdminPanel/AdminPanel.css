@@ -92,7 +92,6 @@ th {
   background-color: #f1f1f1;
 }
 
-
 .ideas-table tfoot td {
   background-color: #f9f9f9;
 }
@@ -105,10 +104,10 @@ th {
   box-sizing: border-box;
 }
 
+
 .idea-item-row td {
   background-color: #fff;
 }
-
 
 
 /* === Estilos para modales (Usuarios, Familias, Productos, Ideas) === */

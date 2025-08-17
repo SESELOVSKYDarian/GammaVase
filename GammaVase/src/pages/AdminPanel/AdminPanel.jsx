@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import UsuarioForm from "../../components/Admin/UsuarioForm"; // <- IMPORTANTE
 import FamiliaForm from "../../components/Admin/FamiliaForm";
 import ProductoForm from "../../components/Admin/ProductoForm";
-// import IdeasAdmin from "../../components/Admin/IdeasAdmin"; // ya no se usa, integramos abajo directo
 import "./AdminPanel.css";
 
 const AdminPanel = () => {
@@ -18,13 +17,7 @@ const AdminPanel = () => {
   const [showIdeaForm, setShowIdeaForm] = useState(false);
 
   // === IDEAS ===
-  const [ideas, setIdeas] = useState([]);           // categorías
-  const [newCatName, setNewCatName] = useState(""); // input "Nombre de la categoría"
-
-  const [newCardCatId, setNewCardCatId] = useState(""); // select categoría para la tarjeta
-  const [newCardTitle, setNewCardTitle] = useState(""); // título de la tarjeta
-  const [newCardType, setNewCardType] = useState("pdf"); // pdf | video
-  const [newCardUrl, setNewCardUrl] = useState("");     // URL (descarga o video)
+  const [ideas, setIdeas] = useState([]); // categorías e items
 
   useEffect(() => {
     fetch("http://localhost:3000/api/familias")
@@ -147,21 +140,22 @@ const AdminPanel = () => {
   };
 
   // === HANDLERS IDEAS ===
-  const agregarCategoria = async (nombreDesdeForm) => {
-    const nombre = (nombreDesdeForm ?? newCatName).trim();
-    if (!nombre) return;
+  const agregarCategoria = async (nombre) => {
+    const nombreTrim = nombre.trim();
+    if (!nombreTrim) return null;
     try {
       const res = await fetch("http://localhost:3000/api/ideas/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: nombre }),
+        body: JSON.stringify({ name: nombreTrim }),
       });
       if (!res.ok) throw new Error("No se pudo agregar la categoría");
       const creada = await res.json();
       setIdeas((prev) => [...prev, { ...creada, cards: creada.cards || [] }]);
-      setNewCatName("");
+      return creada;
     } catch (e) {
       alert(e.message);
+      return null;
     }
   };
 
@@ -178,34 +172,35 @@ const AdminPanel = () => {
     }
   };
 
-  const agregarTarjeta = async () => {
-    if (!newCardCatId || !newCardTitle.trim() || !newCardUrl.trim()) return;
+  const agregarTarjeta = async ({ categoryId, title, type, url }) => {
     try {
       const res = await fetch("http://localhost:3000/api/ideas/items", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+
+        body: JSON.stringify({ categoryId, title, type, url }),
+
         body: JSON.stringify({
           categoryId: newCardCatId,
           title: newCardTitle.trim(),
           type: newCardType, // "pdf" | "video"
           url: newCardUrl.trim(),
         }),
+
       });
       if (!res.ok) throw new Error("No se pudo agregar la tarjeta");
       const nueva = await res.json();
       setIdeas((prev) =>
         prev.map((cat) =>
-          cat.id === Number(newCardCatId)
+          cat.id === Number(categoryId)
             ? { ...cat, cards: [...(cat.cards || []), nueva] }
             : cat
         )
       );
-      setNewCardCatId("");
-      setNewCardTitle("");
-      setNewCardType("pdf");
-      setNewCardUrl("");
+      return nueva;
     } catch (e) {
       alert(e.message);
+      return null;
     }
   };
 
@@ -231,13 +226,32 @@ const AdminPanel = () => {
 
 
 // === Modal simple para crear Categoría de Ideas (similar a otros forms) ===
-function IdeaForm({ onClose, onSave }) {
-  const [name, setName] = useState("");
+function IdeaForm({ onClose, categories, onAddCategory, onAddCard }) {
+  const [catName, setCatName] = useState("");
+  const [catId, setCatId] = useState("");
+  const [title, setTitle] = useState("");
+  const [type, setType] = useState("pdf");
+  const [url, setUrl] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim()) return;
-    onSave({ name: name.trim() });
+    let usedCatId = catId;
+    if (catName.trim()) {
+      const nueva = await onAddCategory(catName.trim());
+      if (nueva) usedCatId = nueva.id;
+    }
+    if (!usedCatId || !title.trim() || !url.trim()) return;
+    await onAddCard({
+      categoryId: usedCatId,
+      title: title.trim(),
+      type,
+      url: url.trim(),
+    });
+    setCatName("");
+    setCatId("");
+    setTitle("");
+    setType("pdf");
+    setUrl("");
     onClose();
   };
 
@@ -245,19 +259,37 @@ function IdeaForm({ onClose, onSave }) {
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="modal-header">
-          <h3>Nueva categoría</h3>
+          <h3>Nueva idea</h3>
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
         <form onSubmit={handleSubmit} className="modal-body">
-          <label>Nombre</label>
+          <label>Nueva categoría (opcional)</label>
           <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={catName}
+            onChange={(e) => setCatName(e.target.value)}
             placeholder="Nombre de la categoría"
           />
+          <label>Seleccionar categoría</label>
+          <select value={catId} onChange={(e) => setCatId(e.target.value)}>
+            <option value="">Selecciona categoría</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+          <label>Título</label>
+          <input value={title} onChange={(e) => setTitle(e.target.value)} />
+          <label>Tipo (PDF/Video)</label>
+          <select value={type} onChange={(e) => setType(e.target.value)}>
+            <option value="pdf">PDF</option>
+            <option value="video">Video</option>
+          </select>
+          <label>URL del recurso</label>
+          <input value={url} onChange={(e) => setUrl(e.target.value)} />
           <div className="modal-actions">
             <button type="button" onClick={onClose}>Cancelar</button>
-            <button type="submit">Guardar</button>
+            <button type="submit">Agregar</button>
           </div>
         </form>
       </div>
@@ -422,7 +454,11 @@ function IdeaForm({ onClose, onSave }) {
 
         {/* Tabla de categorías y tarjetas */}
 
+
+        {/* Tabla de categorías y tarjetas */}
+
         {/* Tabla de categorías */}
+
 
         <table className="ideas-table">
           <thead>
@@ -531,7 +567,16 @@ function IdeaForm({ onClose, onSave }) {
           </tfoot>
         </table>
         {showIdeaForm && (
+
+          <IdeaForm
+            onClose={() => setShowIdeaForm(false)}
+            categories={ideas}
+            onAddCategory={agregarCategoria}
+            onAddCard={agregarTarjeta}
+          />
+
           <IdeaForm onClose={() => setShowIdeaForm(false)} onSave={({ name }) => agregarCategoria(name)} />
+
         )}
       </div>
     </div>
