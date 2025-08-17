@@ -419,7 +419,11 @@ function IdeaForm({ onClose, onSave }) {
           </span>
         </h2>
 
+
         {/* Tabla de categorías y tarjetas */}
+
+        {/* Tabla de categorías */}
+
         <table className="ideas-table">
           <thead>
             <tr>

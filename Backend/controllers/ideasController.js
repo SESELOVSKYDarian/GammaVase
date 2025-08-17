@@ -51,8 +51,11 @@ const createItem = async (req, res) => {
 const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
+
     // Remove child items first to avoid foreign key violations
     await pool.query('DELETE FROM idea_items WHERE category_id=$1', [id]);
+
+
     await pool.query('DELETE FROM idea_categories WHERE id=$1', [id]);
     res.sendStatus(204);
   } catch (err) {
