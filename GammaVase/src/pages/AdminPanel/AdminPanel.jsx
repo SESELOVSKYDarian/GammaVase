@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import UsuarioForm from "../../components/Admin/UsuarioForm"; // <- IMPORTANTE
 import FamiliaForm from "../../components/Admin/FamiliaForm";
 import ProductoForm from "../../components/Admin/ProductoForm";
-import IdeasAdmin from "../../components/Admin/IdeasAdmin";
+// import IdeasAdmin from "../../components/Admin/IdeasAdmin"; // ya no se usa, integramos abajo directo
 import "./AdminPanel.css";
 
 const AdminPanel = () => {
@@ -14,6 +14,19 @@ const AdminPanel = () => {
   const [showFamiliaForm, setShowFamiliaForm] = useState(false);
   const [productos, setProductos] = useState([]);
   const [showProductoForm, setShowProductoForm] = useState(false);
+
+  // Nuevo: modal Ideas
+  const [showIdeaForm, setShowIdeaForm] = useState(false);
+
+  // === IDEAS ===
+  const [ideas, setIdeas] = useState([]);           // categorías
+  const [newCatName, setNewCatName] = useState(""); // input "Nombre de la categoría"
+
+  const [newCardCatId, setNewCardCatId] = useState(""); // select categoría para la tarjeta
+  const [newCardTitle, setNewCardTitle] = useState(""); // título de la tarjeta
+  const [newCardType, setNewCardType] = useState("pdf"); // pdf | video
+  const [newCardUrl, setNewCardUrl] = useState("");     // URL (descarga o video)
+
   useEffect(() => {
     fetch("http://localhost:3000/api/familias")
       .then((res) => res.json())
@@ -28,6 +41,12 @@ const AdminPanel = () => {
     fetch("http://localhost:3000/api/productos")
       .then((res) => res.json())
       .then((data) => setProductos(data));
+
+    // IDEAS
+    fetch("http://localhost:3000/api/ideas")
+      .then((res) => res.json())
+      .then((data) => setIdeas(Array.isArray(data) ? data : []))
+      .catch((err) => console.error("Error al cargar ideas", err));
   }, []);
 
   const agregarFamilia = async (nuevaFamilia) => {
@@ -121,12 +140,134 @@ const AdminPanel = () => {
       }
 
       const data = await res.json();
-      setUsuarios((prev) => [...prev, data]); // 👈 actualiza la tabla
+      setUsuarios((prev) => [...prev, data]); // actualiza la tabla
     } catch (err) {
-      alert("Error al agregar usuario: " + err.message); // 👈 muestra si hay error
+      alert("Error al agregar usuario: " + err.message);
       console.error(err);
     }
   };
+
+  // === HANDLERS IDEAS ===
+  const agregarCategoria = async (nombreDesdeForm) => {
+    const nombre = (nombreDesdeForm ?? newCatName).trim();
+    if (!nombre) return;
+    try {
+      const res = await fetch("http://localhost:3000/api/ideas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: nombre }),
+      });
+      if (!res.ok) throw new Error("No se pudo agregar la categoría");
+      const creada = await res.json();
+      setIdeas((prev) => [...prev, { ...creada, cards: creada.cards || [] }]);
+      setNewCatName("");
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  const eliminarCategoria = async (id) => {
+    if (!window.confirm("¿Eliminar esta categoría y sus tarjetas?")) return;
+    try {
+      const res = await fetch(`http://localhost:3000/api/ideas/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("No se pudo eliminar");
+      setIdeas((prev) => prev.filter((c) => c.id !== id));
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  const agregarTarjeta = async () => {
+    if (!newCardCatId || !newCardTitle.trim() || !newCardUrl.trim()) return;
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/ideas/${newCardCatId}/cards`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: newCardTitle.trim(),
+            type: newCardType, // "pdf" | "video"
+            url: newCardUrl.trim(),
+          }),
+        }
+      );
+      if (!res.ok) throw new Error("No se pudo agregar la tarjeta");
+      const nueva = await res.json();
+      setIdeas((prev) =>
+        prev.map((cat) =>
+          cat.id === Number(newCardCatId)
+            ? { ...cat, cards: [...(cat.cards || []), nueva] }
+            : cat
+        )
+      );
+      setNewCardCatId("");
+      setNewCardTitle("");
+      setNewCardType("pdf");
+      setNewCardUrl("");
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  const eliminarTarjeta = async (catId, cardId) => {
+    if (!window.confirm("¿Eliminar esta tarjeta?")) return;
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/ideas/${catId}/cards/${cardId}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) throw new Error("No se pudo eliminar la tarjeta");
+      setIdeas((prev) =>
+        prev.map((cat) =>
+          cat.id === catId
+            ? { ...cat, cards: (cat.cards || []).filter((t) => t.id !== cardId) }
+            : cat
+        )
+      );
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+
+// === Modal simple para crear Categoría de Ideas (similar a otros forms) ===
+function IdeaForm({ onClose, onSave }) {
+  const [name, setName] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!name.trim()) return;
+    onSave({ name: name.trim() });
+    onClose();
+  };
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h3>Nueva categoría</h3>
+          <button className="close-btn" onClick={onClose}>×</button>
+        </div>
+        <form onSubmit={handleSubmit} className="modal-body">
+          <label>Nombre</label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Nombre de la categoría"
+          />
+          <div className="modal-actions">
+            <button type="button" onClick={onClose}>Cancelar</button>
+            <button type="submit">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 
   return (
     <div className="admin-panel">
@@ -143,28 +284,28 @@ const AdminPanel = () => {
           </span>
         </h2>
         <table>
-         <thead>
-  <tr>
-    <th>ID</th>
-    <th>Cliente</th>
-    <th>Contraseña</th>
-    <th>Rol</th>
-    <th>Acciones</th>
-  </tr>
-</thead>
-<tbody>
-  {usuarios.map((usuario) => (
-    <tr key={usuario.id}>
-      <td>{usuario.id}</td>
-      <td>{usuario.cliente}</td>
-      <td>{usuario.contrasena}</td>
-      <td>{usuario.rol || "cliente"}</td>
-      <td>
-        <button onClick={() => eliminarUsuario(usuario.id)}>🗑️</button>
-      </td>
-    </tr>
-  ))}
-</tbody>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Cliente</th>
+              <th>Contraseña</th>
+              <th>Rol</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {usuarios.map((usuario) => (
+              <tr key={usuario.id}>
+                <td>{usuario.id}</td>
+                <td>{usuario.cliente}</td>
+                <td>{usuario.contrasena}</td>
+                <td>{usuario.rol || "cliente"}</td>
+                <td>
+                  <button onClick={() => eliminarUsuario(usuario.id)}>🗑️</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
         {showForm && (
           <UsuarioForm
@@ -173,6 +314,7 @@ const AdminPanel = () => {
           />
         )}
       </div>
+
       {/* Sección Familias */}
       <div className="admin-section">
         <h2>
@@ -212,6 +354,8 @@ const AdminPanel = () => {
           />
         )}
       </div>
+
+      {/* Sección Productos */}
       <div className="admin-section">
         <h2>
           Productos{" "}
@@ -220,47 +364,46 @@ const AdminPanel = () => {
           </span>
         </h2>
         <table>
-        <thead>
-  <tr>
-    <th>ID</th>
-    <th>Artículo</th>
-    <th>Familia</th>
-    <th>Línea</th>
-    <th>Imágenes</th>
-    <th>Código color</th>
-    <th>Stock</th>
-    <th>Precio Minorista</th>
-    <th>Precio Mayorista</th>
-    <th>Slider</th>
-    <th>Acciones</th>
-  </tr>
-</thead>
-<tbody>
-  {productos.map((p) => (
-    <tr key={p.id}>
-      <td>{p.id}</td>
-      <td>{p.articulo}</td>
-      <td>{p.gran_familia}</td>
-      <td>{p.linea}</td>
-      <td>{p.img_articulo?.join(", ")}</td>
-      <td>{p.codigo_color}</td>
-      <td>{p.stock}</td>
-      <td>${p.precio_minorista}</td>
-      <td>${p.precio_mayorista}</td>
-      <td>
-        <input
-          type="checkbox"
-          checked={p.slider}
-          onChange={() => toggleSlider(p.id, p.slider)}
-        />
-      </td>
-      <td>
-        <button onClick={() => eliminarProducto(p.id)}>🗑️</button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Artículo</th>
+              <th>Familia</th>
+              <th>Línea</th>
+              <th>Imágenes</th>
+              <th>Código color</th>
+              <th>Stock</th>
+              <th>Precio Minorista</th>
+              <th>Precio Mayorista</th>
+              <th>Slider</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {productos.map((p) => (
+              <tr key={p.id}>
+                <td>{p.id}</td>
+                <td>{p.articulo}</td>
+                <td>{p.gran_familia}</td>
+                <td>{p.linea}</td>
+                <td>{p.img_articulo?.join(", ")}</td>
+                <td>{p.codigo_color}</td>
+                <td>{p.stock}</td>
+                <td>${p.precio_minorista}</td>
+                <td>${p.precio_mayorista}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={p.slider}
+                    onChange={() => toggleSlider(p.id, p.slider)}
+                  />
+                </td>
+                <td>
+                  <button onClick={() => eliminarProducto(p.id)}>🗑️</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
         {showProductoForm && (
           <ProductoForm
@@ -270,8 +413,126 @@ const AdminPanel = () => {
         )}
       </div>
 
-      <IdeasAdmin />
-      {/* Las otras secciones como Precios e Ideas pueden seguir igual */}
+      {/* Sección Ideas */}
+      <div className="admin-section">
+        <h2>
+          Ideas{" "}
+          <span className="actions" onClick={() => setShowIdeaForm(true)}>
+            ➕
+          </span>
+        </h2>
+
+        {/* Tabla de categorías */}
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Categoría</th>
+              <th>Subitems</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ideas.map((cat) => (
+              <tr key={cat.id}>
+                <td>{cat.id}</td>
+                <td>{cat.name}</td>
+                <td>{(cat.cards || []).length}</td>
+                <td>
+                  <button onClick={() => eliminarCategoria(cat.id)}>🗑️</button>
+                </td>
+              </tr>
+            ))}
+            {ideas.length === 0 && (
+              <tr>
+                <td colSpan={4} style={{ textAlign: "center", color: "#666" }}>
+                  No hay categorías
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        {showIdeaForm && (
+          <IdeaForm onClose={() => setShowIdeaForm(false)} onSave={({ name }) => agregarCategoria(name)} />
+        )}
+
+        {/* Form inline: Agregar categoría */}
+        <div style={{ marginTop: ".5rem" }}>
+          <input
+            placeholder="Nombre de la categoría"
+            value={newCatName}
+            onChange={(e) => setNewCatName(e.target.value)}
+            style={{ marginRight: ".5rem" }}
+          />
+          <button onClick={agregarCategoria}>Agregar categoría</button>
+        </div>
+
+        {/* Form inline: Agregar tarjeta a una categoría */}
+        <div style={{ marginTop: ".5rem", display: "grid", gap: ".5rem",
+                      gridTemplateColumns: "200px 1fr 120px 1fr 150px" }}>
+          <select
+            value={newCardCatId}
+            onChange={(e) => setNewCardCatId(e.target.value)}
+          >
+            <option value="">Selecciona categoría</option>
+            {ideas.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+
+          <input
+            placeholder="Título"
+            value={newCardTitle}
+            onChange={(e) => setNewCardTitle(e.target.value)}
+          />
+
+          <select
+            value={newCardType}
+            onChange={(e) => setNewCardType(e.target.value)}
+          >
+            <option value="pdf">PDF</option>
+            <option value="video">Video</option>
+          </select>
+
+          <input
+            placeholder="URL (archivo o video)"
+            value={newCardUrl}
+            onChange={(e) => setNewCardUrl(e.target.value)}
+          />
+
+          <button
+            onClick={agregarTarjeta}
+            disabled={!newCardCatId || !newCardTitle || !newCardUrl}
+          >
+            Agregar tarjeta
+          </button>
+        </div>
+
+        {/* Lista rápida de tarjetas por categoría */}
+        <div style={{ marginTop: "0.75rem" }}>
+          {ideas.map((cat) => (
+            <div key={cat.id} style={{ marginBottom: ".5rem" }}>
+              <strong>{cat.name}:</strong>{" "}
+              {(cat.cards || []).map((card, idx) => (
+                <span key={card.id || idx} style={{ marginRight: "10px" }}>
+                  <Link to={card.url} target="_blank" rel="noreferrer">
+                    {card.title} {card.type === "pdf" ? "📄" : "▶️"}
+                  </Link>{" "}
+                  <button
+                    title="Eliminar tarjeta"
+                    onClick={() => eliminarTarjeta(cat.id, card.id)}
+                    style={{ marginLeft: "4px" }}
+                  >
+                    🗑️
+                  </button>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
