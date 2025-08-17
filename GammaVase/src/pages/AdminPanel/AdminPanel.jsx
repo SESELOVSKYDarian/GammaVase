@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import UsuarioForm from "../../components/Admin/UsuarioForm"; // <- IMPORTANTE
 import FamiliaForm from "../../components/Admin/FamiliaForm";
 import ProductoForm from "../../components/Admin/ProductoForm";
@@ -152,7 +151,7 @@ const AdminPanel = () => {
     const nombre = (nombreDesdeForm ?? newCatName).trim();
     if (!nombre) return;
     try {
-      const res = await fetch("http://localhost:3000/api/ideas", {
+      const res = await fetch("http://localhost:3000/api/ideas/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: nombre }),
@@ -169,7 +168,7 @@ const AdminPanel = () => {
   const eliminarCategoria = async (id) => {
     if (!window.confirm("¿Eliminar esta categoría y sus tarjetas?")) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/ideas/${id}`, {
+      const res = await fetch(`http://localhost:3000/api/ideas/categories/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("No se pudo eliminar");
@@ -182,18 +181,16 @@ const AdminPanel = () => {
   const agregarTarjeta = async () => {
     if (!newCardCatId || !newCardTitle.trim() || !newCardUrl.trim()) return;
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/ideas/${newCardCatId}/cards`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: newCardTitle.trim(),
-            type: newCardType, // "pdf" | "video"
-            url: newCardUrl.trim(),
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/api/ideas/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          categoryId: newCardCatId,
+          title: newCardTitle.trim(),
+          type: newCardType, // "pdf" | "video"
+          url: newCardUrl.trim(),
+        }),
+      });
       if (!res.ok) throw new Error("No se pudo agregar la tarjeta");
       const nueva = await res.json();
       setIdeas((prev) =>
@@ -216,7 +213,7 @@ const AdminPanel = () => {
     if (!window.confirm("¿Eliminar esta tarjeta?")) return;
     try {
       const res = await fetch(
-        `http://localhost:3000/api/ideas/${catId}/cards/${cardId}`,
+        `http://localhost:3000/api/ideas/items/${cardId}`,
         { method: "DELETE" }
       );
       if (!res.ok) throw new Error("No se pudo eliminar la tarjeta");
@@ -423,7 +420,7 @@ function IdeaForm({ onClose, onSave }) {
         </h2>
 
         {/* Tabla de categorías */}
-        <table>
+        <table className="ideas-table">
           <thead>
             <tr>
               <th>ID</th>
