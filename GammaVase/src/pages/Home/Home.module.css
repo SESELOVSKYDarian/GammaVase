@@ -1,17 +1,68 @@
- .sugerencias {
+.searchSection {
+  background-image: url('/background.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.searchTitle {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.searchInput {
+  padding: 0.75rem 1rem;
+  border-radius: 9999px;
+  border: none;
+  width: 300px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.searchButton {
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+.searchButton:hover {
+  background: #f0f0f0;
+}
+
+.sugerencias {
   list-style: none;
-  margin: 0 auto;
+  margin: 1rem auto 0;
   padding: 0;
   width: 300px;
   background: white;
   border: 1px solid #ccc;
- }
+  border-radius: 8px;
+}
 
- .sugerencias li {
+.sugerencias li {
   padding: 0.5rem;
   cursor: pointer;
- }
+}
 
- .sugerencias li:hover {
+.sugerencias li:hover {
   background: #f0f0f0;
- }
+}
