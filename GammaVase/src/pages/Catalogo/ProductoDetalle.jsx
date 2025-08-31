@@ -18,9 +18,11 @@ const ProductoDetalle = () => {
         const actual = data.find((p) => p.id === parseInt(id));
         setProducto(actual);
 
-        const relacionados = data.filter(
-          (p) => p.gran_familia === actual.gran_familia && p.id !== actual.id
-        );
+        const relacionados = data
+          .filter(
+            (p) => p.gran_familia === actual.gran_familia && p.id !== actual.id
+          )
+          .slice(0, 5);
         setRelacionados(relacionados);
       });
   }, [id]);

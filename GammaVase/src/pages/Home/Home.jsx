@@ -54,38 +54,40 @@ export default function Home() {
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <h2 className={styles.searchTitle}>¿Qué estás buscando?</h2>
-        <form onSubmit={buscar} className={styles.searchForm}>
-          <input
-            type="text"
-            placeholder="Buscar..."
-            className={styles.searchInput}
-            value={term}
-            onChange={(e) => setTerm(e.target.value)}
-          />
-          <button type="submit" className={styles.searchButton}>
-            <Search size={20} strokeWidth={3} />
-          </button>
-        </form>
-        <AnimatePresence>
-          {sugerencias.length > 0 && (
-            <motion.ul
-              className={styles.sugerencias}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-            >
-              {sugerencias.map((s) => (
-                <li
-                  key={s.id}
-                  onMouseDown={() => navigate(`/productos/${s.url}`)}
-                >
-                  {s.articulo}
-                </li>
-              ))}
-            </motion.ul>
-          )}
-        </AnimatePresence>
+        <div className={styles.sliderWrapper}>
+          <h2 className={styles.searchTitle}>¿Qué estás buscando?</h2>
+          <form onSubmit={buscar} className={styles.searchForm}>
+            <input
+              type="text"
+              placeholder="Buscar..."
+              className={styles.searchInput}
+              value={term}
+              onChange={(e) => setTerm(e.target.value)}
+            />
+            <button type="submit" className={styles.searchButton}>
+              <Search size={20} strokeWidth={3} />
+            </button>
+          </form>
+          <AnimatePresence>
+            {sugerencias.length > 0 && (
+              <motion.ul
+                className={styles.sugerencias}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                {sugerencias.map((s) => (
+                  <li
+                    key={s.id}
+                    onMouseDown={() => navigate(`/productos/${s.url}`)}
+                  >
+                    {s.articulo}
+                  </li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
+        </div>
       </motion.section>
     </MotionDiv>
   );

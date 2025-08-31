@@ -1,10 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Montaga&display=swap");
 
+/* Sticky navbar with subtle bottom border */
 .navbar {
-  position: relative;
+  position: sticky;
+  top: 0;
   background-color: #f0ede8;
   padding: 2rem;
   z-index: 1000;
+  border-bottom: 1px solid #ccc;
 }
 
 .navbar-container {

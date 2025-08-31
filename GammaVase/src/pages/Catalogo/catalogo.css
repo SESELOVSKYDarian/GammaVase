@@ -24,9 +24,37 @@
   padding: 0.3rem;
 }
 
+.filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.filter-btn {
+  background-color: #e75ec0;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease;
+}
+
+.filter-btn:hover {
+  background: #d14aae;
+}
+
 .contenido {
   flex: 1;
   margin-left: 2rem;
+}
+
+.no-result {
+  padding: 2rem;
+  text-align: center;
+  font-weight: bold;
 }
 
 .productos-grid {
@@ -192,4 +220,32 @@
 
   display: inline-block;
   padding-bottom: 0.3rem;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  max-width: 300px;
+  text-align: center;
+}
+
+.modal-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
 }
