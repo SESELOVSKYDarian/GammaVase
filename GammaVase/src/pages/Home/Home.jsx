@@ -17,7 +17,11 @@ export default function Home() {
       setSugerencias([]);
       return;
     }
-    fetch(`http://localhost:3000/api/productos?q=${encodeURIComponent(term)}&limit=5`)
+    fetch(
+      `http://localhost:3000/api/productos?q=${encodeURIComponent(
+        term
+      )}&limit=5`
+    )
       .then((res) => res.json())
       .then((data) => setSugerencias(data));
   }, [term]);
@@ -60,7 +64,7 @@ export default function Home() {
             onChange={(e) => setTerm(e.target.value)}
           />
           <button type="submit" className={styles.searchButton}>
-            <Search size={24} />
+            <Search size={20} strokeWidth={3} />
           </button>
         </form>
         <AnimatePresence>
@@ -72,7 +76,10 @@ export default function Home() {
               exit={{ opacity: 0, y: -10 }}
             >
               {sugerencias.map((s) => (
-                <li key={s.id} onMouseDown={() => navigate(`/productos/${s.url}`)}>
+                <li
+                  key={s.id}
+                  onMouseDown={() => navigate(`/productos/${s.url}`)}
+                >
                   {s.articulo}
                 </li>
               ))}

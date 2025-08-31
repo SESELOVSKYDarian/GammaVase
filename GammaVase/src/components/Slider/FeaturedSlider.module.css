@@ -1,6 +1,5 @@
 .sliderWrapper {
-  position: relative;
-  background: #F0EDE8;
+  background: #f0ede8;
   overflow: hidden;
   padding: 4rem 2rem;
 }
@@ -12,9 +11,15 @@
   height: 500px;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, #F328B8 0%, rgba(243,40,184,0) 70%);
-  border-radius: 50%;
+  transform: translate(10%, -50%);
+  border-radius: 1000%;
+  filter: blur(150px);
+  background-image: radial-gradient(
+    circle at center,
+    rgba(243, 40, 184, 1) 0%,
+    rgba(84, 5, 169, 1) 60%,
+    #f0ede8 20%
+  );
   z-index: 0;
 }
 
@@ -43,7 +48,7 @@
 }
 
 .addButton {
-  background: #F328B8;
+  background: #f328b8;
   color: #fff;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -136,5 +141,5 @@
 }
 
 .activeDot {
-  background: #F328B8;
+  background: #f328b8;
 }

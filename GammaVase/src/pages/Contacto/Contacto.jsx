@@ -121,7 +121,9 @@ export const Contacto = () => {
 
               <textarea name="comentario" placeholder="Comentario (opcional)" />
 
-              <button type="submit">Enviar</button>
+              <button type="submit" className="boton-enviar">
+                Enviar
+              </button>
             </form>
           </div>
 

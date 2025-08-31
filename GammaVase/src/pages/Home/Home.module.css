@@ -1,5 +1,5 @@
 .searchSection {
-  background-image: url('/background.jpg');
+  background-image: url("./../background1.png");
   background-size: cover;
   background-position: center;
   display: flex;
@@ -8,17 +8,17 @@
   justify-content: center;
   padding: 4rem 1rem;
   text-align: center;
+  height: 130vh;
 }
 
 .searchTitle {
   font-size: 2rem;
-  color: #fff;
+  color: #000000;
   margin-bottom: 1.5rem;
 }
 
 .searchForm {
   display: flex;
-  align-items: center;
   gap: 0.5rem;
 }
 
@@ -32,10 +32,13 @@
 }
 
 .searchButton {
-  background: #fff;
+  background-color: #e75ec0;
+  color: white;
   border: none;
-  border-radius: 50%;
-  padding: 0.5rem;
+  padding: 0.7rem 1rem;
+  height: fit-content;
+  border-radius: 20px;
+  font-weight: bold;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -45,15 +48,16 @@
 }
 
 .searchButton:hover {
-  background: #f0f0f0;
+  background: #d14aae;
 }
 
 .sugerencias {
   list-style: none;
-  margin: 1rem auto 0;
+  margin-top: -10px;
+  margin-right: 3rem;
   padding: 0;
   width: 300px;
-  background: white;
+  background: #f4f4f4;
   border: 1px solid #ccc;
   border-radius: 8px;
 }

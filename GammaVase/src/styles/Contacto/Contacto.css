@@ -102,7 +102,7 @@ textarea {
 }
 
 /* Botón Enviar */
-button[type="submit"] {
+.boton-enviar {
   background-color: #e75ec0;
   color: white;
   padding: 0.9rem 2rem;
@@ -115,7 +115,7 @@ button[type="submit"] {
   align-self: flex-start;
 }
 
-button[type="submit"]:hover {
+.boton-enviar:hover {
   background-color: #d14aae;
 }
 
