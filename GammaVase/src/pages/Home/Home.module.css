@@ -8,18 +8,37 @@
   justify-content: center;
   padding: 4rem 1rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.searchSection::before {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, #F328B8 0%, rgba(243, 40, 184, 0) 70%);
+  border-radius: 50%;
+  z-index: 0;
 }
 
 .searchTitle {
   font-size: 2rem;
   color: #fff;
   margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .searchForm {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .searchInput {
@@ -56,6 +75,8 @@
   background: white;
   border: 1px solid #ccc;
   border-radius: 8px;
+  position: relative;
+  z-index: 1;
 }
 
 .sugerencias li {
