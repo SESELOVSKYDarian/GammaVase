@@ -197,3 +197,21 @@ th {
   background: #e1e1e1;
   color: #333;
 }
+@media (max-width: 768px) {
+  .admin-panel {
+    padding: 1rem;
+  }
+  .admin-banner {
+    height: 80px;
+  }
+  .admin-banner h1 {
+    font-size: 1.5rem;
+  }
+  .admin-section {
+    padding: 1rem;
+    overflow-x: auto;
+  }
+  table {
+    min-width: 600px;
+  }
+}

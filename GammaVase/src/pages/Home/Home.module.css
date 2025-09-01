@@ -105,3 +105,23 @@
   position: relative;
   z-index: 1;
 }
+@media (max-width: 600px) {
+  .searchSection {
+    height: auto;
+    padding: 2rem 1rem;
+  }
+  .searchForm {
+    flex-direction: column;
+    width: 100%;
+  }
+  .searchInput {
+    width: 100%;
+  }
+  .sugerencias {
+    width: 100%;
+    margin-right: 0;
+  }
+  .sliderWrapper {
+    padding: 2rem 1rem;
+  }
+}
