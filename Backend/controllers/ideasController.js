@@ -2,8 +2,13 @@ const pool = require('../db/db');
 
 const getIdeas = async (_req, res) => {
   try {
-    const categoriesRes = await pool.query('SELECT id, name FROM idea_categories ORDER BY id');
-    const itemsRes = await pool.query('SELECT id, category_id, title, type, url FROM idea_items ORDER BY id');
+    const categoriesRes = await pool.query(
+      'SELECT id, name FROM idea_categories ORDER BY id'
+    );
+    const itemsRes = await pool.query(
+      'SELECT id, category_id, title, type, url FROM idea_items ORDER BY id'
+    );
+
     const categories = categoriesRes.rows.map((cat) => ({
       id: cat.id,
       name: cat.name,
@@ -16,6 +21,7 @@ const getIdeas = async (_req, res) => {
           url: item.url,
         })),
     }));
+
     res.json(categories);
   } catch (err) {
     console.error('Error fetching ideas', err);
@@ -26,7 +32,10 @@ const getIdeas = async (_req, res) => {
 const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
-    const result = await pool.query('INSERT INTO idea_categories(name) VALUES($1) RETURNING id, name', [name]);
+    const result = await pool.query(
+      'INSERT INTO idea_categories(name) VALUES($1) RETURNING id, name',
+      [name]
+    );
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error('Error creating category', err);
@@ -38,7 +47,9 @@ const createItem = async (req, res) => {
   try {
     const { categoryId, title, type, url } = req.body;
     const result = await pool.query(
-      'INSERT INTO idea_items(category_id, title, type, url) VALUES($1,$2,$3,$4) RETURNING id, category_id, title, type, url',
+      `INSERT INTO idea_items(category_id, title, type, url)
+       VALUES($1,$2,$3,$4)
+       RETURNING id, category_id, title, type, url`,
       [categoryId, title, type, url]
     );
     res.status(201).json(result.rows[0]);
@@ -49,33 +60,39 @@ const createItem = async (req, res) => {
 };
 
 const deleteCategory = async (req, res) => {
+  const client = await pool.connect();
   try {
-    co
-nst { id } = req.params;
-// Remove child items first to avoid foreign key violations
-    await pool.query('DELETE FROM idea_items WHERE category_id=$1', [id]);
+    const { id } = req.params;
 
-    // Remove child items first to avoid foreign key violations
-    await pool.query('DELETE FROM idea_items WHERE category_id=$1', [id]);
+    await client.query('BEGIN');
+    // Borrar hijos primero para evitar violaciones de FK
+    await client.query('DELETE FROM idea_items WHERE category_id=$1', [id]);
+    // Borrar la categoría
+    const delCat = await client.query('DELETE FROM idea_categories WHERE id=$1', [id]);
+    await client.query('COMMIT');
 
+    if (delCat.rowCount === 0) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
 
-
-    await pool.query('DELETE FROM idea_categories WHERE id=$1', [id]);
     res.sendStatus(204);
   } catch (err) {
+    await client.query('ROLLBACK');
     console.error('Error deleting category', err);
     res.status(500).json({ error: 'Error deleting category' });
+  } finally {
+    client.release();
   }
 };
 
 const deleteItem = async (req, res) => {
   try {
     const { id } = req.params;
-
     const result = await pool.query('DELETE FROM idea_items WHERE id=$1', [id]);
-    if (result.rowCount === 0) return res.status(404).json({ error: 'Item not found' });
 
-    await pool.query('DELETE FROM idea_items WHERE id=$1', [id]);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Item not found' });
+    }
 
     res.sendStatus(204);
   } catch (err) {
@@ -84,4 +101,10 @@ const deleteItem = async (req, res) => {
   }
 };
 
-module.exports = { getIdeas, createCategory, createItem, deleteCategory, deleteItem };
+module.exports = {
+  getIdeas,
+  createCategory,
+  createItem,
+  deleteCategory,
+  deleteItem,
+};
