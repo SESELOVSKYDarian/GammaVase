@@ -1,10 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Montaga&display=swap");
 
+/* Sticky navbar with subtle bottom border */
 .navbar {
-  position: relative;
+  position: sticky;
+  top: 0;
   background-color: #f0ede8;
-  padding: 1.5rem;
+  padding: 2rem;
   z-index: 1000;
+  border-bottom: 1px solid #ccc;
 }
 
 .navbar-container {
@@ -40,6 +43,42 @@
 .navbar-list li a i {
   font-size: 1.6rem;
   vertical-align: middle;
+}
+
+.cart-icon {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.8rem;
+  background: #e60000;
+  color: #fff;
+  border-radius: 50%;
+  padding: 0 0.4rem;
+  font-size: 0.7rem;
+}
+
+.user-menu-wrapper {
+  position: relative;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  z-index: 1002;
+}
+
+.user-dropdown button,
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "Montaga", serif;
 }
 
 /* Oculta el icono en escritorio */

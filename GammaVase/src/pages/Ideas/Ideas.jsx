@@ -3,6 +3,7 @@ import "./Ideas.css";
 import TijerasImage from "../../components/Empresa/TijerasImage";
 import { Link } from "react-router-dom"; //
 import { motion } from "framer-motion";
+const MotionDiv = motion.div;
 
 const Ideas = () => {
   const categorias = [
@@ -33,7 +34,7 @@ const Ideas = () => {
   ];
 
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -80,7 +81,7 @@ const Ideas = () => {
           Ver tabla de ideas
         </Link>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 };
 

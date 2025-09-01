@@ -13,6 +13,7 @@ import DecoracionHogar from "../../src/pages/Ideas/DecoracionHogar";
 import IdeasTable from "../pages/Ideas/IdeasTable";
 import Login from "../pages/Login/Login";
 import AdminPanel from "../pages/AdminPanel/AdminPanel";
+import AdminLogin from "../pages/AdminPanel/AdminLogin";
 import Contacto from "../pages/Contacto/Contacto";
 import Catalogo from "../pages/Catalogo/Catalogo";
 import Producto from "../pages/Catalogo/Productos/Producto";
@@ -32,7 +33,8 @@ export default function AnimatedRoutes() {
         <Route path="/ropa-accesorios" element={<RopaAccesorios />} />
         <Route path="/decoracion-hogar" element={<DecoracionHogar />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/panel" element={<AdminPanel />} />
         <Route path="/catalogo" element={<Catalogo />} />
         {/* <Route path="/catalogo" element={<Catalogo />} /> */}
         <Route path="/producto" element={<ProductoDetalle />} />

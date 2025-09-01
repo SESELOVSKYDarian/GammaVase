@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { CarritoContext } from "../pages/Carrito/CarritoContext";
 import "../styles/navbar.css";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { totalItems } = useContext(CarritoContext);
+  const [user, setUser] = useState(() =>
+    JSON.parse(localStorage.getItem("usuario"))
+  );
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
+  const handleLogout = () => {
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("adminAuthed");
+    setUser(null);
+    setShowUserMenu(false);
+  };
 
   return (
     <nav className="navbar">
@@ -54,21 +66,38 @@ export const Navbar = () => {
               CONTACTO
             </NavLink>
           </li>
-          <li>
+          <li className="cart-icon">
             <NavLink
               to="/carrito"
               className={({ isActive }) => (isActive ? "active-link" : "")}
             >
               <i className="bx bx-cart"></i>
+              {totalItems > 0 && (
+                <span className="cart-badge">{totalItems}</span>
+              )}
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/login"
-              className={({ isActive }) => (isActive ? "active-link" : "")}
-            >
-              <i className="bx bx-user-circle"></i>
-            </NavLink>
+          <li className="user-menu-wrapper">
+            {user ? (
+              <div
+                className="user-icon"
+                onClick={() => setShowUserMenu(!showUserMenu)}
+              >
+                <i className="bx bx-user-circle"></i>
+                {showUserMenu && (
+                  <div className="user-dropdown">
+                    <button onClick={handleLogout}>Cerrar sesión</button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <NavLink
+                to="/login"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+              >
+                <i className="bx bx-user-circle"></i>
+              </NavLink>
+            )}
           </li>
         </ul>
 
@@ -124,24 +153,41 @@ export const Navbar = () => {
                 CONTACTO
               </NavLink>
             </li>
-            <li>
+            <li className="cart-icon">
               <NavLink
                 to="/carrito"
                 onClick={closeMenu}
                 className={({ isActive }) => (isActive ? "active-link" : "")}
               >
                 <i className="bx bx-cart"></i>
+                {totalItems > 0 && (
+                  <span className="cart-badge">{totalItems}</span>
+                )}
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/login"
-                onClick={closeMenu}
-                className={({ isActive }) => (isActive ? "active-link" : "")}
-              >
-                <i className="bx bx-user-circle"></i>
-              </NavLink>
-            </li>
+            {user ? (
+              <li>
+                <button
+                  className="logout-btn"
+                  onClick={() => {
+                    handleLogout();
+                    closeMenu();
+                  }}
+                >
+                  Cerrar sesión
+                </button>
+              </li>
+            ) : (
+              <li>
+                <NavLink
+                  to="/login"
+                  onClick={closeMenu}
+                  className={({ isActive }) => (isActive ? "active-link" : "")}
+                >
+                  <i className="bx bx-user-circle"></i>
+                </NavLink>
+              </li>
+            )}
           </ul>
         </div>
       </div>

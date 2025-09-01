@@ -24,10 +24,12 @@ export const CarritoProvider = ({ children }) => {
         );
       } else {
         const usuario = JSON.parse(localStorage.getItem("usuario"));
-        const precio =
+        const porcentaje = usuario?.porcentaje_a_agregar || 0;
+        const base =
           usuario?.rol === "mayorista"
             ? producto.precio_mayorista
             : producto.precio_minorista;
+        const precio = base * (1 + parseFloat(porcentaje) / 100);
 
         return [
           ...prev,
@@ -50,9 +52,17 @@ export const CarritoProvider = ({ children }) => {
 
   const vaciarCarrito = () => setCarrito([]);
 
+  const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+
   return (
     <CarritoContext.Provider
-      value={{ carrito, agregarProducto, eliminarProducto, vaciarCarrito }}
+      value={{
+        carrito,
+        totalItems,
+        agregarProducto,
+        eliminarProducto,
+        vaciarCarrito,
+      }}
     >
       {children}
     </CarritoContext.Provider>

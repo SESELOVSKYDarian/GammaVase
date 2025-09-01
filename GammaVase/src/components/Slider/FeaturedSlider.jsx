@@ -1,11 +1,18 @@
 import React, { useEffect, useState, useContext } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import styles from "./FeaturedSlider.module.css";
 import { CarritoContext } from "../../pages/Carrito/CarritoContext";
+
+const MotionDiv = motion.div;
+const MotionButton = motion.button;
 
 const FeaturedSlider = () => {
   const [productos, setProductos] = useState([]);
   const [index, setIndex] = useState(0);
   const { agregarProducto } = useContext(CarritoContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:3000/api/productos/slider")
@@ -34,19 +41,52 @@ const FeaturedSlider = () => {
 
   const actual = productos[index];
 
+  const handleAgregar = (prod) => {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    if (usuario) {
+      agregarProducto(prod);
+      toast.success(`${prod.articulo} agregado al carrito 🛒`);
+    } else {
+      toast.info("Iniciá sesión para agregar productos.");
+      navigate("/login");
+    }
+  };
+
   return (
-    <div className={styles.sliderWrapper}>
+    <MotionDiv
+      className={styles.sliderWrapper}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+    >
       <div className={styles.content}>
         <div className={styles.text}>
-          <h2>{actual?.articulo}</h2>
-          <p>{actual?.descripcion}</p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            {actual?.articulo}
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            {actual?.descripcion}
+          </motion.p>
           {actual && (
-            <button
+            <MotionButton
               className={styles.addButton}
-              onClick={() => agregarProducto(actual)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleAgregar(actual)}
             >
               Agregar al carrito
-            </button>
+            </MotionButton>
           )}
         </div>
         <div className={styles.sliderArea}>
@@ -78,7 +118,7 @@ const FeaturedSlider = () => {
           </div>
         </div>
       </div>
-    </div>
+    </MotionDiv>
   );
 };
 

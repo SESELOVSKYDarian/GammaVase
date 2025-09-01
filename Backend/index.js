@@ -23,7 +23,9 @@ app.use("/api/contacto", contactoRoute);
 app.use('/api/familias', require('./routes/familiasRoutes'));
 app.use('/api/usuarios', require('./routes/usuariosRoutes'));
 app.use('/api/productos', require('./routes/productosRoutes'));
-app.use('/api/ideas', require('./routes/ideasRoutes'));
+
+app.use('/api/precios', require('./routes/preciosRoutes'));
+
 app.use('/api/login', require('./routes/authRoutes'));
 
 // ✅ 4. Archivos estáticos

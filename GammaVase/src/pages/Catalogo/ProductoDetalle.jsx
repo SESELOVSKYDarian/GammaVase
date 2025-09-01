@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { useParams } from "react-router-dom";
 import ProductoCard from "./ProductoCard";
 import { CarritoContext } from "../Carrito/CarritoContext"; // corregí la ruta si es necesario
 import { toast } from "react-toastify";
@@ -9,8 +9,7 @@ const ProductoDetalle = () => {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
   const [relacionados, setRelacionados] = useState([]);
-const [cantidad, setCantidad] = useState(1);
-const { agregarProducto } = useContext(CarritoContext);
+  const { agregarProducto } = useContext(CarritoContext);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/productos")
@@ -19,9 +18,11 @@ const { agregarProducto } = useContext(CarritoContext);
         const actual = data.find((p) => p.id === parseInt(id));
         setProducto(actual);
 
-        const relacionados = data.filter(
-          (p) => p.gran_familia === actual.gran_familia && p.id !== actual.id
-        );
+        const relacionados = data
+          .filter(
+            (p) => p.gran_familia === actual.gran_familia && p.id !== actual.id
+          )
+          .slice(0, 5);
         setRelacionados(relacionados);
       });
   }, [id]);

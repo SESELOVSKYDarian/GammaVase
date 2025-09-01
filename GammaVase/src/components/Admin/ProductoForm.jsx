@@ -1,20 +1,21 @@
 import "../Admin/UsuarioForm.css";
 import React, { useState, useEffect } from "react";
 
-const ProductoForm = ({ onClose, onSave }) => {
+const ProductoForm = ({ onClose, onSave, initialData }) => {
   const [familias, setFamilias] = useState([]);
   const [imagenes, setImagenes] = useState([]);
- const [form, setForm] = useState({
-  articulo: "",
-  descripcion: "",
-  familia_id: "",
-  linea: "",
-  codigo_color: "",
-  stock: 0,
-  precio_minorista: "",
-  precio_mayorista: "",
-  slider: false
-});
+  const [granSel, setGranSel] = useState("");
+  const [form, setForm] = useState({
+    articulo: "",
+    descripcion: "",
+    familia_id: "",
+    linea: "",
+    codigo_color: "",
+    stock: 0,
+    precio_minorista: "",
+    precio_mayorista: "",
+    slider: false,
+  });
 
   useEffect(() => {
     fetch("http://localhost:3000/api/familias")
@@ -22,11 +23,28 @@ const ProductoForm = ({ onClose, onSave }) => {
       .then((data) => setFamilias(data));
   }, []);
 
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        articulo: initialData.articulo,
+        descripcion: initialData.descripcion || "",
+        familia_id: initialData.familia_id,
+        linea: initialData.linea || "",
+        codigo_color: initialData.codigo_color || "",
+        stock: initialData.stock || 0,
+        precio_minorista: initialData.precio_minorista || "",
+        precio_mayorista: initialData.precio_mayorista || "",
+        slider: initialData.slider,
+      });
+      setGranSel(initialData.gran_familia || "");
+    }
+  }, [initialData]);
+
   const generateSlug = (nombre) =>
     nombre
       .toLowerCase()
       .replace(/\s+/g, "-")
-      .replace(/[^\w\-]+/g, "");
+      .replace(/[^\w-]+/g, "");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -65,31 +83,56 @@ formData.append("precio_minorista", form.precio_minorista);
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h2>Agregar Producto</h2>
+        <h2>{initialData ? "Editar Producto" : "Agregar Producto"}</h2>
         <form onSubmit={handleSubmit}>
           <input
             name="articulo"
             placeholder="Artículo"
             onChange={handleChange}
+            value={form.articulo}
             required
           />
-          <select name="familia_id" onChange={handleChange} required>
-            <option value="">Seleccione Familia</option>
-            {familias.map((f) => (
-              <option key={f.id} value={f.id}>
-                {f.gran_familia}
+          <select
+            value={granSel}
+            onChange={(e) => {
+              setGranSel(e.target.value);
+              setForm((prev) => ({ ...prev, familia_id: "" }));
+            }}
+            required
+          >
+            <option value="">Seleccione Gran Familia</option>
+            {[...new Set(familias.map((f) => f.gran_familia))].map((gf) => (
+              <option key={gf} value={gf}>
+                {gf}
               </option>
             ))}
+          </select>
+          <select
+            name="familia_id"
+            value={form.familia_id}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Seleccione Familia</option>
+            {familias
+              .filter((f) => !granSel || f.gran_familia === granSel)
+              .map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.tipo_familia}
+                </option>
+              ))}
           </select>
           <textarea
             name="descripcion"
             placeholder="Descripción"
             onChange={handleChange}
+            value={form.descripcion}
           />
           <input
             name="linea"
             placeholder="Línea o marca"
             onChange={handleChange}
+            value={form.linea}
           />
           <label>Imágenes (máx 5)</label>
           <input
@@ -103,12 +146,14 @@ formData.append("precio_minorista", form.precio_minorista);
             name="codigo_color"
             placeholder="#FFFFFF"
             onChange={handleChange}
+            value={form.codigo_color}
           />
           <input
             type="number"
             name="stock"
             placeholder="Stock"
             onChange={handleChange}
+            value={form.stock}
             min="0"
           />
           <label className="slider-check">
@@ -120,11 +165,12 @@ formData.append("precio_minorista", form.precio_minorista);
             />
             Mostrar en slider principal
           </label>
-          <input
+<input
   type="number"
   name="precio_minorista"
   placeholder="Precio Minorista"
   onChange={handleChange}
+  value={form.precio_minorista}
   min="0"
   required
 />
@@ -134,6 +180,7 @@ formData.append("precio_minorista", form.precio_minorista);
   name="precio_mayorista"
   placeholder="Precio Mayorista"
   onChange={handleChange}
+  value={form.precio_mayorista}
   min="0"
   required
 />

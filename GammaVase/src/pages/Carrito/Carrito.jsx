@@ -1,6 +1,5 @@
 // src/components/Carrito.jsx
 import React, { useContext } from "react";
-import { motion } from "framer-motion";
 import { CarritoContext } from "../Carrito/CarritoContext";
 import "../Carrito/Carrito.css";
 

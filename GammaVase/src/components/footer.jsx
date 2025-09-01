@@ -1,6 +1,5 @@
-import React from 'react';
-import './Footer.css';
-
+import React from "react";
+import "./Footer.css";
 
 const Footer = () => {
   return (
@@ -15,17 +14,19 @@ const Footer = () => {
         <div className="footer-contact">
           <div className="footer-item">
             <img src="/wasap.svg" alt="WhatsApp" className="footer-icon" />
-            <span>+54 (223) 633-4301</span>
+            <span>+54 (11) 6406 8001</span>
           </div>
           <div className="footer-item">
             <img src="/gmail.png" alt="Email" className="footer-icon" />
-            <span>ventas@gammodas.com.ar</span>
+            <span>ventas@gammamodas.com.ar</span>
           </div>
         </div>
       </div>
 
       <div className="footer-copy">
-        <p>Copyright © 2025 <span className="footer-copy-name">Vase</span></p>
+        <p>
+          Copyright © 2025 <span className="footer-copy-name">Vase</span>
+        </p>
       </div>
     </footer>
   );

@@ -1,25 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Admin/UsuarioForm.css"; // asumimos que ahí está tu CSS, si no, ponelo donde corresponda
 
-const FamiliaForm = ({ onClose, onSave }) => {
+const FamiliaForm = ({ onClose, onSave, initialData }) => {
   const [granFamilia, setGranFamilia] = useState("");
-  const [tipoFamilia, setTipoFamilia] = useState("");
+  const [tipos, setTipos] = useState([""]);
+
+  useEffect(() => {
+    if (initialData) {
+      setGranFamilia(initialData.gran_familia);
+      setTipos([initialData.tipo_familia]);
+    }
+  }, [initialData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!granFamilia || !tipoFamilia) {
+    if (!granFamilia || tipos.some((t) => !t)) {
       alert("Todos los campos son obligatorios.");
       return;
     }
 
-    onSave({ gran_familia: granFamilia, tipo_familia: tipoFamilia });
+    if (initialData) {
+      onSave({ gran_familia: granFamilia, tipo_familia: tipos[0] });
+    } else {
+      onSave({ gran_familia: granFamilia, tipos_familia: tipos });
+    }
     onClose();
+  };
+
+  const agregarTipo = () => setTipos((prev) => [...prev, ""]);
+  const actualizarTipo = (i, val) => {
+    const nuevos = [...tipos];
+    nuevos[i] = val;
+    setTipos(nuevos);
   };
 
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h2>Agregar Familia</h2>
+        <h2>{initialData ? "Editar Familia" : "Agregar Familia"}</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -27,12 +45,20 @@ const FamiliaForm = ({ onClose, onSave }) => {
             value={granFamilia}
             onChange={(e) => setGranFamilia(e.target.value)}
           />
-          <input
-            type="text"
-            placeholder="Tipo familia"
-            value={tipoFamilia}
-            onChange={(e) => setTipoFamilia(e.target.value)}
-          />
+          {tipos.map((t, i) => (
+            <input
+              key={i}
+              type="text"
+              placeholder="Tipo familia"
+              value={t}
+              onChange={(e) => actualizarTipo(i, e.target.value)}
+            />
+          ))}
+          {!initialData && (
+            <button type="button" onClick={agregarTipo}>
+              + Agregar tipo
+            </button>
+          )}
           <div className="modal-actions">
             <button type="submit">Guardar</button>
             <button type="button" onClick={onClose}>Cancelar</button>
