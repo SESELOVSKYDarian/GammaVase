@@ -4,6 +4,8 @@ import FamiliaForm from "../../components/Admin/FamiliaForm";
 import ProductoForm from "../../components/Admin/ProductoForm";
 import ConfirmDialog from "../../components/Admin/ConfirmDialog";
 import PrecioForm from "../../components/Admin/PrecioForm";
+import IdeaCategoryForm from "../../components/Admin/IdeaCategoryForm";
+import IdeaItemForm from "../../components/Admin/IdeaItemForm";
 import "./AdminPanel.css";
 
 const AdminPanel = () => {
@@ -20,6 +22,10 @@ const AdminPanel = () => {
   const [editingProducto, setEditingProducto] = useState(null);
   const [editingPrecio, setEditingPrecio] = useState(null);
   const [confirm, setConfirm] = useState(null);
+  const [ideaCategories, setIdeaCategories] = useState([]);
+  const [showIdeaCategoryForm, setShowIdeaCategoryForm] = useState(false);
+  const [showIdeaItemForm, setShowIdeaItemForm] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState(null);
   useEffect(() => {
     if (!localStorage.getItem('adminAuthed')) {
       window.location.href = '/admin';
@@ -41,6 +47,11 @@ const AdminPanel = () => {
     fetch('http://localhost:3000/api/precios')
       .then((res) => res.json())
       .then((data) => setPrecios(data));
+
+    fetch('http://localhost:3000/api/ideas')
+      .then((res) => res.json())
+      .then((data) => setIdeaCategories(data))
+      .catch((err) => console.error('Error al cargar ideas', err));
   }, []);
 
   const guardarFamilia = async (familia) => {
@@ -168,6 +179,74 @@ const AdminPanel = () => {
       );
     } catch (err) {
       console.error('Error al eliminar lista de precios', err);
+    }
+  };
+
+  const guardarIdeaCategoria = async (name) => {
+    try {
+      const res = await fetch('http://localhost:3000/api/ideas/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      });
+      const data = await res.json();
+      setIdeaCategories((prev) => [...prev, { ...data, cards: [] }]);
+    } catch (err) {
+      alert('Error al guardar categoría: ' + err.message);
+    }
+  };
+
+  const guardarIdeaItem = async (item) => {
+    try {
+      const res = await fetch('http://localhost:3000/api/ideas/items', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item),
+      });
+      const data = await res.json();
+      setIdeaCategories((prev) =>
+        prev.map((cat) =>
+          cat.id === data.category_id
+            ? {
+                ...cat,
+                cards: [
+                  ...cat.cards,
+                  { id: data.id, title: data.title, type: data.type, url: data.url },
+                ],
+              }
+            : cat
+        )
+      );
+    } catch (err) {
+      alert('Error al guardar idea: ' + err.message);
+    }
+  };
+
+  const eliminarIdeaCategoria = async (id) => {
+    try {
+      await fetch(`http://localhost:3000/api/ideas/categories/${id}`, {
+        method: 'DELETE',
+      });
+      setIdeaCategories((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      console.error('Error al eliminar categoría', err);
+    }
+  };
+
+  const eliminarIdeaItem = async (id, categoryId) => {
+    try {
+      await fetch(`http://localhost:3000/api/ideas/items/${id}`, {
+        method: 'DELETE',
+      });
+      setIdeaCategories((prev) =>
+        prev.map((cat) =>
+          cat.id === categoryId
+            ? { ...cat, cards: cat.cards.filter((card) => card.id !== id) }
+            : cat
+        )
+      );
+    } catch (err) {
+      console.error('Error al eliminar idea', err);
     }
   };
 
@@ -498,6 +577,89 @@ const AdminPanel = () => {
             }}
             onSave={guardarPrecio}
             initialData={editingPrecio || {}}
+          />
+        )}
+      </div>
+
+      <div className="admin-section">
+        <h2>
+          Ideas{" "}
+          <span
+            className="actions"
+            onClick={() => {
+              setShowIdeaCategoryForm(true);
+            }}
+          >
+            ➕
+          </span>
+        </h2>
+        {ideaCategories.map((cat) => (
+          <div key={cat.id} className="idea-admin-category">
+            <h3>
+              {cat.name}{" "}
+              <button
+                onClick={() => {
+                  setCurrentCategory(cat.id);
+                  setShowIdeaItemForm(true);
+                }}
+              >
+                ➕ Item
+              </button>
+              <button
+                onClick={() =>
+                  confirmDelete(() => eliminarIdeaCategoria(cat.id))
+                }
+              >
+                🗑️
+              </button>
+            </h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Tipo</th>
+                  <th>URL</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cat.cards.map((card) => (
+                  <tr key={card.id}>
+                    <td>{card.title}</td>
+                    <td>{card.type}</td>
+                    <td>{card.url}</td>
+                    <td>
+                      <button
+                        onClick={() =>
+                          confirmDelete(() =>
+                            eliminarIdeaItem(card.id, cat.id)
+                          )
+                        }
+                      >
+                        🗑️
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+        {showIdeaCategoryForm && (
+          <IdeaCategoryForm
+            onClose={() => setShowIdeaCategoryForm(false)}
+            onSave={guardarIdeaCategoria}
+          />
+        )}
+        {showIdeaItemForm && (
+          <IdeaItemForm
+            categories={ideaCategories}
+            defaultCategoryId={currentCategory}
+            onClose={() => {
+              setShowIdeaItemForm(false);
+              setCurrentCategory(null);
+            }}
+            onSave={guardarIdeaItem}
           />
         )}
       </div>
