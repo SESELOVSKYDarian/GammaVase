@@ -26,6 +26,19 @@ const AdminPanel = () => {
   const [showIdeaCategoryForm, setShowIdeaCategoryForm] = useState(false);
   const [showIdeaItemForm, setShowIdeaItemForm] = useState(false);
   const [currentCategory, setCurrentCategory] = useState(null);
+  const [ideasError, setIdeasError] = useState(false);
+
+  const fetchIdeas = () => {
+    setIdeasError(false);
+    fetch('http://localhost:3000/api/ideas')
+      .then((res) => res.json())
+      .then((data) => setIdeaCategories(data))
+      .catch((err) => {
+        console.error('Error al cargar ideas', err);
+        setIdeasError(true);
+      });
+  };
+
   useEffect(() => {
     if (!localStorage.getItem('adminAuthed')) {
       window.location.href = '/admin';
@@ -48,10 +61,7 @@ const AdminPanel = () => {
       .then((res) => res.json())
       .then((data) => setPrecios(data));
 
-    fetch('http://localhost:3000/api/ideas')
-      .then((res) => res.json())
-      .then((data) => setIdeaCategories(data))
-      .catch((err) => console.error('Error al cargar ideas', err));
+    fetchIdeas();
   }, []);
 
   const guardarFamilia = async (familia) => {
@@ -593,58 +603,65 @@ const AdminPanel = () => {
             ➕
           </span>
         </h2>
-        {ideaCategories.map((cat) => (
-          <div key={cat.id} className="idea-admin-category">
-            <h3>
-              {cat.name}{" "}
-              <button
-                onClick={() => {
-                  setCurrentCategory(cat.id);
-                  setShowIdeaItemForm(true);
-                }}
-              >
-                ➕ Item
-              </button>
-              <button
-                onClick={() =>
-                  confirmDelete(() => eliminarIdeaCategoria(cat.id))
-                }
-              >
-                🗑️
-              </button>
-            </h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Tipo</th>
-                  <th>URL</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cat.cards.map((card) => (
-                  <tr key={card.id}>
-                    <td>{card.title}</td>
-                    <td>{card.type}</td>
-                    <td>{card.url}</td>
-                    <td>
-                      <button
-                        onClick={() =>
-                          confirmDelete(() =>
-                            eliminarIdeaItem(card.id, cat.id)
-                          )
-                        }
-                      >
-                        🗑️
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {ideasError ? (
+          <div>
+            <p>No se pudieron cargar las ideas</p>
+            <button onClick={fetchIdeas}>Reintentar</button>
           </div>
-        ))}
+        ) : (
+          ideaCategories.map((cat) => (
+            <div key={cat.id} className="idea-admin-category">
+              <h3>
+                {cat.name}{" "}
+                <button
+                  onClick={() => {
+                    setCurrentCategory(cat.id);
+                    setShowIdeaItemForm(true);
+                  }}
+                >
+                  ➕ Item
+                </button>
+                <button
+                  onClick={() =>
+                    confirmDelete(() => eliminarIdeaCategoria(cat.id))
+                  }
+                >
+                  🗑️
+                </button>
+              </h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Título</th>
+                    <th>Tipo</th>
+                    <th>URL</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cat.cards.map((card) => (
+                    <tr key={card.id}>
+                      <td>{card.title}</td>
+                      <td>{card.type}</td>
+                      <td>{card.url}</td>
+                      <td>
+                        <button
+                          onClick={() =>
+                            confirmDelete(() =>
+                              eliminarIdeaItem(card.id, cat.id)
+                            )
+                          }
+                        >
+                          🗑️
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))
+        )}
         {showIdeaCategoryForm && (
           <IdeaCategoryForm
             onClose={() => setShowIdeaCategoryForm(false)}
