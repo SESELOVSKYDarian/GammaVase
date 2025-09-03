@@ -1,37 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Ideas.css";
 import TijerasImage from "../../components/Empresa/TijerasImage";
-import { Link } from "react-router-dom"; //
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 const MotionDiv = motion.div;
 
 const Ideas = () => {
-  const categorias = [
-    {
-      titulo: "Ropa y accesorios",
-      imagen: "/ideas/ropayaccesorios.jpg",
-      link: "/ropa-accesorios",
-    },
-    {
-      titulo: "Decoración para el hogar",
-      imagen: "/ideas/decoracionparaelhogar.jpg",
-      link: "/decoracion-hogar",
-    },
-    { titulo: "Amigurumis", imagen: "/ideas/amigurimus.png" },
-    {
-      titulo: "Decoraciones de temporada",
-      imagen: "/ideas/decoracionfestivas.jpg",
-    },
-    {
-      titulo: "Accesorios prácticos",
-      imagen: "/ideas/AccesoriosPracticos.jpg",
-      link: "/accesorios-practicos",
-    },
-    { titulo: "Proyectos para bebés", imagen: "/ideas/proyectosparabebes.png" },
-    { titulo: "Próximamente", imagen: "/ideas/proximamente.jpg" },
-    { titulo: "Próximamente", imagen: "/ideas/proximamente.jpg" },
-    { titulo: "Próximamente", imagen: "/ideas/proximamente.jpg" },
-  ];
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/ideas")
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((err) => console.error("Error al cargar ideas", err));
+  }, []);
 
   return (
     <MotionDiv
@@ -53,28 +35,29 @@ const Ideas = () => {
         {/* Título Categorías */}
         <h2 className="ideas-subtitle">Categorías</h2>
 
-        {/* Grid de categorías */}
+        {/* Categorías e items */}
         <div className="ideas-grid">
-          {categorias.map((cat, index) => {
-            const cardContent = (
-              <div
-                className="idea-card"
-                style={{ backgroundImage: `url(${cat.imagen})` }}
-              >
-                <div className="idea-overlay">
-                  <p>{cat.titulo}</p>
-                </div>
-              </div>
-            );
-
-            return cat.link ? (
-              <Link to={cat.link} key={index}>
-                {cardContent}
-              </Link>
-            ) : (
-              <div key={index}>{cardContent}</div>
-            );
-          })}
+          {categories.map((cat) => (
+            <div key={cat.id} className="idea-category">
+              <h3>{cat.name}</h3>
+              <ul>
+                {cat.cards.map((card) => (
+                  <li key={card.id}>
+                    {card.title}{" "}
+                    {card.type === "pdf" ? (
+                      <a href={card.url} target="_blank" rel="noopener noreferrer">
+                        Descargar PDF
+                      </a>
+                    ) : (
+                      <a href={card.url} target="_blank" rel="noopener noreferrer">
+                        Ver video
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         <Link to="/tabla-ideas" className="ideas-table-link">

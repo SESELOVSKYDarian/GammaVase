@@ -124,6 +124,22 @@
   font-weight: bold;
   text-decoration: none;
 }
+
+/* Estilos para categorías dinámicas */
+.idea-category {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.idea-category ul {
+  list-style: none;
+  padding: 0;
+}
+
+.idea-category li {
+  margin-bottom: 0.5rem;
+}
 @media (max-width: 600px) {
   .ideas-banner {
     height: 250px;
