@@ -189,6 +189,11 @@ const AdminPanel = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name }),
       });
+      if (!res.ok) {
+        const error = await res.json();
+        alert(error.error || error.message || 'Error al guardar categoría');
+        return;
+      }
       const data = await res.json();
       setIdeaCategories((prev) => [...prev, { ...data, cards: [] }]);
     } catch (err) {
@@ -203,6 +208,11 @@ const AdminPanel = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(item),
       });
+      if (!res.ok) {
+        const error = await res.json();
+        alert(error.error || error.message || 'Error al guardar idea');
+        return;
+      }
       const data = await res.json();
       setIdeaCategories((prev) =>
         prev.map((cat) =>
