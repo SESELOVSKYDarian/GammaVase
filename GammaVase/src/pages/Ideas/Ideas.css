@@ -74,28 +74,11 @@
 .idea-card:hover {
   transform: scale(1.03);
 }
+
 .idea-overlay {
   position: absolute;
   letter-spacing: 2px;
   font-family: "Kaushan Script", cursive;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1.1rem;
-  text-align: center;
-  padding: 0.5rem;
-}
-
-.idea-card:hover {
-  transform: scale(1.03);
-}
-
-.idea-overlay {
-  position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
   color: white;
@@ -116,36 +99,10 @@
   z-index: 2;
 }
 
-/* Estilos para categorías dinámicas */
-.idea-category {
-  background-color: #fff;
-  padding: 1rem;
-  border-radius: 8px;
-}
-
-.idea-items {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-top: 0.5rem;
-}
-
-.idea-item {
-  background-color: #f8f8f8;
-  border-radius: 6px;
-  padding: 0.75rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.ideas-back {
   text-align: center;
-}
-
-.idea-item h4 {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
-  color: #333;
-}
-
-.idea-item a {
-  text-decoration: none;
+  margin-top: 1rem;
+  cursor: pointer;
   color: #e75ec0;
   font-weight: bold;
 }

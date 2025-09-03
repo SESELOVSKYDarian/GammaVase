@@ -28,7 +28,7 @@ app.use('/api/precios', require('./routes/preciosRoutes'));
 
 app.use('/api/login', require('./routes/authRoutes'));
 app.use('/api/ideas', require('./routes/ideasRoutes'));
-// ✅ 4. Archivos estáticos
+
 app.use('/imgCata', express.static(path.join(__dirname, '../GammaVase/public/imgCata')));
 
 // ❗ OPCIONAL: si ya usás `/api/login` desde authRoutes.js, esta ruta extra de admin podrías dejarla o renombrarla:

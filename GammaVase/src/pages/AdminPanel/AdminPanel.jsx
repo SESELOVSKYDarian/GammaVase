@@ -49,9 +49,21 @@ const AdminPanel = () => {
       .then((data) => setPrecios(data));
 
     fetch('http://localhost:3000/api/ideas')
-      .then((res) => res.json())
-      .then((data) => setIdeaCategories(data))
-      .catch((err) => console.error('Error al cargar ideas', err));
+      .then((res) => {
+        if (!res.ok) throw new Error('Error al cargar ideas');
+        return res.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setIdeaCategories(data);
+        } else {
+          setIdeaCategories([]);
+        }
+      })
+      .catch((err) => {
+        console.error('Error al cargar ideas', err);
+        setIdeaCategories([]);
+      });
   }, []);
 
   const guardarFamilia = async (familia) => {
@@ -182,14 +194,17 @@ const AdminPanel = () => {
     }
   };
 
-  const guardarIdeaCategoria = async (name) => {
+  const guardarIdeaCategoria = async ({ name, imageUrl }) => {
     try {
       const res = await fetch('http://localhost:3000/api/ideas/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, imageUrl }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al guardar categoría');
+      }
       setIdeaCategories((prev) => [...prev, { ...data, cards: [] }]);
     } catch (err) {
       alert('Error al guardar categoría: ' + err.message);
@@ -204,6 +219,9 @@ const AdminPanel = () => {
         body: JSON.stringify(item),
       });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al guardar idea');
+      }
       setIdeaCategories((prev) =>
         prev.map((cat) =>
           cat.id === data.category_id
@@ -211,7 +229,13 @@ const AdminPanel = () => {
                 ...cat,
                 cards: [
                   ...cat.cards,
-                  { id: data.id, title: data.title, type: data.type, url: data.url },
+                  {
+                    id: data.id,
+                    title: data.title,
+                    type: data.type,
+                    url: data.url,
+                    imageUrl: data.imageUrl,
+                  },
                 ],
               }
             : cat
@@ -593,10 +617,11 @@ const AdminPanel = () => {
             ➕
           </span>
         </h2>
-        {ideaCategories.map((cat) => (
-          <div key={cat.id} className="idea-admin-category">
-            <h3>
-              {cat.name}{" "}
+        {Array.isArray(ideaCategories)
+          ? ideaCategories.map((cat) => (
+              <div key={cat.id} className="idea-admin-category">
+              <h3>
+                {cat.name}{" "}
               <button
                 onClick={() => {
                   setCurrentCategory(cat.id);
@@ -644,7 +669,8 @@ const AdminPanel = () => {
               </tbody>
             </table>
           </div>
-        ))}
+        ))
+          : null}
         {showIdeaCategoryForm && (
           <IdeaCategoryForm
             onClose={() => setShowIdeaCategoryForm(false)}
