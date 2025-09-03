@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Ideas.css";
 import TijerasImage from "../../components/Empresa/TijerasImage";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 const MotionDiv = motion.div;
 
@@ -40,29 +39,25 @@ const Ideas = () => {
           {categories.map((cat) => (
             <div key={cat.id} className="idea-category">
               <h3>{cat.name}</h3>
-              <ul>
+              <div className="idea-items">
                 {cat.cards.map((card) => (
-                  <li key={card.id}>
-                    {card.title}{" "}
+                  <div key={card.id} className="idea-item">
+                    <h4>{card.title}</h4>
                     {card.type === "pdf" ? (
                       <a href={card.url} target="_blank" rel="noopener noreferrer">
-                        Descargar PDF
+                        📄 Descargar PDF
                       </a>
                     ) : (
                       <a href={card.url} target="_blank" rel="noopener noreferrer">
-                        Ver video
+                        🎬 Ver video
                       </a>
                     )}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           ))}
         </div>
-
-        <Link to="/tabla-ideas" className="ideas-table-link">
-          Ver tabla de ideas
-        </Link>
       </div>
     </MotionDiv>
   );
