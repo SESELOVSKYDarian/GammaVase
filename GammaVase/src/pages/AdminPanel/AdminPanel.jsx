@@ -49,9 +49,21 @@ const AdminPanel = () => {
       .then((data) => setPrecios(data));
 
     fetch('http://localhost:3000/api/ideas')
-      .then((res) => res.json())
-      .then((data) => setIdeaCategories(data))
-      .catch((err) => console.error('Error al cargar ideas', err));
+      .then((res) => {
+        if (!res.ok) throw new Error('Error al cargar ideas');
+        return res.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setIdeaCategories(data);
+        } else {
+          setIdeaCategories([]);
+        }
+      })
+      .catch((err) => {
+        console.error('Error al cargar ideas', err);
+        setIdeaCategories([]);
+      });
   }, []);
 
   const guardarFamilia = async (familia) => {
@@ -599,7 +611,7 @@ const AdminPanel = () => {
             ➕
           </span>
         </h2>
-        {ideaCategories.map((cat) => (
+        {Array.isArray(ideaCategories) && ideaCategories.map((cat) => (
           <div key={cat.id} className="idea-admin-category">
             <h3>
               {cat.name}{" "}
