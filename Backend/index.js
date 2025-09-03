@@ -27,7 +27,7 @@ app.use('/api/productos', require('./routes/productosRoutes'));
 app.use('/api/precios', require('./routes/preciosRoutes'));
 
 app.use('/api/login', require('./routes/authRoutes'));
-
+app.use('/api/ideas', require('./routes/ideasRoutes'));
 // ✅ 4. Archivos estáticos
 app.use('/imgCata', express.static(path.join(__dirname, '../GammaVase/public/imgCata')));
 
