@@ -105,6 +105,22 @@
   position: relative;
   z-index: 1;
 }
+
+@media (max-width: 768px) {
+  .searchSection {
+    height: auto;
+    padding: 3rem 1rem;
+  }
+
+  .searchTitle {
+    font-size: 1.5rem;
+  }
+
+  .sliderWrapper {
+    padding: 3rem 1rem;
+  }
+}
+
 @media (max-width: 600px) {
   .searchSection {
     height: auto;

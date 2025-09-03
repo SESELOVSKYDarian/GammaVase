@@ -31,3 +31,27 @@
   font-family: "Kaushan Script", cursive;
   color: #e75ec0;
 }
+
+@media (max-width: 768px) {
+  .hero {
+    height: 60vh;
+  }
+
+  .hero h1 {
+    font-size: 4rem;
+  }
+
+  .somos {
+    padding-left: 0;
+  }
+
+  .gamma {
+    margin: -4rem auto 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 3rem;
+  }
+}

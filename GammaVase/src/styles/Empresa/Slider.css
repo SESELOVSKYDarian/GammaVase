@@ -30,3 +30,26 @@
 .slider-buttons button.active {
   background-color: #e75ec0;
 }
+
+@media (max-width: 768px) {
+  .slider img {
+    width: 100%;
+    max-height: 300px;
+  }
+
+  .slider-buttons {
+    justify-content: center;
+    margin: 1rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .slider img {
+    max-height: 200px;
+  }
+
+  .slider-buttons button {
+    width: 1rem;
+    height: 1rem;
+  }
+}

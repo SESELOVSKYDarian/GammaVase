@@ -118,3 +118,17 @@
     margin-top: 1rem;
   }
 }
+
+@media (max-width: 480px) {
+  .ideas-grid {
+    padding: 0 1rem;
+  }
+
+  .idea-card {
+    height: 120px;
+  }
+
+  .ideas-banner .logo-gamma {
+    height: 60px;
+  }
+}

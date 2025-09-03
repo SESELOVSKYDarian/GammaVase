@@ -275,3 +275,22 @@
     height: 80px;
   }
 }
+
+@media (max-width: 480px) {
+  .catalogo-container {
+    padding: 0.5rem;
+  }
+
+  .sidebar {
+    padding: 0.5rem;
+  }
+
+  .productos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    padding: 1rem;
+  }
+
+  .titulo-principal h3 {
+    font-size: 1.8rem;
+  }
+}

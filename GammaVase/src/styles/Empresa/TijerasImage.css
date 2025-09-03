@@ -10,3 +10,15 @@
 .tijeras-container img {
   max-width: 100%;
 }
+
+@media (max-width: 768px) {
+  .tijeras-container {
+    top: -60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tijeras-container {
+    top: -40px;
+  }
+}
