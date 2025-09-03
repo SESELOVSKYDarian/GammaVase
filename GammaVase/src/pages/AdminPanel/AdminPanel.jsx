@@ -182,12 +182,12 @@ const AdminPanel = () => {
     }
   };
 
-  const guardarIdeaCategoria = async (name) => {
+  const guardarIdeaCategoria = async ({ name, imageUrl }) => {
     try {
       const res = await fetch('http://localhost:3000/api/ideas/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, imageUrl }),
       });
       const data = await res.json();
       setIdeaCategories((prev) => [...prev, { ...data, cards: [] }]);
@@ -211,7 +211,13 @@ const AdminPanel = () => {
                 ...cat,
                 cards: [
                   ...cat.cards,
-                  { id: data.id, title: data.title, type: data.type, url: data.url },
+                  {
+                    id: data.id,
+                    title: data.title,
+                    type: data.type,
+                    url: data.url,
+                    imageUrl: data.imageUrl,
+                  },
                 ],
               }
             : cat

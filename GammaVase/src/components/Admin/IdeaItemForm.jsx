@@ -7,6 +7,7 @@ const IdeaItemForm = ({ categories, defaultCategoryId = "", onClose, onSave }) =
     title: "",
     type: "video",
     url: "",
+    imageUrl: "",
   });
 
   const handleChange = (e) => {
@@ -54,6 +55,12 @@ const IdeaItemForm = ({ categories, defaultCategoryId = "", onClose, onSave }) =
             name="url"
             placeholder="URL"
             value={form.url}
+            onChange={handleChange}
+          />
+          <input
+            name="imageUrl"
+            placeholder="URL de imagen"
+            value={form.imageUrl}
             onChange={handleChange}
           />
           <div className="modal-actions">

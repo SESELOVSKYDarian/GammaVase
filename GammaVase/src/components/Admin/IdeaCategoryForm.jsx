@@ -2,15 +2,19 @@ import React, { useState } from "react";
 import "./UsuarioForm.css";
 
 const IdeaCategoryForm = ({ onClose, onSave }) => {
-  const [name, setName] = useState("");
+  const [form, setForm] = useState({ name: "", imageUrl: "" });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name.trim()) {
+    if (!form.name.trim()) {
       alert("El nombre es obligatorio.");
       return;
     }
-    onSave(name);
+    onSave(form);
     onClose();
   };
 
@@ -22,8 +26,16 @@ const IdeaCategoryForm = ({ onClose, onSave }) => {
           <input
             type="text"
             placeholder="Nombre"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            placeholder="URL de imagen"
+            name="imageUrl"
+            value={form.imageUrl}
+            onChange={handleChange}
           />
           <div className="modal-actions">
             <button type="submit">Guardar</button>

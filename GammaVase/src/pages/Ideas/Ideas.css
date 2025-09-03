@@ -74,28 +74,11 @@
 .idea-card:hover {
   transform: scale(1.03);
 }
+
 .idea-overlay {
   position: absolute;
   letter-spacing: 2px;
   font-family: "Kaushan Script", cursive;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 1.1rem;
-  text-align: center;
-  padding: 0.5rem;
-}
-
-.idea-card:hover {
-  transform: scale(1.03);
-}
-
-.idea-overlay {
-  position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
   color: white;
@@ -116,29 +99,12 @@
   z-index: 2;
 }
 
-.ideas-table-link {
-  display: block;
-  margin: 2rem auto 0;
+.ideas-back {
   text-align: center;
+  margin-top: 1rem;
+  cursor: pointer;
   color: #e75ec0;
   font-weight: bold;
-  text-decoration: none;
-}
-
-/* Estilos para categorías dinámicas */
-.idea-category {
-  background-color: #fff;
-  padding: 1rem;
-  border-radius: 8px;
-}
-
-.idea-category ul {
-  list-style: none;
-  padding: 0;
-}
-
-.idea-category li {
-  margin-bottom: 0.5rem;
 }
 @media (max-width: 600px) {
   .ideas-banner {

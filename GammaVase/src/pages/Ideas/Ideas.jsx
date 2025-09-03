@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./Ideas.css";
 import TijerasImage from "../../components/Empresa/TijerasImage";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 const MotionDiv = motion.div;
 
 const Ideas = () => {
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/ideas")
@@ -33,36 +33,42 @@ const Ideas = () => {
         <TijerasImage />
 
         {/* Título Categorías */}
-        <h2 className="ideas-subtitle">Categorías</h2>
+        <h2 className="ideas-subtitle">
+          {selectedCategory ? selectedCategory.name : "Categorías"}
+        </h2>
 
-        {/* Categorías e items */}
+        {/* Grilla de categorías o subcategorías */}
         <div className="ideas-grid">
-          {categories.map((cat) => (
-            <div key={cat.id} className="idea-category">
-              <h3>{cat.name}</h3>
-              <ul>
-                {cat.cards.map((card) => (
-                  <li key={card.id}>
-                    {card.title}{" "}
-                    {card.type === "pdf" ? (
-                      <a href={card.url} target="_blank" rel="noopener noreferrer">
-                        Descargar PDF
-                      </a>
-                    ) : (
-                      <a href={card.url} target="_blank" rel="noopener noreferrer">
-                        Ver video
-                      </a>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {selectedCategory
+            ? selectedCategory.cards.map((card) => (
+                <a
+                  key={card.id}
+                  href={card.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="idea-card"
+                  style={{ backgroundImage: `url(${card.imageUrl})` }}
+                >
+                  <div className="idea-overlay">{card.title}</div>
+                </a>
+              ))
+            : categories.map((cat) => (
+                <div
+                  key={cat.id}
+                  className="idea-card"
+                  style={{ backgroundImage: `url(${cat.imageUrl})` }}
+                  onClick={() => setSelectedCategory(cat)}
+                >
+                  <div className="idea-overlay">{cat.name}</div>
+                </div>
+              ))}
         </div>
 
-        <Link to="/tabla-ideas" className="ideas-table-link">
-          Ver tabla de ideas
-        </Link>
+        {selectedCategory && (
+          <div className="ideas-back" onClick={() => setSelectedCategory(null)}>
+            ← Volver a categorías
+          </div>
+        )}
       </div>
     </MotionDiv>
   );

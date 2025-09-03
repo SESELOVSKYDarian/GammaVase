@@ -3,15 +3,16 @@ const pool = require('../db/db');
 const getIdeas = async (_req, res) => {
   try {
     const categoriesRes = await pool.query(
-      'SELECT id, name FROM idea_categories ORDER BY id'
+      'SELECT id, name, image_url FROM idea_categories ORDER BY id'
     );
     const itemsRes = await pool.query(
-      'SELECT id, category_id, title, type, url FROM idea_items ORDER BY id'
+      'SELECT id, category_id, title, type, url, image_url FROM idea_items ORDER BY id'
     );
 
     const categories = categoriesRes.rows.map((cat) => ({
       id: cat.id,
       name: cat.name,
+      imageUrl: cat.image_url,
       cards: itemsRes.rows
         .filter((item) => item.category_id === cat.id)
         .map((item) => ({
@@ -19,6 +20,7 @@ const getIdeas = async (_req, res) => {
           title: item.title,
           type: item.type,
           url: item.url,
+          imageUrl: item.image_url,
         })),
     }));
 
@@ -31,12 +33,12 @@ const getIdeas = async (_req, res) => {
 
 const createCategory = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, imageUrl } = req.body;
     const result = await pool.query(
-      'INSERT INTO idea_categories(name) VALUES($1) RETURNING id, name',
-      [name]
+      'INSERT INTO idea_categories(name, image_url) VALUES($1,$2) RETURNING id, name, image_url',
+      [name, imageUrl]
     );
-    res.status(201).json(result.rows[0]);
+    res.status(201).json({ id: result.rows[0].id, name: result.rows[0].name, imageUrl: result.rows[0].image_url });
   } catch (err) {
     console.error('Error creating category', err);
     res.status(500).json({ error: 'Error creating category' });
@@ -45,14 +47,21 @@ const createCategory = async (req, res) => {
 
 const createItem = async (req, res) => {
   try {
-    const { categoryId, title, type, url } = req.body;
+    const { categoryId, title, type, url, imageUrl } = req.body;
     const result = await pool.query(
-      `INSERT INTO idea_items(category_id, title, type, url)
-       VALUES($1,$2,$3,$4)
-       RETURNING id, category_id, title, type, url`,
-      [categoryId, title, type, url]
+      `INSERT INTO idea_items(category_id, title, type, url, image_url)
+       VALUES($1,$2,$3,$4,$5)
+       RETURNING id, category_id, title, type, url, image_url`,
+      [categoryId, title, type, url, imageUrl]
     );
-    res.status(201).json(result.rows[0]);
+    res.status(201).json({
+      id: result.rows[0].id,
+      category_id: result.rows[0].category_id,
+      title: result.rows[0].title,
+      type: result.rows[0].type,
+      url: result.rows[0].url,
+      imageUrl: result.rows[0].image_url,
+    });
   } catch (err) {
     console.error('Error creating item', err);
     res.status(500).json({ error: 'Error creating item' });
