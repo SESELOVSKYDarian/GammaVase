@@ -202,6 +202,9 @@ const AdminPanel = () => {
         body: JSON.stringify({ name, imageUrl }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al guardar categoría');
+      }
       setIdeaCategories((prev) => [...prev, { ...data, cards: [] }]);
     } catch (err) {
       alert('Error al guardar categoría: ' + err.message);
@@ -216,6 +219,9 @@ const AdminPanel = () => {
         body: JSON.stringify(item),
       });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al guardar idea');
+      }
       setIdeaCategories((prev) =>
         prev.map((cat) =>
           cat.id === data.category_id
@@ -611,10 +617,11 @@ const AdminPanel = () => {
             ➕
           </span>
         </h2>
-        {Array.isArray(ideaCategories) && ideaCategories.map((cat) => (
-          <div key={cat.id} className="idea-admin-category">
-            <h3>
-              {cat.name}{" "}
+        {Array.isArray(ideaCategories)
+          ? ideaCategories.map((cat) => (
+              <div key={cat.id} className="idea-admin-category">
+              <h3>
+                {cat.name}{" "}
               <button
                 onClick={() => {
                   setCurrentCategory(cat.id);
@@ -662,7 +669,8 @@ const AdminPanel = () => {
               </tbody>
             </table>
           </div>
-        ))}
+        ))
+          : null}
         {showIdeaCategoryForm && (
           <IdeaCategoryForm
             onClose={() => setShowIdeaCategoryForm(false)}
