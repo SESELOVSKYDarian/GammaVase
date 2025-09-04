@@ -6,6 +6,7 @@ import ConfirmDialog from "../../components/Admin/ConfirmDialog";
 import PrecioForm from "../../components/Admin/PrecioForm";
 import IdeaCategoryForm from "../../components/Admin/IdeaCategoryForm";
 import IdeaItemForm from "../../components/Admin/IdeaItemForm";
+import { Edit, Trash2 } from "lucide-react";
 import "./AdminPanel.css";
 
 const AdminPanel = () => {
@@ -26,6 +27,8 @@ const AdminPanel = () => {
   const [showIdeaCategoryForm, setShowIdeaCategoryForm] = useState(false);
   const [showIdeaItemForm, setShowIdeaItemForm] = useState(false);
   const [currentCategory, setCurrentCategory] = useState(null);
+  const [editingIdeaCategory, setEditingIdeaCategory] = useState(null);
+  const [editingIdeaItem, setEditingIdeaItem] = useState(null);
   useEffect(() => {
     if (!localStorage.getItem('adminAuthed')) {
       window.location.href = '/admin';
@@ -69,18 +72,32 @@ const AdminPanel = () => {
   const guardarFamilia = async (familia) => {
     try {
       if (editingFamilia) {
+        const { nuevos_tipos, ...base } = familia;
         const res = await fetch(
           `http://localhost:3000/api/familias/${editingFamilia.id}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(familia),
+            body: JSON.stringify(base),
           }
         );
         const data = await res.json();
         setFamilias((prev) =>
           prev.map((f) => (f.id === editingFamilia.id ? data : f))
         );
+        if (nuevos_tipos && nuevos_tipos.length) {
+          const resNuevos = await fetch("http://localhost:3000/api/familias", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              gran_familia: familia.gran_familia,
+              tipos_familia: nuevos_tipos,
+            }),
+          });
+          const dataNuevos = await resNuevos.json();
+          const nuevas = Array.isArray(dataNuevos) ? dataNuevos : [dataNuevos];
+          setFamilias((prev) => [...prev, ...nuevas]);
+        }
       } else {
         const res = await fetch("http://localhost:3000/api/familias", {
           method: "POST",
@@ -194,53 +211,91 @@ const AdminPanel = () => {
     }
   };
 
-  const guardarIdeaCategoria = async ({ name, imageUrl }) => {
+  const guardarIdeaCategoria = async (formData) => {
     try {
-      const res = await fetch('http://localhost:3000/api/ideas/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, imageUrl }),
-      });
+      let url = 'http://localhost:3000/api/ideas/categories';
+      let method = 'POST';
+      if (editingIdeaCategory) {
+        url += `/${editingIdeaCategory.id}`;
+        method = 'PUT';
+      }
+      const res = await fetch(url, { method, body: formData });
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || 'Error al guardar categoría');
       }
-      setIdeaCategories((prev) => [...prev, { ...data, cards: [] }]);
+      if (editingIdeaCategory) {
+        setIdeaCategories((prev) =>
+          prev.map((c) =>
+            c.id === data.id ? { ...c, name: data.name, imageUrl: data.imageUrl } : c
+          )
+        );
+      } else {
+        setIdeaCategories((prev) => [...prev, { ...data, cards: [] }]);
+      }
     } catch (err) {
       alert('Error al guardar categoría: ' + err.message);
     }
   };
 
-  const guardarIdeaItem = async (item) => {
+  const guardarIdeaItem = async (formData) => {
     try {
-      const res = await fetch('http://localhost:3000/api/ideas/items', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(item),
-      });
+      let url = 'http://localhost:3000/api/ideas/items';
+      let method = 'POST';
+      if (editingIdeaItem) {
+        url += `/${editingIdeaItem.id}`;
+        method = 'PUT';
+      }
+      const res = await fetch(url, { method, body: formData });
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || 'Error al guardar idea');
       }
-      setIdeaCategories((prev) =>
-        prev.map((cat) =>
-          cat.id === data.category_id
-            ? {
+      if (editingIdeaItem) {
+        setIdeaCategories((prev) =>
+          prev.map((cat) => {
+            if (cat.id === editingIdeaItem.category_id && cat.id !== data.category_id) {
+              return { ...cat, cards: cat.cards.filter((card) => card.id !== data.id) };
+            }
+            if (cat.id === data.category_id) {
+              return {
                 ...cat,
-                cards: [
-                  ...cat.cards,
-                  {
-                    id: data.id,
-                    title: data.title,
-                    type: data.type,
-                    url: data.url,
-                    imageUrl: data.imageUrl,
-                  },
-                ],
-              }
-            : cat
-        )
-      );
+                cards: cat.cards.some((card) => card.id === data.id)
+                  ? cat.cards.map((card) =>
+                      card.id === data.id
+                        ? { id: data.id, title: data.title, type: data.type, url: data.url, imageUrl: data.imageUrl }
+                        : card
+                    )
+                  : [
+                      ...cat.cards,
+                      { id: data.id, title: data.title, type: data.type, url: data.url, imageUrl: data.imageUrl },
+                    ],
+              };
+            }
+            return cat;
+          })
+        );
+      } else {
+        setIdeaCategories((prev) =>
+          prev.map((cat) =>
+            cat.id === data.category_id
+              ? {
+                  ...cat,
+                  cards: [
+                    ...cat.cards,
+                    {
+                      id: data.id,
+                      title: data.title,
+                      type: data.type,
+                      url: data.url,
+                      imageUrl: data.imageUrl,
+                    },
+                  ],
+                }
+              : cat
+          )
+        );
+      }
     } catch (err) {
       alert('Error al guardar idea: ' + err.message);
     }
@@ -320,8 +375,8 @@ const AdminPanel = () => {
 
   const confirmDelete = (
     action,
-    message = 'Are you sure you want to delete this item?',
-    confirmLabel = 'Yes',
+    message = '¿Está seguro de que desea eliminar este elemento?',
+    confirmLabel = 'Sí',
     cancelLabel = 'No'
   ) => {
     setConfirm({
@@ -382,10 +437,10 @@ const AdminPanel = () => {
             setShowForm(true);
           }}
         >
-          ✏️
+          <Edit size={16} />
         </button>
         <button onClick={() => confirmDelete(() => eliminarUsuario(usuario.id))}>
-          🗑️
+          <Trash2 size={16} />
         </button>
       </td>
     </tr>
@@ -439,10 +494,10 @@ const AdminPanel = () => {
                       setShowFamiliaForm(true);
                     }}
                   >
-                    ✏️
+                    <Edit size={16} />
                   </button>
                   <button onClick={() => confirmDelete(() => eliminarFamilia(familia.id))}>
-                    🗑️
+                    <Trash2 size={16} />
                   </button>
                 </td>
               </tr>
@@ -517,10 +572,10 @@ const AdminPanel = () => {
             setShowProductoForm(true);
           }}
         >
-          ✏️
+          <Edit size={16} />
         </button>
         <button onClick={() => confirmDelete(() => eliminarProducto(p.id))}>
-          🗑️
+          <Trash2 size={16} />
         </button>
       </td>
     </tr>
@@ -574,7 +629,7 @@ const AdminPanel = () => {
                       setShowPrecioForm(true);
                     }}
                   >
-                    ✏️
+                    <Edit size={16} />
                   </button>
                   <button
                     onClick={() =>
@@ -586,7 +641,7 @@ const AdminPanel = () => {
                       )
                     }
                   >
-                    🗑️
+                    <Trash2 size={16} />
                   </button>
                 </td>
               </tr>
@@ -611,6 +666,7 @@ const AdminPanel = () => {
           <span
             className="actions"
             onClick={() => {
+              setEditingIdeaCategory(null);
               setShowIdeaCategoryForm(true);
             }}
           >
@@ -620,22 +676,31 @@ const AdminPanel = () => {
         {Array.isArray(ideaCategories)
           ? ideaCategories.map((cat) => (
               <div key={cat.id} className="idea-admin-category">
-              <h3>
-                {cat.name}{" "}
+            <h3>
+              {cat.name}{" "}
               <button
                 onClick={() => {
                   setCurrentCategory(cat.id);
                   setShowIdeaItemForm(true);
+                  setEditingIdeaItem(null);
                 }}
               >
                 ➕ Item
+              </button>
+              <button
+                onClick={() => {
+                  setEditingIdeaCategory(cat);
+                  setShowIdeaCategoryForm(true);
+                }}
+              >
+                <Edit size={16} />
               </button>
               <button
                 onClick={() =>
                   confirmDelete(() => eliminarIdeaCategoria(cat.id))
                 }
               >
-                🗑️
+                <Trash2 size={16} />
               </button>
             </h3>
             <table>
@@ -655,13 +720,21 @@ const AdminPanel = () => {
                     <td>{card.url}</td>
                     <td>
                       <button
+                        onClick={() => {
+                          setEditingIdeaItem({ ...card, category_id: cat.id });
+                          setShowIdeaItemForm(true);
+                        }}
+                      >
+                        <Edit size={16} />
+                      </button>
+                      <button
                         onClick={() =>
                           confirmDelete(() =>
                             eliminarIdeaItem(card.id, cat.id)
                           )
                         }
                       >
-                        🗑️
+                        <Trash2 size={16} />
                       </button>
                     </td>
                   </tr>
@@ -673,8 +746,12 @@ const AdminPanel = () => {
           : null}
         {showIdeaCategoryForm && (
           <IdeaCategoryForm
-            onClose={() => setShowIdeaCategoryForm(false)}
+            onClose={() => {
+              setShowIdeaCategoryForm(false);
+              setEditingIdeaCategory(null);
+            }}
             onSave={guardarIdeaCategoria}
+            initialData={editingIdeaCategory}
           />
         )}
         {showIdeaItemForm && (
@@ -684,8 +761,10 @@ const AdminPanel = () => {
             onClose={() => {
               setShowIdeaItemForm(false);
               setCurrentCategory(null);
+              setEditingIdeaItem(null);
             }}
             onSave={guardarIdeaItem}
+            initialData={editingIdeaItem}
           />
         )}
       </div>

@@ -20,7 +20,12 @@ const FamiliaForm = ({ onClose, onSave, initialData }) => {
     }
 
     if (initialData) {
-      onSave({ gran_familia: granFamilia, tipo_familia: tipos[0] });
+      const nuevos = tipos.slice(1);
+      onSave({
+        gran_familia: granFamilia,
+        tipo_familia: tipos[0],
+        nuevos_tipos: nuevos.length ? nuevos : undefined,
+      });
     } else {
       onSave({ gran_familia: granFamilia, tipos_familia: tipos });
     }
@@ -39,26 +44,29 @@ const FamiliaForm = ({ onClose, onSave, initialData }) => {
       <div className="modal">
         <h2>{initialData ? "Editar Familia" : "Agregar Familia"}</h2>
         <form onSubmit={handleSubmit}>
+          <label htmlFor="gran_familia">Gran familia</label>
           <input
+            id="gran_familia"
             type="text"
             placeholder="Gran familia"
             value={granFamilia}
             onChange={(e) => setGranFamilia(e.target.value)}
           />
           {tipos.map((t, i) => (
-            <input
-              key={i}
-              type="text"
-              placeholder="Tipo familia"
-              value={t}
-              onChange={(e) => actualizarTipo(i, e.target.value)}
-            />
+            <div key={i}>
+              <label htmlFor={`tipo_${i}`}>Tipo familia</label>
+              <input
+                id={`tipo_${i}`}
+                type="text"
+                placeholder="Tipo familia"
+                value={t}
+                onChange={(e) => actualizarTipo(i, e.target.value)}
+              />
+            </div>
           ))}
-          {!initialData && (
-            <button type="button" onClick={agregarTipo}>
-              + Agregar tipo
-            </button>
-          )}
+          <button type="button" onClick={agregarTipo}>
+            + Agregar tipo
+          </button>
           <div className="modal-actions">
             <button type="submit">Guardar</button>
             <button type="button" onClick={onClose}>Cancelar</button>

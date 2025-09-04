@@ -38,47 +38,55 @@ const UsuarioForm = ({ onClose, onSave, initialData }) => {
       <div className="modal">
         <h2>{initialData ? 'Editar Usuario' : 'Agregar Usuario'}</h2>
         <form onSubmit={handleSubmit}>
+          <label htmlFor="id">ID</label>
           <input
+            id="id"
             name="id"
             placeholder="ID"
             value={formData.id}
             onChange={handleChange}
             required
           />
+          <label htmlFor="cliente">Cliente</label>
           <input
+            id="cliente"
             name="cliente"
             placeholder="Cliente"
             value={formData.cliente}
             onChange={handleChange}
             required
           />
-        <input
-          name="contrasena"
-          placeholder="Contraseña"
-          value={formData.contrasena}
-          onChange={handleChange}
-          required
-        />
+          <label htmlFor="contrasena">Contraseña</label>
+          <input
+            id="contrasena"
+            name="contrasena"
+            placeholder="Contraseña"
+            value={formData.contrasena}
+            onChange={handleChange}
+            required
+          />
+          <label htmlFor="rol">Rol</label>
+          <select name="rol" id="rol" value={formData.rol} onChange={handleChange}>
+            <option value="cliente">Cliente</option>
+            <option value="mayorista">Mayorista</option>
+            <option value="admin">Administrador</option>
+          </select>
 
-        <select name="rol" value={formData.rol} onChange={handleChange}>
-          <option value="cliente">Cliente</option>
-          <option value="mayorista">Mayorista</option>
-          <option value="admin">Administrador</option>
-        </select>
-
-        <select
-          name="lista_de_precio"
-          value={formData.lista_de_precio}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Lista de precio</option>
-          {listas.map((l) => (
-            <option key={l.lista_de_precio_id} value={l.lista_de_precio_id}>
-              {l.lista_de_precio_id}
-            </option>
-          ))}
-        </select>
+          <label htmlFor="lista_de_precio">Lista de precio</label>
+          <select
+            name="lista_de_precio"
+            id="lista_de_precio"
+            value={formData.lista_de_precio}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Lista de precio</option>
+            {listas.map((l) => (
+              <option key={l.lista_de_precio_id} value={l.lista_de_precio_id}>
+                {l.lista_de_precio_id}
+              </option>
+            ))}
+          </select>
 
           <div className="modal-actions">
             <button type="submit">Guardar</button>
