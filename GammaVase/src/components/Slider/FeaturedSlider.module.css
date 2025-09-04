@@ -1,11 +1,17 @@
 .sliderWrapper {
   background: #f0ede8;
   overflow: hidden;
-  padding: 4rem 2rem;
+  padding: 6rem 2rem;
 }
 
-
-
+.decorativeImg {
+  position: absolute;
+  top: -30px;
+  right: -100px;
+  width: 250px;
+  height: auto;
+  z-index: 0;
+}
 
 .content {
   position: relative;
@@ -38,6 +44,11 @@
   padding: 0.75rem 1.5rem;
   border-radius: 9999px;
   cursor: pointer;
+  font-weight: 700;
+}
+
+.addButton:hover {
+  background: rgb(192, 0, 125);
 }
 
 .sliderArea {

@@ -22,8 +22,7 @@ const FeaturedSlider = () => {
   }, []);
 
   const siguiente = () => {
-    if (productos.length)
-      setIndex((prev) => (prev + 1) % productos.length);
+    if (productos.length) setIndex((prev) => (prev + 1) % productos.length);
   };
 
   const anterior = () => {
@@ -35,7 +34,8 @@ const FeaturedSlider = () => {
     if (!productos.length) return styles.inactive;
     if (i === index) return styles.active;
     if (i === (index + 1) % productos.length) return styles.next;
-    if (i === (index - 1 + productos.length) % productos.length) return styles.prev;
+    if (i === (index - 1 + productos.length) % productos.length)
+      return styles.prev;
     return styles.inactive;
   };
 
@@ -61,6 +61,11 @@ const FeaturedSlider = () => {
       viewport={{ once: true }}
     >
       <div className={styles.content}>
+        <img
+          src="logo2.png"
+          alt="Gammamodas"
+          className={styles.decorativeImg}
+        />
         <div className={styles.text}>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -104,14 +109,19 @@ const FeaturedSlider = () => {
           </button>
           {productos.map((p, i) => (
             <div key={p.id} className={`${styles.productImage} ${getClass(i)}`}>
-              <img src={`http://localhost:3000${p.img_articulo[0]}`} alt={p.articulo} />
+              <img
+                src={`http://localhost:3000${p.img_articulo[0]}`}
+                alt={p.articulo}
+              />
             </div>
           ))}
           <div className={styles.dots}>
             {productos.map((_, i) => (
               <span
                 key={i}
-                className={`${styles.dot} ${i === index ? styles.activeDot : ""}`}
+                className={`${styles.dot} ${
+                  i === index ? styles.activeDot : ""
+                }`}
                 onClick={() => setIndex(i)}
               ></span>
             ))}
