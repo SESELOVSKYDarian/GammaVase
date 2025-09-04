@@ -43,11 +43,11 @@ const Ideas = () => {
             ? selectedCategory.cards.map((card) => (
                 <a
                   key={card.id}
-                  href={card.url}
+                  href={card.type === "pdf" ? `http://localhost:3000${card.url}` : card.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="idea-card"
-                  style={{ backgroundImage: `url(${card.imageUrl})` }}
+                  style={{ backgroundImage: `url(http://localhost:3000${card.imageUrl})` }}
                 >
                   <div className="idea-overlay">{card.title}</div>
                 </a>
@@ -56,7 +56,7 @@ const Ideas = () => {
                 <div
                   key={cat.id}
                   className="idea-card"
-                  style={{ backgroundImage: `url(${cat.imageUrl})` }}
+                  style={{ backgroundImage: `url(http://localhost:3000${cat.imageUrl})` }}
                   onClick={() => setSelectedCategory(cat)}
                 >
                   <div className="idea-overlay">{cat.name}</div>

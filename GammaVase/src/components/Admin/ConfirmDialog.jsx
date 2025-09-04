@@ -5,7 +5,7 @@ const ConfirmDialog = ({
   message,
   onConfirm,
   onCancel,
-  confirmLabel = 'Yes',
+  confirmLabel = 'Sí',
   cancelLabel = 'No',
 }) => (
   <div className="modal-backdrop">
