@@ -59,8 +59,8 @@
 
 .productos-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Solo 3 por fila */
-  gap: 1rem; /* Menor espacio entre ellas */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
   padding: 1rem 2rem;
 }
 

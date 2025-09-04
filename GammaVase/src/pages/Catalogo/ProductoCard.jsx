@@ -62,10 +62,10 @@ const ProductoCard = ({ producto }) => {
           </div>
 
           <button className="btn-carrito" onClick={agregarAlCarrito}>
-            <ShoppingCart size={20} strokeWidth={2.5} />
+            <ShoppingCart strokeWidth={2.5} />
           </button>
           <Link to={`/productos/${producto.url}`} className="btn-vermas">
-            <Eye size={20} strokeWidth={2.5} />
+            <Eye strokeWidth={2.5} />
           </Link>
         </div>
       </div>

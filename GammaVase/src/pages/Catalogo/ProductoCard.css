@@ -1,5 +1,6 @@
 .card-producto {
-  width: 220px;
+  width: 100%;
+  max-width: 220px;
   background: #f5f5f5;
   border-radius: 20px;
   /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12); */
@@ -57,14 +58,14 @@
 .precio-producto {
   color: #28a745;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
 }
 
 .acciones {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.4rem;
+  gap: clamp(0.3rem, 2vw, 0.4rem);
   margin-top: 0.3rem;
 }
 
@@ -77,14 +78,14 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  font-size: 1rem;
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
 }
 
 .contador button {
   border: none;
   background: none;
   color: white;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 3vw, 1.2rem);
   padding: 0.2rem 0.6rem;
   cursor: pointer;
 }
@@ -102,7 +103,7 @@
   color: black;
   border: none;
   padding: 0.3rem 0.5rem;
-  font-size: 10rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
   font-weight: 800;
   cursor: pointer;
   display: flex;
@@ -114,4 +115,10 @@
 .btn-carrito:hover,
 .btn-vermas:hover {
   color: #444;
+}
+
+.btn-carrito svg,
+.btn-vermas svg {
+  width: clamp(18px, 4vw, 22px);
+  height: clamp(18px, 4vw, 22px);
 }
