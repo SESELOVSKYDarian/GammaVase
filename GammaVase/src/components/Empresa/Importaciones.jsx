@@ -15,7 +15,6 @@ const Importaciones = () => {
         {paises.map((pais) => (
           <div key={pais.nombre} className="pais">
             <img src={pais.bandera} alt={pais.nombre} />
-            <p>{pais.nombre}</p>
           </div>
         ))}
       </div>

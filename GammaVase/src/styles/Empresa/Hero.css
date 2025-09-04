@@ -34,24 +34,31 @@
 
 @media (max-width: 768px) {
   .hero {
-    height: 60vh;
+    height: 50vh;
   }
 
   .hero h1 {
-    font-size: 4rem;
+    font-size: 5rem;
   }
 
   .somos {
-    padding-left: 0;
+    padding-left: 5rem;
   }
 
   .gamma {
-    margin: -4rem auto 0;
+    margin: -6rem auto 0;
   }
 }
 
 @media (max-width: 480px) {
   .hero h1 {
-    font-size: 3rem;
+    font-size: 4.3rem;
+  }
+  .somos {
+    padding-left: 4rem;
+  }
+
+  .gamma {
+    margin: -5rem auto 0;
   }
 }

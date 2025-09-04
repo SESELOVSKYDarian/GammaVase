@@ -17,11 +17,29 @@
   padding-top: 1rem;
 }
 
+@media (max-width: 1300px) {
+  .about {
+    margin-top: -7rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .about {
+    margin-top: -5rem;
+  }
+  .about h3 {
+    font-size: 2rem;
+  }
+
+  .about p {
+    font-size: 1.2rem;
+  }
+}
+
 @media (max-width: 768px) {
   .about {
-    margin-top: -4rem;
+    margin-top: -2rem;
     padding: 0 2rem;
-    text-align: center;
   }
 
   .about h3 {
@@ -35,7 +53,7 @@
 
 @media (max-width: 480px) {
   .about {
-    padding: 0 1rem;
+    padding: 0 2rem;
   }
 
   .about h3 {

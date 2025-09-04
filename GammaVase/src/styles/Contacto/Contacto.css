@@ -141,7 +141,7 @@ textarea {
 }
 
 .hero2 {
-  background: url("login.jpg") center/cover no-repeat;
+  background: url("/assets/contacto.jpg") center/cover no-repeat;
 }
 
 /* Responsivo */
@@ -160,4 +160,3 @@ textarea {
     align-items: flex-start;
   }
 }
-

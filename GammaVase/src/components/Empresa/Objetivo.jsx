@@ -6,9 +6,10 @@ const Objetivo = () => {
     <section className="objetivo">
       <h3>¿Cuál es nuestro objetivo?</h3>
       <p>
-        Nuestro objetivo es abastecer a nuestros clientes de productos de alta
-        calidad, estando atentos a los cambios y dinámica que requiere el
-        consumidor.
+        Tomamos el compromiso de proporcionarles productos de alta calidad,
+        estando atento a los cambios y tendencias. <br />
+        Nos esforzamos por brindarles lo mejor con una atención cercana y
+        dedicada para que se sientan respaldados en cada elección que realicen.
       </p>
     </section>
   );
