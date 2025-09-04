@@ -48,7 +48,10 @@ const ProductoForm = ({ onClose, onSave, initialData }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleImgChange = (e) => {
@@ -67,8 +70,8 @@ const ProductoForm = ({ onClose, onSave, initialData }) => {
     formData.append("codigo_color", form.codigo_color);
     formData.append("stock", form.stock);
     formData.append("url", generateSlug(form.articulo)); // 👈 Agrega el slug
-formData.append("precio", form.precio_minorista); // opcional, usa el mismo que el minorista
-formData.append("precio_minorista", form.precio_minorista);
+    formData.append("precio", form.precio_minorista); // opcional, usa el mismo que el minorista
+    formData.append("precio_minorista", form.precio_minorista);
     formData.append("precio_mayorista", form.precio_mayorista);
     formData.append("slider", form.slider);
 
@@ -169,15 +172,13 @@ formData.append("precio_minorista", form.precio_minorista);
             value={form.stock}
             min="0"
           />
-          <label className="slider-check">
-            <input
-              type="checkbox"
-              name="slider"
-              checked={form.slider}
-              onChange={handleChange}
-            />
-            Mostrar en slider principal
-          </label>
+          <label className="slider-check">Mostrar en slider principal</label>
+          <input
+            type="checkbox"
+            name="slider"
+            checked={form.slider}
+            onChange={handleChange}
+          />
           <label htmlFor="precio_minorista">Precio Minorista</label>
           <input
             id="precio_minorista"
