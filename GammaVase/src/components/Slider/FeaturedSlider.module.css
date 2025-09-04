@@ -4,24 +4,8 @@
   padding: 4rem 2rem;
 }
 
-.sliderWrapper::before {
-  content: "";
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  top: 50%;
-  left: 50%;
-  transform: translate(10%, -50%);
-  border-radius: 1000%;
-  filter: blur(150px);
-  background-image: radial-gradient(
-    circle at center,
-    rgba(243, 40, 184, 1) 0%,
-    rgba(84, 5, 169, 1) 60%,
-    #f0ede8 20%
-  );
-  z-index: 0;
-}
+
+
 
 .content {
   position: relative;
