@@ -85,14 +85,18 @@ formData.append("precio_minorista", form.precio_minorista);
       <div className="modal">
         <h2>{initialData ? "Editar Producto" : "Agregar Producto"}</h2>
         <form onSubmit={handleSubmit}>
+          <label htmlFor="articulo">Artículo</label>
           <input
+            id="articulo"
             name="articulo"
             placeholder="Artículo"
             onChange={handleChange}
             value={form.articulo}
             required
           />
+          <label htmlFor="gran_familia_select">Gran familia</label>
           <select
+            id="gran_familia_select"
             value={granSel}
             onChange={(e) => {
               setGranSel(e.target.value);
@@ -107,7 +111,9 @@ formData.append("precio_minorista", form.precio_minorista);
               </option>
             ))}
           </select>
+          <label htmlFor="familia_id">Familia</label>
           <select
+            id="familia_id"
             name="familia_id"
             value={form.familia_id}
             onChange={handleChange}
@@ -122,13 +128,17 @@ formData.append("precio_minorista", form.precio_minorista);
                 </option>
               ))}
           </select>
+          <label htmlFor="descripcion">Descripción</label>
           <textarea
+            id="descripcion"
             name="descripcion"
             placeholder="Descripción"
             onChange={handleChange}
             value={form.descripcion}
           />
+          <label htmlFor="linea">Línea o marca</label>
           <input
+            id="linea"
             name="linea"
             placeholder="Línea o marca"
             onChange={handleChange}
@@ -141,14 +151,17 @@ formData.append("precio_minorista", form.precio_minorista);
             accept="image/*"
             onChange={handleImgChange}
           />
-          <label>Código de color</label>
+          <label htmlFor="codigo_color">Código de color</label>
           <input
+            id="codigo_color"
             name="codigo_color"
             placeholder="#FFFFFF"
             onChange={handleChange}
             value={form.codigo_color}
           />
+          <label htmlFor="stock">Stock</label>
           <input
+            id="stock"
             type="number"
             name="stock"
             placeholder="Stock"
@@ -165,25 +178,29 @@ formData.append("precio_minorista", form.precio_minorista);
             />
             Mostrar en slider principal
           </label>
-<input
-  type="number"
-  name="precio_minorista"
-  placeholder="Precio Minorista"
-  onChange={handleChange}
-  value={form.precio_minorista}
-  min="0"
-  required
-/>
+          <label htmlFor="precio_minorista">Precio Minorista</label>
+          <input
+            id="precio_minorista"
+            type="number"
+            name="precio_minorista"
+            placeholder="Precio Minorista"
+            onChange={handleChange}
+            value={form.precio_minorista}
+            min="0"
+            required
+          />
 
-<input
-  type="number"
-  name="precio_mayorista"
-  placeholder="Precio Mayorista"
-  onChange={handleChange}
-  value={form.precio_mayorista}
-  min="0"
-  required
-/>
+          <label htmlFor="precio_mayorista">Precio Mayorista</label>
+          <input
+            id="precio_mayorista"
+            type="number"
+            name="precio_mayorista"
+            placeholder="Precio Mayorista"
+            onChange={handleChange}
+            value={form.precio_mayorista}
+            min="0"
+            required
+          />
           <div className="modal-actions">
             <button type="submit">Guardar</button>
             <button type="button" onClick={onClose}>

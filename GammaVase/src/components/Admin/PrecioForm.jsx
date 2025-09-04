@@ -21,14 +21,18 @@ const PrecioForm = ({ onClose, onSave, initialData = {} }) => {
           {initialData.lista_de_precio_id ? `Editar Lista ${initialData.lista_de_precio_id}` : 'Nueva Lista'}
         </h2>
         <form onSubmit={handleSubmit}>
+          <label htmlFor="lista_id">ID de lista</label>
           <input
+            id="lista_id"
             value={listaId}
             onChange={(e) => setListaId(e.target.value)}
             placeholder="ID de lista"
             required
             disabled={!!initialData.lista_de_precio_id}
           />
+          <label htmlFor="porcentaje">Porcentaje a agregar</label>
           <input
+            id="porcentaje"
             type="number"
             step="0.01"
             value={porcentaje}

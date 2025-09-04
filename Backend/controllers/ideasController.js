@@ -33,10 +33,11 @@ const getIdeas = async (_req, res) => {
 
 const createCategory = async (req, res) => {
   try {
-    const { name, imageUrl } = req.body;
+    const { name } = req.body;
+    const imagePath = req.file ? `/ideas/${req.file.filename}` : null;
     const result = await pool.query(
       'INSERT INTO idea_categories(name, image_url) VALUES($1,$2) RETURNING id, name, image_url',
-      [name, imageUrl]
+      [name, imagePath]
     );
     res.status(201).json({ id: result.rows[0].id, name: result.rows[0].name, imageUrl: result.rows[0].image_url });
   } catch (err) {
@@ -45,14 +46,41 @@ const createCategory = async (req, res) => {
   }
 };
 
+const updateCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const imagePath = req.file ? `/ideas/${req.file.filename}` : null;
+    const fields = [name];
+    let query = 'UPDATE idea_categories SET name=$1';
+    if (imagePath) {
+      query += ', image_url=$2 WHERE id=$3 RETURNING id, name, image_url';
+      fields.push(imagePath, id);
+    } else {
+      query += ' WHERE id=$2 RETURNING id, name, image_url';
+      fields.push(id);
+    }
+    const result = await pool.query(query, fields);
+    if (!result.rows.length) return res.status(404).json({ error: 'Category not found' });
+    res.json({ id: result.rows[0].id, name: result.rows[0].name, imageUrl: result.rows[0].image_url });
+  } catch (err) {
+    console.error('Error updating category', err);
+    res.status(500).json({ error: 'Error updating category' });
+  }
+};
+
 const createItem = async (req, res) => {
   try {
     const { categoryId, title, type, url, imageUrl } = req.body;
+    let finalUrl = url;
+    if (type === 'pdf' && req.file) {
+      finalUrl = `/ideas/${req.file.filename}`;
+    }
     const result = await pool.query(
       `INSERT INTO idea_items(category_id, title, type, url, image_url)
        VALUES($1,$2,$3,$4,$5)
        RETURNING id, category_id, title, type, url, image_url`,
-      [categoryId, title, type, url, imageUrl]
+      [categoryId, title, type, finalUrl, imageUrl]
     );
     res.status(201).json({
       id: result.rows[0].id,
@@ -65,6 +93,33 @@ const createItem = async (req, res) => {
   } catch (err) {
     console.error('Error creating item', err);
     res.status(500).json({ error: 'Error creating item' });
+  }
+};
+
+const updateItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { categoryId, title, type, url, imageUrl } = req.body;
+    let finalUrl = url;
+    if (type === 'pdf' && req.file) {
+      finalUrl = `/ideas/${req.file.filename}`;
+    }
+    const result = await pool.query(
+      `UPDATE idea_items SET category_id=$1, title=$2, type=$3, url=$4, image_url=$5 WHERE id=$6 RETURNING id, category_id, title, type, url, image_url`,
+      [categoryId, title, type, finalUrl, imageUrl, id]
+    );
+    if (!result.rows.length) return res.status(404).json({ error: 'Item not found' });
+    res.json({
+      id: result.rows[0].id,
+      category_id: result.rows[0].category_id,
+      title: result.rows[0].title,
+      type: result.rows[0].type,
+      url: result.rows[0].url,
+      imageUrl: result.rows[0].image_url,
+    });
+  } catch (err) {
+    console.error('Error updating item', err);
+    res.status(500).json({ error: 'Error updating item' });
   }
 };
 
@@ -113,7 +168,9 @@ const deleteItem = async (req, res) => {
 module.exports = {
   getIdeas,
   createCategory,
+  updateCategory,
   createItem,
+  updateItem,
   deleteCategory,
   deleteItem,
 };

@@ -39,20 +39,25 @@ const FamiliaForm = ({ onClose, onSave, initialData }) => {
       <div className="modal">
         <h2>{initialData ? "Editar Familia" : "Agregar Familia"}</h2>
         <form onSubmit={handleSubmit}>
+          <label htmlFor="gran_familia">Gran familia</label>
           <input
+            id="gran_familia"
             type="text"
             placeholder="Gran familia"
             value={granFamilia}
             onChange={(e) => setGranFamilia(e.target.value)}
           />
           {tipos.map((t, i) => (
-            <input
-              key={i}
-              type="text"
-              placeholder="Tipo familia"
-              value={t}
-              onChange={(e) => actualizarTipo(i, e.target.value)}
-            />
+            <div key={i}>
+              <label htmlFor={`tipo_${i}`}>Tipo familia</label>
+              <input
+                id={`tipo_${i}`}
+                type="text"
+                placeholder="Tipo familia"
+                value={t}
+                onChange={(e) => actualizarTipo(i, e.target.value)}
+              />
+            </div>
           ))}
           {!initialData && (
             <button type="button" onClick={agregarTipo}>

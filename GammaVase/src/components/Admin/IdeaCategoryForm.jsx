@@ -1,41 +1,41 @@
 import React, { useState } from "react";
 import "./UsuarioForm.css";
 
-const IdeaCategoryForm = ({ onClose, onSave }) => {
-  const [form, setForm] = useState({ name: "", imageUrl: "" });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+const IdeaCategoryForm = ({ onClose, onSave, initialData }) => {
+  const [name, setName] = useState(initialData?.name || "");
+  const [image, setImage] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name.trim()) {
+    if (!name.trim()) {
       alert("El nombre es obligatorio.");
       return;
     }
-    onSave(form);
+    const formData = new FormData();
+    formData.append("name", name);
+    if (image) formData.append("image", image);
+    onSave(formData);
     onClose();
   };
 
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <h2>Agregar Categoría</h2>
+        <h2>{initialData ? "Editar Categoría" : "Agregar Categoría"}</h2>
         <form onSubmit={handleSubmit}>
+          <label htmlFor="name">Nombre</label>
           <input
+            id="name"
             type="text"
-            placeholder="Nombre"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
+          <label htmlFor="image">Imagen</label>
           <input
-            type="text"
-            placeholder="URL de imagen"
-            name="imageUrl"
-            value={form.imageUrl}
-            onChange={handleChange}
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
           />
           <div className="modal-actions">
             <button type="submit">Guardar</button>
