@@ -26,28 +26,28 @@ router.get('/', async (_, res) => {
 
 // Crear una o varias familias dentro de una gran familia
 router.post('/', upload.single('imagen'), async (req, res) => {
-
     const { gran_familia, tipo_familia, tipos_familia, usar_imagen } = req.body;
     const imgPath = req.file ? `/familias/${req.file.filename}` : null;
 
-    try {
-        if (Array.isArray(tipos_familia) && tipos_familia.length) {
-            const inserted = [];
-            for (const tipo of tipos_familia) {
-                const r = await pool.query(
-                    'INSERT INTO familias (gran_familia, tipo_familia, usar_imagen, imagen_subtitulo) VALUES ($1,$2,$3,$4) RETURNING *',
-                    [gran_familia, tipo, usar_imagen === 'true', imgPath]
-                );
-                inserted.push(r.rows[0]);
-            }
-            return res.json(inserted);
-        }
+    // Normalizar los distintos nombres de campos para los tipos
+    const tipos = tipos_familia
+        ? Array.isArray(tipos_familia) ? tipos_familia : [tipos_familia]
+        : tipo_familia ? [tipo_familia] : [];
 
-        const result = await pool.query(
-            'INSERT INTO familias (gran_familia, tipo_familia, usar_imagen, imagen_subtitulo) VALUES ($1,$2,$3,$4) RETURNING *',
-            [gran_familia, tipo_familia, usar_imagen === 'true', imgPath]
-        );
-        res.json(result.rows[0]);
+    if (!gran_familia || tipos.length === 0) {
+        return res.status(400).json({ error: 'Gran familia y al menos un tipo son requeridos' });
+    }
+
+    try {
+        const inserted = [];
+        for (const tipo of tipos) {
+            const r = await pool.query(
+                'INSERT INTO familias (gran_familia, tipo_familia, usar_imagen, imagen_subtitulo) VALUES ($1,$2,$3,$4) RETURNING *',
+                [gran_familia, tipo, usar_imagen === 'true', imgPath]
+            );
+            inserted.push(r.rows[0]);
+        }
+        res.json(inserted.length === 1 ? inserted[0] : inserted);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
