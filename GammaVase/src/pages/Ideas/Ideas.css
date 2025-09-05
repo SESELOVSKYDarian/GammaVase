@@ -106,16 +106,26 @@
   color: #e75ec0;
   font-weight: bold;
 }
+
+@media (max-width: 820px) {
+  .ideas-page h2 {
+    margin-top: -5rem;
+  }
+}
+
 @media (max-width: 600px) {
   .ideas-banner {
     height: 250px;
   }
+  .ideas-banner .logo-gamma {
+    height: 70px;
+  }
   .ideas-banner h1 {
     font-size: 2.5rem;
   }
-  .ideas-subtitle {
+  .ideas-page h2 {
+    margin-top: -3rem;
     font-size: 1.8rem;
-    margin-top: 1rem;
   }
 }
 
@@ -130,5 +140,10 @@
 
   .ideas-banner .logo-gamma {
     height: 60px;
+  }
+
+  .ideas-page h2 {
+    margin-top: -1rem;
+    font-size: 1.8rem;
   }
 }

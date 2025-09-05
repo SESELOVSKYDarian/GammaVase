@@ -159,4 +159,8 @@ textarea {
   .contacto-derecho {
     align-items: flex-start;
   }
+
+  .contacto-derecho {
+    flex: 0;
+  }
 }
