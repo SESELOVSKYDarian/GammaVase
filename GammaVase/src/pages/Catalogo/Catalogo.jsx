@@ -191,7 +191,22 @@ const Catalogo = () => {
                   {Object.entries(tipos).map(([tipo, prods]) => (
                     <React.Fragment key={tipo}>
                       <div className="titulo-familia">
-                        <h4>{tipo}</h4>
+                        {(() => {
+                          const info = familias.find(
+                            (f) =>
+                              f.gran_familia === familia &&
+                              f.tipo_familia === tipo
+                          );
+                          return info && info.usar_imagen && info.img_subtitulo ? (
+                            <img
+                              src={`http://localhost:3000${info.img_subtitulo}`}
+                              alt={tipo}
+                              className="imagen-familia"
+                            />
+                          ) : (
+                            <h4>{tipo}</h4>
+                          );
+                        })()}
                       </div>
                       <div className="productos-grid">
                         {prods.map((prod) => (

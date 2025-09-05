@@ -23,7 +23,9 @@ export const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="logo"></div>
+        <div className="logo">
+          <img src="/logo2.png" alt="Gamma Modas" />
+        </div>
 
         <ul className="navbar-list desktop">
           <li>

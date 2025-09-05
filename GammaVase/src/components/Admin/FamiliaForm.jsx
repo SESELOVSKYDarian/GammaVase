@@ -4,11 +4,14 @@ import "../Admin/UsuarioForm.css"; // asumimos que ahí está tu CSS, si no, pon
 const FamiliaForm = ({ onClose, onSave, initialData }) => {
   const [granFamilia, setGranFamilia] = useState("");
   const [tipos, setTipos] = useState([""]);
+  const [usarImagen, setUsarImagen] = useState(false);
+  const [imagen, setImagen] = useState(null);
 
   useEffect(() => {
     if (initialData) {
       setGranFamilia(initialData.gran_familia);
       setTipos([initialData.tipo_familia]);
+      setUsarImagen(initialData.usar_imagen || false);
     }
   }, [initialData]);
 
@@ -19,11 +22,24 @@ const FamiliaForm = ({ onClose, onSave, initialData }) => {
       return;
     }
 
+    const formData = new FormData();
+    formData.append("gran_familia", granFamilia);
+    formData.append("usar_imagen", usarImagen);
+
     if (initialData) {
-      onSave({ gran_familia: granFamilia, tipo_familia: tipos[0] });
+      formData.append("tipo_familia", tipos[0]);
+      if (usarImagen && !imagen && initialData.img_subtitulo) {
+        formData.append("img_subtitulo", initialData.img_subtitulo);
+      }
     } else {
-      onSave({ gran_familia: granFamilia, tipos_familia: tipos });
+      formData.append("tipos_familia", JSON.stringify(tipos));
     }
+
+    if (usarImagen && imagen) {
+      formData.append("imagen", imagen);
+    }
+
+    onSave(formData);
     onClose();
   };
 
@@ -59,6 +75,26 @@ const FamiliaForm = ({ onClose, onSave, initialData }) => {
               />
             </div>
           ))}
+          <label htmlFor="usar_imagen">¿Usar imagen como subtítulo?</label>
+          <select
+            id="usar_imagen"
+            value={usarImagen ? "si" : "no"}
+            onChange={(e) => setUsarImagen(e.target.value === "si")}
+          >
+            <option value="no">No</option>
+            <option value="si">Sí</option>
+          </select>
+          {usarImagen && (
+            <>
+              <label htmlFor="imagen_familia">Imagen</label>
+              <input
+                id="imagen_familia"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImagen(e.target.files[0])}
+              />
+            </>
+          )}
           {!initialData && (
             <button type="button" onClick={agregarTipo}>
               + Agregar tipo

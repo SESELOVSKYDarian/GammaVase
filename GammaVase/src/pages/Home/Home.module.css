@@ -84,6 +84,7 @@
   .searchSection {
     height: auto;
     padding: 3rem 1rem;
+    background-image: url("./../background.png");
   }
 
   .searchTitle {
@@ -99,6 +100,7 @@
   .searchSection {
     height: auto;
     padding: 2rem 1rem;
+    background-image: url("./../background.png");
   }
   .searchForm {
     flex-direction: column;

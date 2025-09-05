@@ -55,7 +55,7 @@ router.post("/", upload.array("imagenes", 5), async (req, res) => {
 // Obtener todos los productos con su familia
 router.get("/", async (req, res) => {
   const { gran_familia, tipo_familia, codigo_color, q, limit } = req.query;
-  let query = `SELECT productos.*, familias.gran_familia, familias.tipo_familia
+  let query = `SELECT productos.*, familias.gran_familia, familias.tipo_familia, familias.usar_imagen, familias.img_subtitulo
                FROM productos
                JOIN familias ON productos.familia_id = familias.id`;
   const conditions = [];
@@ -197,7 +197,7 @@ router.get('/slug/:slug', async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT productos.*, familias.gran_familia, familias.tipo_familia
+      `SELECT productos.*, familias.gran_familia, familias.tipo_familia, familias.usar_imagen, familias.img_subtitulo
        FROM productos
        JOIN familias ON productos.familia_id = familias.id
        WHERE productos.url = $1`,
@@ -222,7 +222,7 @@ router.get("/familia/:familia_id", async (req, res) => {
   try {
     // Asumiendo que familia_id es numérico (ajustalo si es string)
     const result = await pool.query(
-      `SELECT productos.*, familias.gran_familia, familias.tipo_familia
+      `SELECT productos.*, familias.gran_familia, familias.tipo_familia, familias.usar_imagen, familias.img_subtitulo
        FROM productos
        JOIN familias ON productos.familia_id = familias.id
        WHERE productos.familia_id = $1`,
@@ -240,7 +240,7 @@ router.get("/familia/:familia_id", async (req, res) => {
 router.get("/slider", async (_req, res) => {
   try {
       const result = await pool.query(
-        `SELECT productos.*, familias.gran_familia, familias.tipo_familia
+        `SELECT productos.*, familias.gran_familia, familias.tipo_familia, familias.usar_imagen, familias.img_subtitulo
          FROM productos
          JOIN familias ON productos.familia_id = familias.id
          WHERE productos.slider = true`

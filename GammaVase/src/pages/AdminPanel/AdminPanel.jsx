@@ -69,28 +69,21 @@ const AdminPanel = () => {
       });
   }, []);
 
-  const guardarFamilia = async (familia) => {
+  const guardarFamilia = async (formData) => {
     try {
+      let url = "http://localhost:3000/api/familias";
+      let method = "POST";
       if (editingFamilia) {
-        const res = await fetch(
-          `http://localhost:3000/api/familias/${editingFamilia.id}`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(familia),
-          }
-        );
-        const data = await res.json();
+        url += `/${editingFamilia.id}`;
+        method = "PUT";
+      }
+      const res = await fetch(url, { method, body: formData });
+      const data = await res.json();
+      if (editingFamilia) {
         setFamilias((prev) =>
           prev.map((f) => (f.id === editingFamilia.id ? data : f))
         );
       } else {
-        const res = await fetch("http://localhost:3000/api/familias", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(familia),
-        });
-        const data = await res.json();
         const nuevas = Array.isArray(data) ? data : [data];
         setFamilias((prev) => [...prev, ...nuevas]);
       }
@@ -464,6 +457,7 @@ const AdminPanel = () => {
               <th>ID</th>
               <th>Gran Familia</th>
               <th>Tipo Familia</th>
+              <th>Usa imagen</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -473,6 +467,7 @@ const AdminPanel = () => {
                 <td>{familia.id}</td>
                 <td>{familia.gran_familia}</td>
                 <td>{familia.tipo_familia}</td>
+                <td>{familia.usar_imagen ? "Imagen" : "Texto"}</td>
                 <td>
                   <button
                     onClick={() => {

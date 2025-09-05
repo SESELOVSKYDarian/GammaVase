@@ -17,6 +17,14 @@
   position: relative;
 }
 
+.logo {
+  display: none;
+}
+
+.logo img {
+  height: 40px;
+}
+
 /* Estilo base para listas */
 .navbar-list {
   list-style: none;
@@ -101,6 +109,10 @@
 @media (max-width: 768px) {
   .navbar-container {
     justify-content: space-between;
+  }
+
+  .logo {
+    display: block;
   }
 
   .navbar-list.desktop {

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/db');
+const upload = require('../middlewares/familiaUpload');
 
 // Obtener todas las familias
 router.get('/', async (_, res) => {
@@ -13,29 +14,31 @@ router.get('/', async (_, res) => {
 });
 
 // Crear una o varias familias dentro de una gran familia
-router.post('/', async (req, res) => {
-
-    const { gran_familia, tipo_familia, tipos_familia } = req.body;
+router.post('/', upload.single('imagen'), async (req, res) => {
+    const { gran_familia, tipo_familia, usar_imagen } = req.body;
+    const tipos_familia = req.body.tipos_familia ? JSON.parse(req.body.tipos_familia) : null;
+    const usarImagenBool = usar_imagen === 'true' || usar_imagen === true;
+    const imgPath = req.file ? `/imgFamilias/${req.file.filename}` : (req.body.img_subtitulo || null);
 
     try {
-        // Si llega un array de tipos, insertar todas en una sola operación
         if (Array.isArray(tipos_familia) && tipos_familia.length) {
-            const values = [gran_familia, ...tipos_familia];
-            const placeholders = tipos_familia
-                .map((_, i) => `($1, $${i + 2})`)
-                .join(',');
-
+            const values = [];
+            const placeholders = [];
+            tipos_familia.forEach((tipo, i) => {
+                const base = i * 4;
+                placeholders.push(`($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4})`);
+                values.push(gran_familia, tipo, usarImagenBool, imgPath);
+            });
             const result = await pool.query(
-                `INSERT INTO familias (gran_familia, tipo_familia) VALUES ${placeholders} RETURNING *`,
+                `INSERT INTO familias (gran_familia, tipo_familia, usar_imagen, img_subtitulo) VALUES ${placeholders.join(',')} RETURNING *`,
                 values
             );
             return res.json(result.rows);
         }
 
-        // Inserción simple si se envía un solo tipo
         const result = await pool.query(
-            'INSERT INTO familias (gran_familia, tipo_familia) VALUES ($1, $2) RETURNING *',
-            [gran_familia, tipo_familia]
+            'INSERT INTO familias (gran_familia, tipo_familia, usar_imagen, img_subtitulo) VALUES ($1, $2, $3, $4) RETURNING *',
+            [gran_familia, tipo_familia, usarImagenBool, imgPath]
         );
         res.json(result.rows[0]);
     } catch (err) {
@@ -54,13 +57,15 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Actualizar una familia existente
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.single('imagen'), async (req, res) => {
     const { id } = req.params;
-    const { gran_familia, tipo_familia } = req.body;
+    const { gran_familia, tipo_familia, usar_imagen, img_subtitulo } = req.body;
+    const usarImagenBool = usar_imagen === 'true' || usar_imagen === true;
+    const imgPath = req.file ? `/imgFamilias/${req.file.filename}` : (img_subtitulo || null);
     try {
         const result = await pool.query(
-            'UPDATE familias SET gran_familia = $1, tipo_familia = $2 WHERE id = $3 RETURNING *',
-            [gran_familia, tipo_familia, id]
+            'UPDATE familias SET gran_familia = $1, tipo_familia = $2, usar_imagen = $3, img_subtitulo = $4 WHERE id = $5 RETURNING *',
+            [gran_familia, tipo_familia, usarImagenBool, imgPath, id]
         );
         res.json(result.rows[0]);
     } catch (err) {

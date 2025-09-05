@@ -138,3 +138,20 @@
 .activeDot {
   background: #f328b8;
 }
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .sliderArea {
+    width: 100%;
+    height: 300px;
+    order: 2;
+  }
+
+  .text {
+    order: 1;
+  }
+}
