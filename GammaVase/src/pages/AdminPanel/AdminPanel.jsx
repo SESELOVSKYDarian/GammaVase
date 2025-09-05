@@ -72,13 +72,12 @@ const AdminPanel = () => {
   const guardarFamilia = async (familia) => {
     try {
       if (editingFamilia) {
-        const { nuevos_tipos, ...base } = familia;
+        const { formData, nuevos_tipos } = familia;
         const res = await fetch(
           `http://localhost:3000/api/familias/${editingFamilia.id}`,
           {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(base),
+            body: formData,
           }
         );
         const data = await res.json();
@@ -86,13 +85,16 @@ const AdminPanel = () => {
           prev.map((f) => (f.id === editingFamilia.id ? data : f))
         );
         if (nuevos_tipos && nuevos_tipos.length) {
+          const fd = new FormData();
+          fd.append("gran_familia", formData.get("gran_familia"));
+          nuevos_tipos.forEach((t) => fd.append("tipos_familia", t));
+          fd.append("usar_imagen", formData.get("usar_imagen"));
+          if (formData.get("imagen")) {
+            fd.append("imagen", formData.get("imagen"));
+          }
           const resNuevos = await fetch("http://localhost:3000/api/familias", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              gran_familia: familia.gran_familia,
-              tipos_familia: nuevos_tipos,
-            }),
+            body: fd,
           });
           const dataNuevos = await resNuevos.json();
           const nuevas = Array.isArray(dataNuevos) ? dataNuevos : [dataNuevos];
@@ -101,8 +103,7 @@ const AdminPanel = () => {
       } else {
         const res = await fetch("http://localhost:3000/api/familias", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(familia),
+          body: familia,
         });
         const data = await res.json();
         const nuevas = Array.isArray(data) ? data : [data];

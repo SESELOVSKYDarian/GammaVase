@@ -23,7 +23,7 @@ export const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="logo"></div>
+        <img src="/logo2.png" alt="Logo" className="mobile-logo" />
 
         <ul className="navbar-list desktop">
           <li>

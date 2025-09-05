@@ -31,6 +31,7 @@ app.use('/api/ideas', require('./routes/ideasRoutes'));
 
 app.use('/imgCata', express.static(path.join(__dirname, '../GammaVase/public/imgCata')));
 app.use('/ideas', express.static(path.join(__dirname, '../GammaVase/public/ideas')));
+app.use('/familias', express.static(path.join(__dirname, '../GammaVase/public/assets/familias')));
 
 // ❗ OPCIONAL: si ya usás `/api/login` desde authRoutes.js, esta ruta extra de admin podrías dejarla o renombrarla:
 

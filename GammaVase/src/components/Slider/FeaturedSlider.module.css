@@ -37,11 +37,11 @@
   cursor: pointer;
 }
 
-.sliderArea {
-  flex: 1;
-  position: relative;
-  height: 400px;
-}
+  .sliderArea {
+    flex: 1;
+    position: relative;
+    height: 400px;
+  }
 
 .productImage {
   position: absolute;
@@ -121,6 +121,21 @@
   cursor: pointer;
 }
 
-.activeDot {
-  background: #f328b8;
+  .activeDot {
+    background: #f328b8;
+  }
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+  }
+  .sliderArea {
+    order: 2;
+    width: 100%;
+    height: 300px;
+  }
+  .text {
+    order: 1;
+    text-align: center;
+  }
 }

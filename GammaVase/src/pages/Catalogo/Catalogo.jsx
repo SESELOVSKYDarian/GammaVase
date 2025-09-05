@@ -188,21 +188,34 @@ const Catalogo = () => {
                   <div className="titulo-principal">
                     <h3>{familia}</h3>
                   </div>
-                  {Object.entries(tipos).map(([tipo, prods]) => (
-                    <React.Fragment key={tipo}>
-                      <div className="titulo-familia">
-                        <h4>{tipo}</h4>
-                      </div>
-                      <div className="productos-grid">
-                        {prods.map((prod) => (
-                          <ProductoCard key={prod.id} producto={prod} />
-                        ))}
-                      </div>
-                    </React.Fragment>
-                  ))}
-                </section>
-              ))
-            )}
+                    {Object.entries(tipos).map(([tipo, prods]) => {
+                      const famInfo = familias.find(
+                        (f) => f.gran_familia === familia && f.tipo_familia === tipo
+                      );
+                      return (
+                        <React.Fragment key={tipo}>
+                          <div className="titulo-familia">
+                            {famInfo?.usar_imagen && famInfo?.imagen_subtitulo ? (
+                              <img
+                                src={famInfo.imagen_subtitulo}
+                                alt={tipo}
+                                className="familia-img"
+                              />
+                            ) : (
+                              <h4>{tipo}</h4>
+                            )}
+                          </div>
+                          <div className="productos-grid">
+                            {prods.map((prod) => (
+                              <ProductoCard key={prod.id} producto={prod} />
+                            ))}
+                          </div>
+                        </React.Fragment>
+                      );
+                    })}
+                  </section>
+                ))
+              )}
           </main>
         </div>
       </div>

@@ -1,5 +1,5 @@
-.searchSection {
-  background-image: url("./../background1.png");
+  .searchSection {
+    background-image: url("/background1.png");
   background-size: cover;
   background-position: center;
   display: flex;
@@ -82,8 +82,9 @@
 
 @media (max-width: 768px) {
   .searchSection {
-    height: auto;
-    padding: 3rem 1rem;
+      height: auto;
+      padding: 3rem 1rem;
+      background-image: url("/background.png");
   }
 
   .searchTitle {

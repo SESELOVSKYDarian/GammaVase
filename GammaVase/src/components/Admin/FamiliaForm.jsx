@@ -4,33 +4,42 @@ import "../Admin/UsuarioForm.css"; // asumimos que ahí está tu CSS, si no, pon
 const FamiliaForm = ({ onClose, onSave, initialData }) => {
   const [granFamilia, setGranFamilia] = useState("");
   const [tipos, setTipos] = useState([""]);
+  const [usarImagen, setUsarImagen] = useState(false);
+  const [imagen, setImagen] = useState(null);
 
   useEffect(() => {
-    if (initialData) {
-      setGranFamilia(initialData.gran_familia);
-      setTipos([initialData.tipo_familia]);
-    }
-  }, [initialData]);
+      if (initialData) {
+        setGranFamilia(initialData.gran_familia);
+        setTipos([initialData.tipo_familia]);
+        setUsarImagen(Boolean(initialData.usar_imagen));
+      }
+    }, [initialData]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!granFamilia || tipos.some((t) => !t)) {
-      alert("Todos los campos son obligatorios.");
-      return;
-    }
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      if (!granFamilia || tipos.some((t) => !t)) {
+        alert("Todos los campos son obligatorios.");
+        return;
+      }
 
-    if (initialData) {
-      const nuevos = tipos.slice(1);
-      onSave({
-        gran_familia: granFamilia,
-        tipo_familia: tipos[0],
-        nuevos_tipos: nuevos.length ? nuevos : undefined,
-      });
-    } else {
-      onSave({ gran_familia: granFamilia, tipos_familia: tipos });
-    }
-    onClose();
-  };
+      if (initialData) {
+        const nuevos = tipos.slice(1);
+        const formData = new FormData();
+        formData.append("gran_familia", granFamilia);
+        formData.append("tipo_familia", tipos[0]);
+        formData.append("usar_imagen", usarImagen);
+        if (imagen) formData.append("imagen", imagen);
+        onSave({ formData, nuevos_tipos: nuevos });
+      } else {
+        const formData = new FormData();
+        formData.append("gran_familia", granFamilia);
+        tipos.forEach((t) => formData.append("tipos_familia", t));
+        formData.append("usar_imagen", usarImagen);
+        if (imagen) formData.append("imagen", imagen);
+        onSave(formData);
+      }
+      onClose();
+    };
 
   const agregarTipo = () => setTipos((prev) => [...prev, ""]);
   const actualizarTipo = (i, val) => {
@@ -52,21 +61,37 @@ const FamiliaForm = ({ onClose, onSave, initialData }) => {
             value={granFamilia}
             onChange={(e) => setGranFamilia(e.target.value)}
           />
-          {tipos.map((t, i) => (
-            <div key={i}>
-              <label htmlFor={`tipo_${i}`}>Tipo familia</label>
+            {tipos.map((t, i) => (
+              <div key={i}>
+                <label htmlFor={`tipo_${i}`}>Tipo familia</label>
+                <input
+                  id={`tipo_${i}`}
+                  type="text"
+                  placeholder="Tipo familia"
+                  value={t}
+                  onChange={(e) => actualizarTipo(i, e.target.value)}
+                />
+              </div>
+            ))}
+            <button type="button" onClick={agregarTipo}>
+              + Agregar tipo
+            </button>
+            <label htmlFor="usar_imagen">¿Usar imagen como subtítulo?</label>
+            <select
+              id="usar_imagen"
+              value={usarImagen ? "si" : "no"}
+              onChange={(e) => setUsarImagen(e.target.value === "si")}
+            >
+              <option value="no">No</option>
+              <option value="si">Sí</option>
+            </select>
+            {usarImagen && (
               <input
-                id={`tipo_${i}`}
-                type="text"
-                placeholder="Tipo familia"
-                value={t}
-                onChange={(e) => actualizarTipo(i, e.target.value)}
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImagen(e.target.files[0])}
               />
-            </div>
-          ))}
-          <button type="button" onClick={agregarTipo}>
-            + Agregar tipo
-          </button>
+            )}
           <div className="modal-actions">
             <button type="submit">Guardar</button>
             <button type="button" onClick={onClose}>Cancelar</button>

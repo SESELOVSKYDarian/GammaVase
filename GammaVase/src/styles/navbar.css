@@ -81,6 +81,11 @@
   font-family: "Montaga", serif;
 }
 
+.mobile-logo {
+  display: none;
+  height: 40px;
+}
+
 /* Oculta el icono en escritorio */
 .menu-icon {
   display: none;
@@ -101,6 +106,10 @@
 @media (max-width: 768px) {
   .navbar-container {
     justify-content: space-between;
+  }
+
+  .mobile-logo {
+    display: block;
   }
 
   .navbar-list.desktop {

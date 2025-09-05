@@ -191,6 +191,10 @@
   margin: 0;
 }
 
+.titulo-familia img {
+  height: 40px;
+}
+
 .titulo-principal {
   background-color: #dddddd;
   border-top-left-radius: 12px;
