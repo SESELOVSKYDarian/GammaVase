@@ -84,6 +84,7 @@
 .mobile-logo {
   display: none;
   height: 40px;
+  padding-left: 1rem;
 }
 
 /* Oculta el icono en escritorio */
@@ -104,6 +105,10 @@
 
 /* ========== MOBILE ========== */
 @media (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+
   .navbar-container {
     justify-content: space-between;
   }
@@ -118,6 +123,7 @@
 
   .menu-icon {
     display: block;
+    margin-top: 1rem;
   }
 
   .mobile-menu {

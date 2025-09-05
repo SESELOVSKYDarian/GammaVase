@@ -1,5 +1,6 @@
 .producto-container {
   padding: 2rem;
+  overflow: hidden;
 }
 
 /* NUEVO: grid de 2 columnas, imagen fija a la izquierda */
@@ -54,7 +55,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-top: 1rem;
-  justify-content: space-between !important;
+  justify-content: flex-start;
 }
 
 .contador {
@@ -180,4 +181,23 @@
   border: none;
   border-radius: 0.4rem;
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .producto-imagen img {
+    width: 60%;
+  }
+  .miniatura-img {
+    width: 40px;
+    height: 40px;
+  }
+  .producto-info h1 {
+    font-size: 2rem;
+  }
+  .producto-info p {
+    font-size: 1.2rem;
+  }
+  .producto-info {
+    font-size: 1rem;
+  }
 }

@@ -1,5 +1,5 @@
-  .searchSection {
-    background-image: url("/background1.png");
+.searchSection {
+  background-image: url("/background1.png");
   background-size: cover;
   background-position: center;
   display: flex;
@@ -71,10 +71,6 @@
   background: #f0f0f0;
 }
 
-
-
-
-
 .sliderWrapper > * {
   position: relative;
   z-index: 1;
@@ -82,9 +78,7 @@
 
 @media (max-width: 768px) {
   .searchSection {
-      height: auto;
-      padding: 3rem 1rem;
-      background-image: url("/background.png");
+    background-image: url("/background.png");
   }
 
   .searchTitle {
@@ -98,8 +92,10 @@
 
 @media (max-width: 600px) {
   .searchSection {
-    height: auto;
-    padding: 2rem 1rem;
+    background-image: url("/background.png");
+    background-position: center;
+    background-size: cover;
+    height: 90vh;
   }
   .searchForm {
     flex-direction: column;
@@ -114,5 +110,11 @@
   }
   .sliderWrapper {
     padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .searchSection {
+    height: 65vh;
   }
 }

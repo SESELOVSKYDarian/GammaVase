@@ -14,8 +14,8 @@ const Producto = () => {
   const [cargando, setCargando] = useState(true);
   const [cantidad, setCantidad] = useState(1);
   const [relacionados, setRelacionados] = useState([]);
-const { agregarProducto } = useContext(CarritoContext);
-const usuario = JSON.parse(localStorage.getItem("usuario"));
+  const { agregarProducto } = useContext(CarritoContext);
+  const usuario = JSON.parse(localStorage.getItem("usuario"));
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/productos/slug/${slug}`)
@@ -73,7 +73,9 @@ const usuario = JSON.parse(localStorage.getItem("usuario"));
                     : producto.precio_minorista
                   : null;
                 const precio =
-                  base !== null ? base * (1 + parseFloat(porcentaje) / 100) : null;
+                  base !== null
+                    ? base * (1 + parseFloat(porcentaje) / 100)
+                    : null;
                 return precio !== null ? (
                   <p className="precio">${precio.toLocaleString("es-AR")}</p>
                 ) : (
@@ -101,22 +103,21 @@ const usuario = JSON.parse(localStorage.getItem("usuario"));
                   <span>{cantidad}</span>
                   <button onClick={() => setCantidad((c) => c + 1)}>+</button>
                 </div>
-                      <button
+                <button
                   className="btn-comprar"
                   onClick={() => {
-  if (usuario) {
-    agregarProducto(producto, cantidad);
-    toast.success(`${producto.articulo} agregado al carrito 🛒`);
-  } else {
-    toast.info("Iniciá sesión para agregar productos.");
-  }
-
+                    if (usuario) {
+                      agregarProducto(producto, cantidad);
+                      toast.success(
+                        `${producto.articulo} agregado al carrito 🛒`
+                      );
+                    } else {
+                      toast.info("Iniciá sesión para agregar productos.");
+                    }
                   }}
                 >
                   Añadir 🛒
                 </button>
-                
-                <button className="btn-comprar">COMPRAR</button>
               </div>
             </div>
           </div>

@@ -1,27 +1,27 @@
 .sliderWrapper {
   background: #f0ede8;
   overflow: hidden;
-  padding: 4rem 2rem;
+  padding: 2rem 1rem;
 }
 
 .content {
-  position: relative;
-  z-index: 1;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 2rem;
+  padding: 0 2rem;
+  gap: 1.5rem;
+  height: auto;
 }
 
 .text {
-  flex: 1;
+  flex: 0.5;
+  margin-left: -6rem;
 }
 
 .text h2 {
   font-size: 2rem;
   font-weight: bold;
-  margin: 0;
 }
 
 .text p {
@@ -37,11 +37,11 @@
   cursor: pointer;
 }
 
-  .sliderArea {
-    flex: 1;
-    position: relative;
-    height: 400px;
-  }
+.sliderArea {
+  flex: 1;
+  position: relative;
+  height: 400px;
+}
 
 .productImage {
   position: absolute;
@@ -52,9 +52,9 @@
 }
 
 .productImage img {
-  max-width: 300px;
-  width: 100%;
-  height: auto;
+  max-width: 400px;
+  width: auto;
+  height: 400px;
 }
 
 .active {
@@ -121,13 +121,29 @@
   cursor: pointer;
 }
 
-  .activeDot {
-    background: #f328b8;
-  }
+.activeDot {
+  background: #f328b8;
+}
 
-@media (max-width: 768px) {
+@media (max-width: 1300px) {
+  .content {
+    height: 70dvh;
+    max-width: 800px;
+  }
+  .sliderArea {
+    order: 2;
+    height: 100px;
+  }
+  .productImage img {
+    max-width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 1020px) {
   .content {
     flex-direction: column;
+    height: 70dvh;
   }
   .sliderArea {
     order: 2;
@@ -135,7 +151,26 @@
     height: 300px;
   }
   .text {
+    margin-left: 0;
+    margin-top: 2rem;
     order: 1;
     text-align: center;
+  }
+  .productImage img {
+    max-width: 250px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    height: 50vh;
+  }
+  .text {
+    margin-bottom: 3rem;
+  }
+  .productImage img {
+    width: auto;
+    height: 200px;
   }
 }
