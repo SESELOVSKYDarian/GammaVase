@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
 require('dotenv').config();
 const pool = require('./db/db');
 const contactoRoute = require("./routes/contactoRoute");
@@ -7,10 +8,14 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+const allowedOrigins = process.env.FRONTEND_URLS
+  ? process.env.FRONTEND_URLS.split(',').map((url) => url.trim())
+  : ['http://localhost:5173', 'http://localhost:5175'];
 
 // ✅ 1. CORS va primero
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5175'],
+  origin: allowedOrigins,
   credentials: true,
 }));
 
@@ -32,6 +37,16 @@ app.use('/api/ideas', require('./routes/ideasRoutes'));
 app.use('/imgCata', express.static(path.join(__dirname, '../GammaVase/public/imgCata')));
 app.use('/ideas', express.static(path.join(__dirname, '../GammaVase/public/ideas')));
 app.use('/familias', express.static(path.join(__dirname, '../GammaVase/public/assets/familias')));
+
+// Serve frontend build when available
+const frontendBuildPath = path.join(__dirname, '../GammaVase/dist');
+if (fs.existsSync(frontendBuildPath)) {
+  app.use(express.static(frontendBuildPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    return res.sendFile(path.join(frontendBuildPath, 'index.html'));
+  });
+}
 
 // ❗ OPCIONAL: si ya usás `/api/login` desde authRoutes.js, esta ruta extra de admin podrías dejarla o renombrarla:
 
@@ -88,6 +103,6 @@ app.get('/api/productos/slug/:slug', async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log('🚀 Servidor escuchando en http://localhost:3000');
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
 });

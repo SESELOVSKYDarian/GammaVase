@@ -4,6 +4,7 @@ import wasapIcon from "/wasap.svg";
 import Hero from "../../components/Contacto/Hero";
 import TijerasImage from "../../components/Empresa/TijerasImage";
 import "../../styles/Contacto/Contacto.css";
+import { buildApiUrl } from "../../utils/api";
 
 export const Contacto = () => {
   const handleSubmit = async (e) => {
@@ -26,7 +27,7 @@ export const Contacto = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/api/contacto", {
+      const res = await fetch(buildApiUrl("/api/contacto"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

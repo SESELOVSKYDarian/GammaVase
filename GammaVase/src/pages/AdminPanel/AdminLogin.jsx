@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 const MotionDiv = motion.div;
 import "./../../styles/Login/Login.css";
 import "./AdminPanel.css";
+import { buildApiUrl } from "../../utils/api";
 
 const AdminLogin = () => {
   const [admin, setAdmin] = useState("");
@@ -16,7 +17,7 @@ const AdminLogin = () => {
 
   const sendCreds = async () => {
     setError("");
-    const res = await fetch("http://localhost:3000/api/admin/login", {
+    const res = await fetch(buildApiUrl("/api/admin/login"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ admin, contrasena }),
@@ -31,7 +32,7 @@ const AdminLogin = () => {
 
   const verifyCode = async () => {
     setError("");
-    const res = await fetch("http://localhost:3000/api/admin/verify", {
+    const res = await fetch(buildApiUrl("/api/admin/verify"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code }),

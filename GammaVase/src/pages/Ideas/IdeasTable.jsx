@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./IdeasTable.css";
+import { buildApiUrl } from "../../utils/api";
 
 const IdeasTable = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/ideas")
+    fetch(buildApiUrl("/api/ideas"))
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.error("Error al cargar ideas", err));

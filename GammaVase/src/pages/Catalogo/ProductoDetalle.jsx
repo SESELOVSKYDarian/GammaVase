@@ -4,6 +4,7 @@ import ProductoCard from "./ProductoCard";
 import { CarritoContext } from "../Carrito/CarritoContext"; // corregí la ruta si es necesario
 import { toast } from "react-toastify";
 import "./detalles.css";
+import { buildApiUrl } from "../../utils/api";
 
 const ProductoDetalle = () => {
   const { id } = useParams();
@@ -12,7 +13,7 @@ const ProductoDetalle = () => {
   const { agregarProducto } = useContext(CarritoContext);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/productos")
+    fetch(buildApiUrl("/api/productos"))
       .then((res) => res.json())
       .then((data) => {
         const actual = data.find((p) => p.id === parseInt(id));
@@ -40,7 +41,7 @@ const ProductoDetalle = () => {
       <div className="info-principal">
         <div className="img-grande">
           <img
-            src={`/imgCata/${producto.img_articulo[0]}`}
+            src={buildApiUrl(`/imgCata/${producto.img_articulo[0]}`)}
             alt={producto.articulo}
           />
         </div>

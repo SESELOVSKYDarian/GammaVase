@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import styles from "./FeaturedSlider.module.css";
 import { CarritoContext } from "../../pages/Carrito/CarritoContext";
+import { buildApiUrl } from "../../utils/api";
 
 const MotionDiv = motion.div;
 const MotionButton = motion.button;
@@ -15,7 +16,7 @@ const FeaturedSlider = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/productos/slider")
+    fetch(buildApiUrl("/api/productos/slider"))
       .then((res) => res.json())
       .then((data) => setProductos(data))
       .catch((err) => console.error("Error al cargar slider", err));
@@ -104,7 +105,7 @@ const FeaturedSlider = () => {
           </button>
           {productos.map((p, i) => (
             <div key={p.id} className={`${styles.productImage} ${getClass(i)}`}>
-              <img src={`http://localhost:3000${p.img_articulo[0]}`} alt={p.articulo} />
+              <img src={buildApiUrl(p.img_articulo[0])} alt={p.articulo} />
             </div>
           ))}
           <div className={styles.dots}>

@@ -1,0 +1,7 @@
+node_modules/
+Backend/node_modules/
+GammaVase/node_modules/
+.env
+Backend/.env
+GammaVase/.env
+GammaVase/dist/

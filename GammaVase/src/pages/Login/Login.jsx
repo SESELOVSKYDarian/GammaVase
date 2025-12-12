@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 const MotionDiv = motion.div;
 import "./../../styles/Login/Login.css";
+import { buildApiUrl } from "../../utils/api";
 
 export default function Login() {
   const [id, setId] = useState("");
@@ -12,7 +13,7 @@ export default function Login() {
 
   const handleLogin = async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/login", {
+    const res = await fetch(buildApiUrl("/api/login"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: Number(id), contrasena: contraseña })

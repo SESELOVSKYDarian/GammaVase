@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Ideas.css";
 import TijerasImage from "../../components/Empresa/TijerasImage";
 import { motion } from "framer-motion";
+import { buildApiUrl } from "../../utils/api";
 const MotionDiv = motion.div;
 
 const Ideas = () => {
@@ -9,7 +10,7 @@ const Ideas = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/ideas")
+    fetch(buildApiUrl("/api/ideas"))
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.error("Error al cargar ideas", err));
@@ -43,11 +44,11 @@ const Ideas = () => {
             ? selectedCategory.cards.map((card) => (
                 <a
                   key={card.id}
-                  href={card.type === "pdf" ? `http://localhost:3000${card.url}` : card.url}
+                  href={card.type === "pdf" ? buildApiUrl(card.url) : card.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="idea-card"
-                  style={{ backgroundImage: `url(http://localhost:3000${card.imageUrl})` }}
+                  style={{ backgroundImage: `url(${buildApiUrl(card.imageUrl)})` }}
                 >
                   <div className="idea-overlay">{card.title}</div>
                 </a>
@@ -56,7 +57,7 @@ const Ideas = () => {
                 <div
                   key={cat.id}
                   className="idea-card"
-                  style={{ backgroundImage: `url(http://localhost:3000${cat.imageUrl})` }}
+                  style={{ backgroundImage: `url(${buildApiUrl(cat.imageUrl)})` }}
                   onClick={() => setSelectedCategory(cat)}
                 >
                   <div className="idea-overlay">{cat.name}</div>

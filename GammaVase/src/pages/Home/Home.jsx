@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import FeaturedSlider from "../../components/Slider/FeaturedSlider";
 import styles from "./Home.module.css";
+import { buildApiUrl } from "../../utils/api";
 
 const MotionDiv = motion.div;
 
@@ -18,9 +19,9 @@ export default function Home() {
       return;
     }
     fetch(
-      `http://localhost:3000/api/productos?q=${encodeURIComponent(
-        term
-      )}&limit=5`
+      `${buildApiUrl(
+        "/api/productos"
+      )}?q=${encodeURIComponent(term)}&limit=5`
     )
       .then((res) => res.json())
       .then((data) => setSugerencias(data));

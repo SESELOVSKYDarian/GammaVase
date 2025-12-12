@@ -1,5 +1,6 @@
 import "../Admin/UsuarioForm.css";
 import React, { useState, useEffect } from "react";
+import { buildApiUrl } from "../../utils/api";
 
 const ProductoForm = ({ onClose, onSave, initialData }) => {
   const [familias, setFamilias] = useState([]);
@@ -18,7 +19,7 @@ const ProductoForm = ({ onClose, onSave, initialData }) => {
   });
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/familias")
+    fetch(buildApiUrl("/api/familias"))
       .then((res) => res.json())
       .then((data) => setFamilias(data));
   }, []);

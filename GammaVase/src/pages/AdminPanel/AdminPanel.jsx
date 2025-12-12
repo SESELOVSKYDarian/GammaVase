@@ -8,6 +8,7 @@ import IdeaCategoryForm from "../../components/Admin/IdeaCategoryForm";
 import IdeaItemForm from "../../components/Admin/IdeaItemForm";
 import { Edit, Trash2 } from "lucide-react";
 import "./AdminPanel.css";
+import { buildApiUrl } from "../../utils/api";
 
 const AdminPanel = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -33,25 +34,25 @@ const AdminPanel = () => {
     if (!localStorage.getItem('adminAuthed')) {
       window.location.href = '/admin';
     }
-    fetch("http://localhost:3000/api/familias")
+    fetch(buildApiUrl("/api/familias"))
       .then((res) => res.json())
       .then((data) => setFamilias(data))
       .catch((err) => console.error("Error al cargar familias", err));
 
-    fetch("http://localhost:3000/api/usuarios")
+    fetch(buildApiUrl("/api/usuarios"))
       .then((res) => res.json())
       .then((data) => setUsuarios(data))
       .catch((err) => console.error("Error al cargar usuarios", err));
 
-    fetch("http://localhost:3000/api/productos")
+    fetch(buildApiUrl("/api/productos"))
       .then((res) => res.json())
       .then((data) => setProductos(data));
 
-    fetch('http://localhost:3000/api/precios')
+    fetch(buildApiUrl('/api/precios'))
       .then((res) => res.json())
       .then((data) => setPrecios(data));
 
-    fetch('http://localhost:3000/api/ideas')
+    fetch(buildApiUrl('/api/ideas'))
       .then((res) => {
         if (!res.ok) throw new Error('Error al cargar ideas');
         return res.json();
@@ -74,7 +75,7 @@ const AdminPanel = () => {
       if (editingFamilia) {
         const { formData, nuevos_tipos } = familia;
         const res = await fetch(
-          `http://localhost:3000/api/familias/${editingFamilia.id}`,
+          buildApiUrl(`/api/familias/${editingFamilia.id}`),
           {
             method: "PUT",
             body: formData,
@@ -92,7 +93,7 @@ const AdminPanel = () => {
           if (formData.get("imagen")) {
             fd.append("imagen", formData.get("imagen"));
           }
-          const resNuevos = await fetch("http://localhost:3000/api/familias", {
+          const resNuevos = await fetch(buildApiUrl("/api/familias"), {
             method: "POST",
             body: fd,
           });
@@ -101,7 +102,7 @@ const AdminPanel = () => {
           setFamilias((prev) => [...prev, ...nuevas]);
         }
       } else {
-        const res = await fetch("http://localhost:3000/api/familias", {
+        const res = await fetch(buildApiUrl("/api/familias"), {
           method: "POST",
           body: familia,
         });
@@ -116,7 +117,7 @@ const AdminPanel = () => {
 
   const eliminarFamilia = async (id) => {
     try {
-      await fetch(`http://localhost:3000/api/familias/${id}`, {
+      await fetch(buildApiUrl(`/api/familias/${id}`), {
         method: "DELETE",
       });
       setFamilias((prev) => prev.filter((f) => f.id !== id));
@@ -127,7 +128,7 @@ const AdminPanel = () => {
 
   const guardarProducto = async (formData) => {
     try {
-      let url = "http://localhost:3000/api/productos";
+      let url = buildApiUrl("/api/productos");
       let method = "POST";
       if (editingProducto) {
         url += `/${editingProducto.id}`;
@@ -153,14 +154,14 @@ const AdminPanel = () => {
   };
 
   const eliminarProducto = async (id) => {
-    await fetch(`http://localhost:3000/api/productos/${id}`, {
+    await fetch(buildApiUrl(`/api/productos/${id}`), {
       method: "DELETE",
     });
     setProductos((prev) => prev.filter((p) => p.id !== id));
   };
 
   const toggleSlider = async (id, current) => {
-    await fetch(`http://localhost:3000/api/productos/${id}/slider`, {
+    await fetch(buildApiUrl(`/api/productos/${id}/slider`), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slider: !current }),
@@ -172,7 +173,7 @@ const AdminPanel = () => {
 
   const guardarPrecio = async (precio) => {
     try {
-      let url = 'http://localhost:3000/api/precios';
+      let url = buildApiUrl('/api/precios');
       let method = 'POST';
       if (editingPrecio) {
         url += `/${precio.lista_de_precio_id}`;
@@ -201,7 +202,7 @@ const AdminPanel = () => {
 
   const eliminarPrecio = async (listaId) => {
     try {
-      await fetch(`http://localhost:3000/api/precios/${listaId}`, {
+      await fetch(buildApiUrl(`/api/precios/${listaId}`), {
         method: 'DELETE',
       });
       setPrecios((prev) =>
@@ -214,7 +215,7 @@ const AdminPanel = () => {
 
   const guardarIdeaCategoria = async (formData) => {
     try {
-      let url = 'http://localhost:3000/api/ideas/categories';
+      let url = buildApiUrl('/api/ideas/categories');
       let method = 'POST';
       if (editingIdeaCategory) {
         url += `/${editingIdeaCategory.id}`;
@@ -241,7 +242,7 @@ const AdminPanel = () => {
 
   const guardarIdeaItem = async (formData) => {
     try {
-      let url = 'http://localhost:3000/api/ideas/items';
+      let url = buildApiUrl('/api/ideas/items');
       let method = 'POST';
       if (editingIdeaItem) {
         url += `/${editingIdeaItem.id}`;
@@ -304,7 +305,7 @@ const AdminPanel = () => {
 
   const eliminarIdeaCategoria = async (id) => {
     try {
-      await fetch(`http://localhost:3000/api/ideas/categories/${id}`, {
+      await fetch(buildApiUrl(`/api/ideas/categories/${id}`), {
         method: 'DELETE',
       });
       setIdeaCategories((prev) => prev.filter((c) => c.id !== id));
@@ -315,7 +316,7 @@ const AdminPanel = () => {
 
   const eliminarIdeaItem = async (id, categoryId) => {
     try {
-      await fetch(`http://localhost:3000/api/ideas/items/${id}`, {
+      await fetch(buildApiUrl(`/api/ideas/items/${id}`), {
         method: 'DELETE',
       });
       setIdeaCategories((prev) =>
@@ -332,7 +333,7 @@ const AdminPanel = () => {
 
   const eliminarUsuario = async (id) => {
     try {
-      await fetch(`http://localhost:3000/api/usuarios/${id}`, {
+      await fetch(buildApiUrl(`/api/usuarios/${id}`), {
         method: "DELETE",
       });
       setUsuarios((prev) => prev.filter((u) => u.id !== id));
@@ -343,7 +344,7 @@ const AdminPanel = () => {
 
   const guardarUsuario = async (usuario) => {
     try {
-      let url = "http://localhost:3000/api/usuarios";
+      let url = buildApiUrl("/api/usuarios");
       let method = "POST";
       if (editingUsuario) {
         url += `/${editingUsuario.id}`;

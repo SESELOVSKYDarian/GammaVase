@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './UsuarioForm.css';
+import { buildApiUrl } from '../../utils/api';
 
 const UsuarioForm = ({ onClose, onSave, initialData }) => {
   const [formData, setFormData] = useState({
@@ -18,7 +19,7 @@ const UsuarioForm = ({ onClose, onSave, initialData }) => {
   }, [initialData]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/precios')
+    fetch(buildApiUrl('/api/precios'))
       .then((res) => res.json())
       .then((data) => setListas(data));
   }, []);

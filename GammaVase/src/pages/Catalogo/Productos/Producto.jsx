@@ -6,6 +6,7 @@ const MotionDiv = motion.div;
 import { useParams } from "react-router-dom";
 import ProductoCard from "../ProductoCard";
 import "./Producto.css";
+import { buildApiUrl } from "../../../utils/api";
 
 const Producto = () => {
   const { slug } = useParams();
@@ -18,7 +19,7 @@ const Producto = () => {
   const usuario = JSON.parse(localStorage.getItem("usuario"));
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/productos/slug/${slug}`)
+    fetch(buildApiUrl(`/api/productos/slug/${slug}`))
       .then((res) => {
         if (!res.ok) throw new Error("Producto no encontrado");
         return res.json();
@@ -29,7 +30,7 @@ const Producto = () => {
         setCargando(false);
 
         // Obtener productos relacionados de la misma familia
-        fetch(`http://localhost:3000/api/productos/familia/${data.familia_id}`)
+        fetch(buildApiUrl(`/api/productos/familia/${data.familia_id}`))
           .then((res) => res.json())
           .then((rel) => {
             const filtrados = rel.filter((p) => p.url !== slug); // <-- acá

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
 import ProductoCard from "./ProductoCard";
 import "./catalogo.css";
+import { buildApiUrl } from "../../utils/api";
 
 const MotionDiv = motion.div;
 
@@ -20,13 +21,13 @@ const Catalogo = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/familias")
+    fetch(buildApiUrl("/api/familias"))
       .then((res) => res.json())
       .then((data) => setFamilias(data));
-    fetch("http://localhost:3000/api/productos")
+    fetch(buildApiUrl("/api/productos"))
       .then((res) => res.json())
       .then((data) => setProductos(data));
-    fetch("http://localhost:3000/api/productos/color-codes")
+    fetch(buildApiUrl("/api/productos/color-codes"))
       .then((res) => res.json())
       .then((data) => setColorOptions(data));
   }, []);
@@ -35,7 +36,7 @@ const Catalogo = () => {
     const inicial = searchParams.get("search") || "";
     setBusqueda(inicial);
     if (inicial) {
-      fetch(`http://localhost:3000/api/productos?q=${encodeURIComponent(inicial)}`)
+      fetch(`${buildApiUrl("/api/productos")}?q=${encodeURIComponent(inicial)}`)
         .then((res) => res.json())
         .then((data) => {
           setProductos(data);
@@ -48,7 +49,7 @@ const Catalogo = () => {
     const params = new URLSearchParams();
     if (granFamilia) params.append("gran_familia", granFamilia);
     if (tipoFamilia) params.append("tipo_familia", tipoFamilia);
-    fetch(`http://localhost:3000/api/productos/color-codes?${params.toString()}`)
+    fetch(`${buildApiUrl("/api/productos/color-codes")}?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => setColorOptions(data));
   }, [granFamilia, tipoFamilia]);
@@ -59,7 +60,7 @@ const Catalogo = () => {
     if (tipoFamilia) params.append("tipo_familia", tipoFamilia);
     if (codigoColor) params.append("codigo_color", codigoColor);
     if (busqueda) params.append("q", busqueda);
-    fetch(`http://localhost:3000/api/productos?${params.toString()}`)
+    fetch(`${buildApiUrl("/api/productos")}?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => {
         setProductos(data);
@@ -84,7 +85,7 @@ const Catalogo = () => {
     setTipoFamilia("");
     setCodigoColor("");
     setSinResultados(false);
-    fetch("http://localhost:3000/api/productos")
+    fetch(buildApiUrl("/api/productos"))
       .then((res) => res.json())
       .then((data) => setProductos(data));
   };
