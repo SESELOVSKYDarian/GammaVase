@@ -42,7 +42,7 @@ app.use('/familias', express.static(path.join(__dirname, '../GammaVase/public/as
 const frontendBuildPath = path.join(__dirname, '../GammaVase/dist');
 if (fs.existsSync(frontendBuildPath)) {
   app.use(express.static(frontendBuildPath));
-  app.get('*', (req, res, next) => {
+  app.get('/*', (req, res, next) => {
     if (req.path.startsWith('/api')) return next();
     return res.sendFile(path.join(frontendBuildPath, 'index.html'));
   });
